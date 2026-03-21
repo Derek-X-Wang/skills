@@ -42,9 +42,10 @@ npx skills add Derek-X-Wang/skills --skill convex -g
 Each skill follows the [Agent Skills Specification](https://agentskills.io/specification):
 
 ```
-skills/
-  skill-name/
-    SKILL.md          # Required - frontmatter + instructions
-    references/       # Optional - additional docs loaded on demand
-    scripts/          # Optional - executable code
+skill-name/
+  SKILL.md          # Required - frontmatter + instructions
+  references/       # Optional - additional docs loaded on demand
+  scripts/          # Optional - executable code
 ```
+
+Skills live at the root level of this repo (not in a `skills/` subdirectory).
