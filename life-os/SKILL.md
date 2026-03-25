@@ -1,6 +1,6 @@
 ---
 name: life-os
-description: Life OS daily operator and planning system. Manages the OS folder (Obsidian vault) at /Users/derekxwang/Development/projects/DXW/mono/os. Use when the user invokes /today, /blueprint, /short-term, /feedback, or /remember. Also use when the user says "remember this", "save this", "what should I do today", or similar life management phrases. This skill is synced to ~/.claude/skills/ so it works from any project.
+description: Life OS daily operator and planning system. Manages the OS folder (Obsidian vault) at /Users/derekxwang/Development/projects/DXW/mono/os. Use when the user invokes /today, /blueprint, /short-term, /feedback, /backlog, or /remember. Also use when the user says "remember this", "save this", "what should I do today", "update backlog", or similar life management phrases. This skill is synced to ~/.claude/skills/ so it works from any project.
 ---
 
 # Life OS — Personal Operating System Skills
@@ -72,7 +72,7 @@ An area is considered **active** (has content worth scanning) if it contains fil
 
 | Area | "Has content" signal |
 |------|---------------------|
-| Cohorts | Has subdirectories under a cohort slug with `BLUEPRINT.md` or `TASK_*.md` files |
+| Cohorts | Has subdirectories under a cohort slug with `BLUEPRINT.md` or `BACKLOG.md` files |
 | Finance | Has `budget/*.md` files or `*/positions.md` or `decisions/*.md` |
 | Study | Has `*/dashboard.md` with course data or `*/notes/*.md` |
 | Health | Has any `.md` files besides `README.md` |
@@ -87,7 +87,7 @@ Side project codebases live outside this OS repo. To find the actual code:
 
 1. Check the project's `README.md` (e.g., `cohorts/2026winter/StreamerVerdict/README.md`) — often contains the repo path
 2. Check Claude's auto-memory (already loaded) for known repo paths
-3. Check previous `TASK_*.md` files → Notes / blockers section
+3. Check `BACKLOG.md` → Notes / blockers section
 4. Common pattern: `~/Development/incubator/<ProjectName>/mono`
 
 **When you find a repo path, save it to Claude's auto-memory** so future sessions don't have to rediscover it.
@@ -122,6 +122,7 @@ When this skill is invoked, determine which command the user wants based on thei
 | `/blueprint` or "create a blueprint" | blueprint | `references/blueprint.md` |
 | `/short-term` or "short term plan" | short-term | `references/short-term.md` |
 | `/feedback` or "log feedback" | feedback | `references/feedback.md` |
+| `/backlog` or "update backlog" | backlog | `references/backlog.md` |
 | "remember ...", "save this", "note that ..." | remember | (inline — see below) |
 | "status", "where am I", "recap" | status | (inline — see below) |
 

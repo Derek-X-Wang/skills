@@ -2,11 +2,13 @@
 
 You are the user's daily operator. Your job is to scan all life areas, understand what's going on, and create a focused daily plan that serves the three life pillars.
 
+**The daily note is the single source of truth for "what to do today."** All actionable todos live here — not in project folders. Project folders hold vision, plans, backlogs, and decisions.
+
 ## Step 0: Load Context
 
 **Read `goals/pillars.md`** for the north-star goals and their current state. Claude's auto-memory (repo paths, active decisions, preferences) is already loaded into the session.
 
-Use memory to inform decisions (e.g., skip paused projects, use known repo paths in TASK files, respect scheduling preferences). Every daily plan should move at least one pillar forward.
+Use memory to inform decisions (e.g., skip paused projects, use known repo paths, respect scheduling preferences). Every daily plan should move at least one pillar forward.
 
 ## Step 1: Scan All Areas
 
@@ -17,8 +19,7 @@ For each area, gather context by reading relevant files. Only include areas that
 1. Find all cohort directories: `ls cohorts/`
 2. For each cohort (e.g., `cohorts/2026winter/`):
    - List project directories
-   - For each project, find the most recent `TASK_*.md` file
-   - Read it and extract unfinished items (`- [ ] ...`)
+   - Read `BACKLOG.md` if it exists — extract unfinished items (`- [ ] ...`)
    - Read `SHORT_TERM_PLAN.md` if it exists (first 100 lines)
    - Read `BLUEPRINT.md` if it exists (first 50 lines for context)
 3. **Check the actual codebase** for each project:
@@ -88,6 +89,7 @@ Create the daily note file at: `daily/YYYY/MM/DD.md`
 
 - Create intermediate directories if needed (e.g., `daily/2026/03/`)
 - If the file already exists, read it first and update rather than overwrite
+- **Pull today's tasks from project `BACKLOG.md` files**, the `SHORT_TERM_PLAN.md` weekly milestones, and codebase state. The daily note is where these become concrete, time-boxed todos for today.
 
 ### Daily Note Template
 
@@ -115,12 +117,10 @@ updated: YYYY-MM-DD
 
 ### [Project Name]
 **Context:** Why this project today (1 line)
-
-#### Carry-over
-- [ ] Unfinished item from last session (Xm)
+**Repo:** path/to/repo (so a coding agent can jump straight in)
 
 #### Must-do
-- [ ] Task description (Xm)
+- [ ] Task description — include file paths, components, or API routes when known (Xm)
 
 #### Should-do
 - [ ] Task description (Xm)
@@ -156,71 +156,29 @@ updated: YYYY-MM-DD
 <!-- End of day -->
 ```
 
-## Step 3.5: Generate Per-Project TASK Files
+### Task Detail Rules
 
-For each side project selected for today (under `cohorts/`), create a **TASK file** in the project directory. This file serves two purposes:
-1. **Human tracking** — the user can review it in Obsidian
-2. **AI agent context** — when the user opens the project repo in a coding agent (Claude Code, Cursor, etc.), the TASK file provides all the context the agent needs to start working immediately
-
-### TASK file location
-
-`cohorts/<cohort>/<project>/TASK_MM-DD.md` (e.g., `cohorts/2026winter/DynaKV/TASK_03-01.md`)
-
-### TASK file template
-
-```markdown
-# Tasks — <Project Name>
-_Date: <Full date, e.g., Saturday, March 01, 2026>_
-
-## Context
-- Why this project today (1-2 lines connecting to the blueprint/short-term plan)
-- Current state of the project (what's done, what's in progress)
-- Where the implementation lives (repo path or URL if known — check BLUEPRINT.md, SHORT_TERM_PLAN.md, or previous TASK files for this)
-
-## Carry-over (from previous task file)
-- [ ] Unfinished item from most recent TASK_*.md (estimate: Xm)
-<!-- If no previous task file or all items completed: "None" -->
-
-## Today — Must-do
-- [ ] Concrete task with enough detail for an AI agent to execute (estimate: Xm)
-- [ ] Another task — include file paths, API endpoints, or specific components when possible (estimate: Xm)
-
-## Today — Should-do
-- [ ] Stretch goal task (estimate: Xm)
-
-## Notes / blockers
-- Implementation repo path (e.g., `/Users/derekxwang/Development/incubator/DynaKV/mono`)
-- Any credentials, environment setup, or dependencies needed
-- Known issues or constraints
-
-## End-of-day success check
-- What must be true by end of today? (1-2 concrete statements)
-```
-
-### TASK file rules
-
-- **Include enough context for a fresh AI agent.** The agent has never seen this project before. It needs: what the project is, what's been done, what to do next, and where the code lives.
-- Pull context from `BLUEPRINT.md` (what the project is, positioning, target audience) and `SHORT_TERM_PLAN.md` (current milestone, what week we're in).
-- Check previous `TASK_*.md` files for: implementation repo paths, credentials notes, and unfinished items.
-- **Inspect the actual codebase** before writing the TASK file:
-  - Read the project's `README.md` and check Claude's auto-memory for the repo path
-  - If the repo exists locally, run `git log --oneline -5` and `git status` in the repo
-  - Look at recent changes to write tasks that build on what's actually there
-  - Reference specific files, functions, or components from the real codebase in task descriptions
+- **Include enough context for a fresh AI agent.** When a project section references code work, include: repo path, relevant file paths, what's been done recently (from git log), and what to do next. A coding agent should be able to start working from the daily note alone.
+- Pull context from `BLUEPRINT.md` (what the project is) and `SHORT_TERM_PLAN.md` (current milestone).
+- Pull actionable items from `BACKLOG.md` — select the highest-priority items that fit the time budget.
+- **Inspect the actual codebase** before writing tasks:
+  - If the repo exists locally, run `git log --oneline -5` and `git status`
+  - Reference specific files, functions, or components from the real codebase
 - Tasks should be concrete and actionable — "Implement the `/api/keys` endpoint with create and revoke" not "Work on API".
-- Include file paths, component names, or API routes when you know them.
-- If the same date TASK file already exists, read it first and update rather than overwrite.
-- Only create TASK files for projects selected for today — not all projects.
+- Must-do tasks should fit within the time budget. Should-do tasks are stretch goals.
 
 ### Template Rules
 
 - Only include sections for areas that have content AND are selected for today
 - Use `---` horizontal rules between area sections for visual clarity
 - Keep tasks concrete with time estimates
-- Must-do tasks should fit within the time budget
-- Should-do tasks are stretch goals
-- Carry-over items come from the most recent task file in that area
-- If a carry-over item is no longer relevant, drop it and mention why in chat output
+- Check yesterday's daily note for unfinished items — carry them forward or drop them with a note
+
+## Step 3.5: Update BACKLOG.md
+
+After generating the daily note, update each project's `BACKLOG.md` to reflect what was selected:
+- Items pulled into today's daily note can be marked with a `(scheduled: YYYY-MM-DD)` tag
+- This keeps the backlog in sync without removing items prematurely (they get checked off in the daily note when done)
 
 ## Step 4: Chat Summary
 
@@ -229,9 +187,8 @@ After writing the file, output a summary:
 ```
 Daily plan written to daily/YYYY/MM/DD.md
 
-Project TASK files created:
-- cohorts/<cohort>/<project>/TASK_MM-DD.md
-  → [brief summary of tasks]
+Today's project focus:
+- [Project]: [brief summary of tasks]
 
 Pillar status:
   1. Health: [current weight] → 175 lbs | Today's action: [what]
@@ -241,8 +198,5 @@ Pillar status:
 Areas skipped (no content): [list]
 
 Highest-leverage task today:
-→ [The single most impactful thing to do]
-
-Carry-over items dropped:
-- [item] — [reason] (if any were dropped)
+> [The single most impactful thing to do]
 ```

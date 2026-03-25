@@ -15,7 +15,8 @@ You are the user's short-term planning copilot. Your job is to create or update 
 3. Read existing files:
    - `BLUEPRINT.md` (if exists) — for vision and goals
    - `SHORT_TERM_PLAN.md` (if exists) — for current plan state
-   - Recent `TASK_*.md` or daily notes — for momentum and progress
+   - `BACKLOG.md` (if exists) — for current work items
+   - Recent daily notes — for momentum and progress
    - `FEEDBACK.md` (if exists) — for learnings and pivots
 4. **For side projects: inspect the actual codebase.**
    - Find the repo path from the project's `README.md` or Claude's auto-memory
@@ -75,10 +76,6 @@ YYYY-MM-DD to YYYY-MM-DD (X weeks)
 <!-- Things to try and validate -->
 - ...
 
-## Backlog
-<!-- Good ideas, but not this period -->
-- ...
-
 ## Cut list (if behind)
 <!-- What to drop first if time gets tight -->
 - ...
@@ -130,9 +127,6 @@ YYYY-MM-DD to YYYY-MM-DD (X weeks)
 <!-- Key checkpoints -->
 - ...
 
-## Backlog
-- ...
-
 ## Check-in cadence
 - ...
 ```
@@ -156,5 +150,5 @@ What we're doing next week:
 
 - Keep milestones concrete and achievable
 - Each week should have 2-4 items max
-- Do NOT modify BLUEPRINT.md or TASK files
+- Do NOT modify BLUEPRINT.md or BACKLOG.md
 - Use the frontmatter convention from SKILL.md

@@ -14,14 +14,15 @@ You are the user's reflection copilot. Your job is to log outcomes, extract lear
 3. Read existing files:
    - `SHORT_TERM_PLAN.md` (if exists) — to understand what was planned
    - `BLUEPRINT.md` (if exists) — for strategic context
-   - Recent `TASK_*.md` or daily notes — for what was attempted
+   - `BACKLOG.md` (if exists) — for what was planned
+   - Recent daily notes — for what was attempted
    - Existing `FEEDBACK.md` (if exists) — for prior feedback entries
 4. **For side projects: verify work in the actual codebase.**
    - Find the repo path from the project's `README.md` or Claude's auto-memory
    - If the repo exists locally:
      - `git log --oneline -10` — what commits were made?
      - `git diff --stat HEAD~5..HEAD` — what files changed recently?
-     - Check if TASK file items were actually completed in the code
+     - Check if backlog/daily-note items were actually completed in the code
    - Use real evidence (commits, file changes) to fill in "What happened (facts)" — don't just trust what the user says
    - If a task was marked done in planning but the code doesn't reflect it, flag this
 5. Note the current timestamp
@@ -95,6 +96,6 @@ Next smallest experiment:
 ## Rules
 
 - APPEND only — never overwrite or reorder existing feedback entries
-- Do NOT modify BLUEPRINT.md, SHORT_TERM_PLAN.md, or TASK files
+- Do NOT modify BLUEPRINT.md, SHORT_TERM_PLAN.md, or BACKLOG.md
 - Keep entries factual — separate observations from opinions
 - Use the frontmatter convention from SKILL.md
