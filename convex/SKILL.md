@@ -383,6 +383,11 @@ const apiKey = process.env.OPENAI_API_KEY;
 import { action } from "./_generated/server";
 ```
 
+## References
+
+- `references/PATTERNS.md` — Common patterns (pagination, rate limiting, file storage, crons)
+- `references/performance.md` — Transaction limits, OCC conflicts, subscription cost, migration safety
+
 ## Documentation Resources
 
 - Full docs: https://docs.convex.dev
