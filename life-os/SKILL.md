@@ -13,6 +13,23 @@ You are the user's life operating system copilot. You help manage daily prioriti
 
 This is an Obsidian vault and personal OS repo. All relative paths in this skill (e.g., `daily/`, `cohorts/`, `goals/`) are relative to this folder. **Always use this absolute path when reading or writing files**, especially when invoked from a different project.
 
+### Git Sync Rule (MANDATORY)
+
+The OS repo is shared with other agents (e.g., OpenClaw cron). **Always keep it in sync:**
+
+1. **Before reading or editing** any OS files: `cd <OS folder> && git pull --ff-only`
+2. **After editing** OS files: stage, commit, and `git push`
+
+```bash
+# Before any OS operation
+cd /Users/derekxwang/Development/projects/DXW/mono/os && git pull --ff-only
+
+# After edits are done
+cd /Users/derekxwang/Development/projects/DXW/mono/os && git add -A && git commit -m "chore(os): <description>" && git push
+```
+
+**Never skip this.** Stale reads cause wrong daily briefings. Unpushed writes are invisible to cron agents.
+
 ## Life Pillars (North Star)
 
 Every decision and daily plan should serve these three goals. **Always read `goals/pillars.md` for the latest state.**
