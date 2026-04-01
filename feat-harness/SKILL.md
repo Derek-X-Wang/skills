@@ -1,6 +1,6 @@
 ---
-name: agent-harness
-description: Set up and run a Planner-Generator-Evaluator agent harness for building features and apps. Use when the user wants to build a feature with structured agent orchestration, set up agent-driven development for a project, create quality evaluation rubrics, or mentions "harness", "planner/generator/evaluator", "agent loop", or "graded evaluation". Also use when the user says "set up harness", "build with agents", or wants structured multi-agent development workflows.
+name: feat-harness
+description: Set up and run a Planner-Generator-Evaluator agent harness for building features. Use when the user wants to build a feature with structured agent orchestration, set up agent-driven development for a project, create quality evaluation rubrics, or mentions "harness", "planner/generator/evaluator", "agent loop", or "graded evaluation". Also use when the user says "set up harness", "build feature with agents", or wants structured multi-agent feature development workflows.
 ---
 
 # Agent Harness
