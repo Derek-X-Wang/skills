@@ -2,15 +2,15 @@
 name: streamerverdict
 repo: Derek-X-Wang/StreamerVerdict
 description: Game review aggregator powered by YouTube streamers with transcript-based AI analysis
-last_scanned: 2026-03-28
+last_scanned: 2026-04-03
 ---
 
 ## Tech Stack
 - **Runtime:** Bun 1.3
 - **Frontend:** Next.js 16, React 19, TailwindCSS 4, TanStack Query, Framer Motion, Radix UI, Zustand
-- **Backend:** Convex (serverless) via better-convex (cRPC + ORM + Better Auth)
+- **Backend:** Convex (serverless) via kitcn 0.12 (cRPC + ORM + Better Auth) — migrated from better-convex
 - **Auth:** Better Auth with email/password, Google OAuth, Twitch OAuth, admin plugin for RBAC
-- **Database:** Convex real-time document database (better-convex ORM with `convexTable`, `defineRelations`)
+- **Database:** Convex real-time document database (kitcn ORM with `convexTable`, `defineSchema().relations()`)
 - **CMS:** Payload CMS 3 with SQLite (blog content only)
 - **AI:** Gemini Flash via OpenRouter (pipeline), Vercel AI SDK
 - **Monorepo:** Bun workspaces + Turborepo
