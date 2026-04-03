@@ -1,11 +1,11 @@
 ---
-name: better-convex
-description: ALWAYS use this skill when working with convex or better-convex. Covers the common end-to-end feature path using cRPC + ORM + auth + React, with setup/bootstrap and niche depth in references.
+name: kitcn
+description: ALWAYS use this skill when working with convex, kitcn, or better-convex (renamed to kitcn). Covers the common end-to-end feature path using cRPC + ORM + auth + React, with setup/bootstrap and niche depth in references.
 ---
 
-# Better Convex Core Skill (80% Path)
+# kitcn Core Skill (80% Path)
 
-Use this file first for everyday feature delivery in an already configured better-convex app.
+Use this file first for everyday feature delivery in an already configured kitcn app.
 
 - If setup/bootstrap/env/auth wiring or project structure mirroring is missing, use `references/setup/index.md` (then the relevant setup file).
 - If the task is advanced or niche, load only the specific feature reference listed at the end.
@@ -136,8 +136,8 @@ import {
   index,
   text,
   timestamp,
-} from "better-convex/orm";
-import { eq } from "better-convex/orm";
+} from "kitcn/orm";
+import { eq } from "kitcn/orm";
 
 export const project = convexTable(
   "project",
@@ -218,8 +218,8 @@ Schema rules that matter:
 
 ```ts
 // convex/lib/crpc.ts (shape reference only)
-import { getHeaders } from "better-convex/auth";
-import { CRPCError } from "better-convex/server";
+import { getHeaders } from "kitcn/auth";
+import { CRPCError } from "kitcn/server";
 import { getAuth } from "../functions/generated/auth";
 import { initCRPC } from "../functions/generated/server";
 
@@ -298,8 +298,8 @@ export const privateAction = c.action.internal();
 ```ts
 // convex/functions/project.ts
 import { z } from "zod";
-import { and, eq } from "better-convex/orm";
-import { CRPCError } from "better-convex/server";
+import { and, eq } from "kitcn/orm";
+import { CRPCError } from "kitcn/server";
 import { authMutation, authQuery } from "../lib/crpc";
 import { project, task } from "./schema";
 
@@ -543,7 +543,7 @@ await ctx.orm
 Null-clearing update for optional fields:
 
 ```ts
-import { unsetToken } from "better-convex/orm";
+import { unsetToken } from "kitcn/orm";
 
 await ctx.orm
   .update(task)
@@ -626,14 +626,14 @@ Key client defaults/deltas:
 2. Never use `queryClient.invalidateQueries` for subscribed cRPC query paths.
 3. Use `{ subscribe: false }` only for one-time fetches; refresh those with explicit `refetch`/`fetchQuery`.
 4. Use `skipUnauth: true` to avoid unauthorized fetch churn.
-5. For pagination, use `useInfiniteQuery` from `better-convex/react`.
+5. For pagination, use `useInfiniteQuery` from `kitcn/react`.
 6. Prefer typed `queryKey(...)` helpers for cache read/write/fetch ops instead of manual keys.
 7. For auth flows, prefer `createAuthMutations(...)` wrappers (not raw auth client calls) to avoid logout race errors.
 
 Infinite query pattern:
 
 ```ts
-import { useInfiniteQuery } from "better-convex/react";
+import { useInfiniteQuery } from "kitcn/react";
 
 const feed = useInfiniteQuery(
   crpc.task.list.infiniteQueryOptions({ projectId }, { skipUnauth: true })
@@ -776,7 +776,7 @@ Before calling a feature done:
 | `orderBy` written as array objects                              | Use object form: `orderBy: { updatedAt: "desc" }`                                                                                                                                    |
 | Using `ctx.db` for policy-sensitive reads                       | Use `ctx.orm` (RLS/constraints path)                                                                                                                                                 |
 | Throwing generic `Error` for expected outcomes                  | Throw `CRPCError` with explicit code                                                                                                                                                 |
-| Infinite list with TanStack native hook directly                | Use `useInfiniteQuery` from `better-convex/react`                                                                                                                                    |
+| Infinite list with TanStack native hook directly                | Use `useInfiniteQuery` from `kitcn/react`                                                                                                                                    |
 | Primitive root input (`z.string()`)                             | Use root `z.object(...)` input schema                                                                                                                                                |
 | Returning nothing with `z.void()`                               | Omit explicit output                                                                                                                                                                 |
 | Manual pagination wrappers for infinite endpoints               | Use `.paginated({ limit, item })`                                                                                                                                                    |
@@ -787,7 +787,7 @@ Before calling a feature done:
 | Using `createCaller` in query/mutation context                  | Use `create<Module>Handler(ctx)` — zero overhead, bypasses redundant validation                                                                                                      |
 | Adding `// @ts-nocheck` to unblock compile                      | NEVER do this; fix the underlying types using canonical patterns in `references/setup/`                                                                                              |
 | Relaxing lint rules to pass checks                              | Keep baseline lint config; fix code-level warnings/errors instead                                                                                                                    |
-| Flagging `aggregate_*`/`migration_*` DB tables as orphans       | These are auto-created by `orm.api()` in `generated/server.ts` — they are built-in ORM infrastructure (aggregates, migrations, batch mutations, reset). They stay empty until enabled. Do not recommend deleting them — better-convex recreates them on every deploy. Only flag tables as orphans if they are not in the app schema AND not in `_generated/dataModel.d.ts`. |
+| Flagging `aggregate_*`/`migration_*` DB tables as orphans       | These are auto-created by `orm.api()` in `generated/server.ts` — they are built-in ORM infrastructure (aggregates, migrations, batch mutations, reset). They stay empty until enabled. Do not recommend deleting them — kitcn recreates them on every deploy. Only flag tables as orphans if they are not in the app schema AND not in `_generated/dataModel.d.ts`. |
 
 ## Reference Escalation Map (Load Only If Needed)
 
@@ -809,7 +809,7 @@ Before calling a feature done:
 - `references/features/scheduling.md`: cron + delayed job patterns
 - `references/features/testing.md`: deeper testing scenarios
 - `references/features/aggregates.md`: aggregate component patterns
-- `references/features/migrations.md`: built-in online data migrations (defineMigration, CLI, deploy, drift). Load when: task involves data backfills, optional→required field hardening, field renames/removals, type narrowing, or `better-convex migrate` CLI commands. Skip for backward-compatible changes (new optional fields, new tables, code-level defaults).
+- `references/features/migrations.md`: built-in online data migrations (defineMigration, CLI, deploy, drift). Load when: task involves data backfills, optional→required field hardening, field renames/removals, type narrowing, or `kitcn migrate` CLI commands. Skip for backward-compatible changes (new optional fields, new tables, code-level defaults).
 - `references/features/auth.md`: full Better Auth core flow
 - `references/features/auth-admin.md`: admin plugin details
 - `references/features/auth-organizations.md`: org/multi-tenant plugin details

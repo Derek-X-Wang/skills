@@ -12,7 +12,7 @@ Complete ORM API for feature work. Prerequisites: `setup/server.md`.
 
 ## Column Types
 
-All from `better-convex/orm`. See [Column Types](#column-types-1) in API Reference.
+All from `kitcn/orm`. See [Column Types](#column-types-1) in API Reference.
 
 ### Column Modifiers
 
@@ -33,7 +33,7 @@ type Post = typeof posts.$inferSelect; // Select type (fields are T | null unles
 type NewPost = typeof posts.$inferInsert; // Insert type (required if .notNull() + no default)
 
 // Or with helpers:
-import { InferSelectModel, InferInsertModel } from "better-convex/orm";
+import { InferSelectModel, InferInsertModel } from "kitcn/orm";
 type Post = InferSelectModel<typeof posts>;
 ```
 
@@ -46,11 +46,11 @@ type Post = InferSelectModel<typeof posts>;
 email: text().notNull().unique();
 
 // Table-level unique index
-import { uniqueIndex } from "better-convex/orm";
+import { uniqueIndex } from "kitcn/orm";
 (t) => [uniqueIndex("users_email_unique").on(t.email)];
 
 // Compound unique
-import { unique } from "better-convex/orm";
+import { unique } from "kitcn/orm";
 (t) => [unique("full_name").on(t.firstName, t.lastName)];
 ```
 
@@ -70,20 +70,20 @@ authorId: id("users")
   });
 
 // Self-referencing (use AnyColumn return type)
-import { type AnyColumn } from "better-convex/orm";
+import { type AnyColumn } from "kitcn/orm";
 parentId: text().references((): AnyColumn => commentsTable.id, {
   onDelete: "cascade",
 });
 
 // Table-level (foreignKey builder, for non-id references)
-import { foreignKey } from "better-convex/orm";
+import { foreignKey } from "kitcn/orm";
 (t) => [foreignKey({ columns: [t.userSlug], foreignColumns: [users.slug] })];
 ```
 
 ### Check Constraints
 
 ```ts
-import { check, gt, isNotNull } from "better-convex/orm";
+import { check, gt, isNotNull } from "kitcn/orm";
 (t) => [
   check("age_over_18", gt(t.age, 18)),
   check("email_present", isNotNull(t.email)),
@@ -93,7 +93,7 @@ import { check, gt, isNotNull } from "better-convex/orm";
 ## Indexes
 
 ```ts
-import { index, searchIndex, vectorIndex } from 'better-convex/orm';
+import { index, searchIndex, vectorIndex } from 'kitcn/orm';
 
 // Standard index
 (t) => [index('by_author').on(t.authorId)]
@@ -108,7 +108,7 @@ import { index, searchIndex, vectorIndex } from 'better-convex/orm';
 ## Relations
 
 ```ts
-import { defineRelations } from "better-convex/orm";
+import { defineRelations } from "kitcn/orm";
 
 export const relations = defineRelations(
   { users, posts, tags, postsTags },
@@ -157,7 +157,7 @@ users: {
 For large schemas, split relation definitions across modules and merge:
 
 ```ts
-import { defineRelationsPart } from "better-convex/orm";
+import { defineRelationsPart } from "kitcn/orm";
 const userRelations = defineRelationsPart({ users, posts }, (r) => ({
   users: { posts: r.many.posts({ from: r.users.id, to: r.posts.authorId }) },
 }));
@@ -169,7 +169,7 @@ const userRelations = defineRelationsPart({ users, posts }, (r) => ({
 Polymorphism is schema-first via a discriminator column builder.
 
 ```ts
-import { boolean, convexTable, discriminator, id, index, integer, text } from 'better-convex/orm';
+import { boolean, convexTable, discriminator, id, index, integer, text } from 'kitcn/orm';
 
 const auditLogs = convexTable(
   'audit_logs',
@@ -243,7 +243,7 @@ Rules:
 ## Schema Definition
 
 ```ts
-import { defineSchema } from "better-convex/orm";
+import { defineSchema } from "kitcn/orm";
 
 // defineSchema takes tables map (not relations)
 export default defineSchema(tables, {
@@ -419,7 +419,7 @@ Use `maxScan` (cursor mode only) to cap scan size.
 Mutation builders use operator helpers with column builders:
 
 ```ts
-import { and, eq, gt } from "better-convex/orm";
+import { and, eq, gt } from "kitcn/orm";
 
 await ctx.orm
   .update(users)
@@ -441,7 +441,7 @@ import {
   defineSchema,
   searchIndex,
   text,
-} from "better-convex/orm";
+} from "kitcn/orm";
 
 export const articles = convexTable(
   "articles",
@@ -743,7 +743,7 @@ await ctx.orm
 ### Update
 
 ```ts
-import { eq } from "better-convex/orm";
+import { eq } from "kitcn/orm";
 import { user } from "./schema";
 
 // Basic
@@ -760,7 +760,7 @@ const [updated] = await ctx.orm
   .returning();
 
 // Unset a field
-import { unsetToken } from "better-convex/orm";
+import { unsetToken } from "kitcn/orm";
 await ctx.orm
   .update(user)
   .set({ nickname: unsetToken })
@@ -789,7 +789,7 @@ await ctx.orm.delete(user).allowFullScan();
 
 ```ts
 // Table-level default
-import { deletion } from "better-convex/orm";
+import { deletion } from "kitcn/orm";
 const user = convexTable(
   "user",
   {
@@ -843,7 +843,7 @@ To force sync (all rows in one transaction): `.execute({ mode: 'sync' })` or `de
 ### Define policies
 
 ```ts
-import { convexTable, rlsPolicy, text, id, eq } from "better-convex/orm";
+import { convexTable, rlsPolicy, text, id, eq } from "kitcn/orm";
 
 export const secrets = convexTable.withRLS(
   "secrets",
@@ -891,7 +891,7 @@ await ctx.orm.skipRules.query.secrets.findMany();
 ### Roles
 
 ```ts
-import { rlsRole } from "better-convex/orm";
+import { rlsRole } from "kitcn/orm";
 const admin = rlsRole("admin");
 rlsPolicy("admin_only", {
   for: "select",
@@ -909,10 +909,10 @@ const ormDb = orm.db(ctx, {
 
 ## Triggers
 
-Schema-level hooks via `defineTriggers` from `better-convex/orm`. Trigger definitions are schema-level only; `convexTable(..., extraConfig)` no longer accepts trigger callbacks.
+Schema-level hooks via `defineTriggers` from `kitcn/orm`. Trigger definitions are schema-level only; `convexTable(..., extraConfig)` no longer accepts trigger callbacks.
 
 ```ts
-import { defineTriggers } from "better-convex/orm";
+import { defineTriggers } from "kitcn/orm";
 
 export const triggers = defineTriggers(relations, {
   comments: {
@@ -1006,7 +1006,7 @@ import {
   textEnum,
   timestamp,
   uniqueIndex,
-} from "better-convex/orm";
+} from "kitcn/orm";
 
 export const user = convexTable("user", {
   name: text().notNull(),
@@ -1081,7 +1081,7 @@ export const triggers = defineTriggers(relations, {
 
 ### Column Types
 
-All from `better-convex/orm`:
+All from `kitcn/orm`:
 
 | Builder                         | TS Type       | Convex                 | Notes                                      |
 | ------------------------------- | ------------- | ---------------------- | ------------------------------------------ |

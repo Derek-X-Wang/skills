@@ -161,7 +161,7 @@ export const authClient = createAuthClient({
 
 ```ts
 // convex/functions/schema.ts
-import { boolean, convexTable, defineSchema, id, index, integer, json, text } from 'better-convex/orm';
+import { boolean, convexTable, defineSchema, id, index, integer, json, text } from 'kitcn/orm';
 
 // User table — add Polar customer ID
 export const user = convexTable('user', {
@@ -387,7 +387,7 @@ webhooks({
 ```ts
 // convex/functions/polarCustomer.ts
 import '../lib/polar-polyfills';
-import { CRPCError } from 'better-convex/server';
+import { CRPCError } from 'kitcn/server';
 import { z } from 'zod';
 import { privateAction, privateMutation } from '../lib/crpc';
 import { getPolarClient } from '../lib/polar-client';
@@ -433,7 +433,7 @@ export const updateUserPolarCustomerId = privateMutation
 ```ts
 // convex/functions/polarSubscription.ts
 import '../lib/polar-polyfills';
-import { CRPCError } from 'better-convex/server';
+import { CRPCError } from 'kitcn/server';
 import { z } from 'zod';
 import { authAction, privateMutation, privateQuery } from '../lib/crpc';
 import { getPolarClient } from '../lib/polar-client';

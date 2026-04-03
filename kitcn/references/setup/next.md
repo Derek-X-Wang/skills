@@ -8,7 +8,7 @@
 
 ```ts
 import { api } from "@convex/api";
-import { convexBetterAuth } from "better-convex/auth/nextjs";
+import { convexBetterAuth } from "kitcn/auth/nextjs";
 
 export const { createContext, createCaller, handler } = convexBetterAuth({
   api,
@@ -43,7 +43,7 @@ import {
 import {
   createServerCRPCProxy,
   getServerQueryClientOptions,
-} from "better-convex/rsc";
+} from "kitcn/rsc";
 import { headers } from "next/headers";
 import { cache } from "react";
 

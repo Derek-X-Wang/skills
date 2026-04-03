@@ -1,6 +1,6 @@
 # Migrations Reference
 
-Built-in online data migrations for better-convex. Prerequisites: `setup/server.md`.
+Built-in online data migrations for kitcn. Prerequisites: `setup/server.md`.
 
 ## When to Migrate
 
@@ -25,7 +25,7 @@ Convex is not SQL — skip migrations for backward-compatible changes.
 ### `defineMigration`
 
 ```ts
-import { defineMigration } from 'better-convex/orm';
+import { defineMigration } from 'kitcn/orm';
 
 export const migration = defineMigration({
   id: '20260227_080239_backfill_todo_priority', // timestamped unique id
@@ -76,7 +76,7 @@ export const migration = defineMigration({
 Auto-generated manifest. Collects migrations, computes checksums, sorts by id:
 
 ```ts
-import { defineMigrationSet } from 'better-convex/orm';
+import { defineMigrationSet } from 'kitcn/orm';
 export const migrations = defineMigrationSet([migration1, migration2]);
 ```
 
@@ -93,9 +93,9 @@ export const migrations = defineMigrationSet([migration1, migration2]);
 
 ## Deploy Integration
 
-`better-convex deploy` auto-runs: `convex deploy` → `migrate up` → `aggregate backfill`.
+`kitcn deploy` auto-runs: `convex deploy` → `migrate up` → `aggregate backfill`.
 
-Config in `better-convex.json`:
+Config in `kitcn.json`:
 
 ```json
 {
@@ -113,7 +113,7 @@ Config in `better-convex.json`:
 }
 ```
 
-`better-convex dev` uses relaxed defaults (`strict: false`, `allowDrift: true`).
+`kitcn dev` uses relaxed defaults (`strict: false`, `allowDrift: true`).
 
 ## Drift Safety
 

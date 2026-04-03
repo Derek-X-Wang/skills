@@ -66,7 +66,7 @@ export const authClient = createAuthClient({
 
 ```ts
 // convex/functions/schema.ts
-import { convexTable, defineSchema, id, index, integer, json, text, timestamp } from 'better-convex/orm';
+import { convexTable, defineSchema, id, index, integer, json, text, timestamp } from 'kitcn/orm';
 
 export const organization = convexTable('organization', {
   name: text().notNull(),
@@ -209,7 +209,7 @@ organization({
 
 ```ts
 // convex/lib/auth/auth-helpers.ts
-import { CRPCError } from 'better-convex/server';
+import { CRPCError } from 'kitcn/server';
 import type { AuthCtx } from '../crpc';
 
 export const hasPermission = async (

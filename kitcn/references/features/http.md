@@ -10,7 +10,7 @@ Prerequisites: `setup/server.md`.
 
 ```ts
 // convex/lib/crpc.ts
-import { CRPCError, initCRPC } from 'better-convex/server';
+import { CRPCError, initCRPC } from 'kitcn/server';
 
 const c = initCRPC.dataModel<DataModel>().context({}).create({});
 
@@ -27,12 +27,12 @@ export const router = c.router;
 
 ### HTTP Registration with Hono
 
-Use `better-convex/auth/http` for auth route helpers; it auto-installs the Convex-safe `MessageChannel` polyfill.
+Use `kitcn/auth/http` for auth route helpers; it auto-installs the Convex-safe `MessageChannel` polyfill.
 
 ```ts
 // convex/functions/http.ts
-import { authMiddleware } from 'better-convex/auth/http';
-import { createHttpRouter } from 'better-convex/server';
+import { authMiddleware } from 'kitcn/auth/http';
+import { createHttpRouter } from 'kitcn/server';
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { router } from '../lib/crpc';

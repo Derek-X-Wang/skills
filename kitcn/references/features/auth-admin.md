@@ -74,7 +74,7 @@ export const authClient = createAuthClient({
 
 ```ts
 // convex/functions/schema.ts
-import { boolean, convexTable, defineSchema, integer, text } from 'better-convex/orm';
+import { boolean, convexTable, defineSchema, integer, text } from 'kitcn/orm';
 
 export const user = convexTable('user', {
   // ... existing fields
@@ -132,7 +132,7 @@ export const authMutation = c.mutation
 
 ```ts
 // convex/lib/auth/role-guard.ts
-import { CRPCError } from 'better-convex/server';
+import { CRPCError } from 'kitcn/server';
 
 export function roleGuard(
   role: 'admin',

@@ -5,7 +5,7 @@ Feature gate: only apply this section if auth is enabled.
 ### 6.1 Install auth dependencies
 
 ```bash
-bun add better-auth@1.4.9 better-convex hono
+bun add better-auth@1.4.9 kitcn hono
 ```
 
 ### 6.2 Auth config provider
@@ -13,7 +13,7 @@ bun add better-auth@1.4.9 better-convex hono
 **Create:** `convex/functions/auth.config.ts`
 
 ```ts
-import { getAuthConfigProvider } from "better-convex/auth/config";
+import { getAuthConfigProvider } from "kitcn/auth/config";
 import type { AuthConfig } from "convex/server";
 
 export default {
@@ -28,7 +28,7 @@ export default {
 Use static `JWKS` via Better Convex env sync:
 
 ```bash
-bunx better-convex env sync --auth
+bunx kitcn env sync --auth
 ```
 
 What this does:
@@ -39,7 +39,7 @@ What this does:
 
 Hard prerequisite:
 
-1. `bunx better-convex dev` (or `bunx convex dev`) must be running first.
+1. `bunx kitcn dev` (or `bunx convex dev`) must be running first.
 2. If no active deployment is reachable, env sync can fall back to anonymous mode and fail to set auth vars.
 
 Quick check:
@@ -48,7 +48,7 @@ Quick check:
 bunx convex env list
 ```
 
-If the command reports local backend is not running, start `bunx better-convex dev` and retry.
+If the command reports local backend is not running, start `bunx kitcn dev` and retry.
 
 This initializes `JWKS` (and `BETTER_AUTH_SECRET`) if missing when deployment access is healthy.
 Malformed `JWKS` values can fail Convex module analysis during push/codegen.
@@ -58,7 +58,7 @@ Malformed `JWKS` values can fail Convex module analysis during push/codegen.
 **Create:** `convex/functions/auth.ts`
 
 ```ts
-import { convex } from "better-convex/auth";
+import { convex } from "kitcn/auth";
 import authConfig from "./auth.config";
 import { defineAuth } from "./generated/auth";
 
@@ -103,7 +103,7 @@ export default defineAuth((ctx) => {
 
 Canonical rule:
 
-1. Run `bunx better-convex dev` first to generate `convex/functions/generated/` directory.
+1. Run `bunx kitcn dev` first to generate `convex/functions/generated/` directory.
 2. `auth.ts` default-exports `defineAuth((ctx) => ({ ...options, triggers }))` imported from `./generated/auth`.
 3. Import runtime auth contract (`getAuth`, `authClient`, CRUD/triggers, `auth`) from `convex/functions/generated/auth`.
 4. If `auth.ts` is missing or incomplete, codegen still succeeds and generated runtime exports `authEnabled = false` with setup guidance at call time.
@@ -120,7 +120,7 @@ Ordering note:
 
 ```ts
 import { z } from "zod";
-import { getHeaders } from "better-convex/auth";
+import { getHeaders } from "kitcn/auth";
 
 import { getAuth } from "./generated/auth";
 import { publicQuery } from "../lib/crpc";
@@ -195,7 +195,7 @@ Keep all auth reads/writes on ORM table definitions in `convex/functions/schema.
 
 ### 6.5 Register auth HTTP routes
 
-Use `better-convex/auth/http` for `authMiddleware` or `registerRoutes`.
+Use `kitcn/auth/http` for `authMiddleware` or `registerRoutes`.
 It auto-installs the Convex-safe `MessageChannel` polyfill, so no manual `http-polyfills.ts` file is needed.
 
 **Create:** `convex/functions/http.ts`
@@ -204,13 +204,13 @@ Bootstrap note:
 
 1. `http.ts` is parsed during startup/codegen.
 2. Keep imports static (no lazy imports in Convex code).
-3. If `_generated/*` modules are missing, run `bunx better-convex dev` first, then continue.
+3. If `_generated/*` modules are missing, run `bunx kitcn dev` first, then continue.
 
 cRPC + Hono route shape:
 
 ```ts
-import { authMiddleware } from "better-convex/auth/http";
-import { createHttpRouter } from "better-convex/server";
+import { authMiddleware } from "kitcn/auth/http";
+import { createHttpRouter } from "kitcn/server";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 
@@ -251,10 +251,10 @@ GOOGLE_CLIENT_SECRET=...
 Sync:
 
 ```bash
-bunx better-convex env sync --auth
+bunx kitcn env sync --auth
 ```
 
-Requires active deployment connectivity from `bunx better-convex dev` (or `bunx convex dev`) before running.
+Requires active deployment connectivity from `bunx kitcn dev` (or `bunx convex dev`) before running.
 
 Rotate later:
 
@@ -276,8 +276,8 @@ bunx convex run auth:getLatestJwks --prod | bunx convex env set JWKS --prod
 After non-auth baseline is green, replace `convex/lib/crpc.ts` with this auth-aware variant:
 
 ```ts
-import { getHeaders } from "better-convex/auth";
-import { CRPCError } from "better-convex/server";
+import { getHeaders } from "kitcn/auth";
+import { CRPCError } from "kitcn/server";
 
 import { getAuth } from "../functions/generated/auth";
 import { initCRPC } from "../functions/generated/server";
@@ -429,7 +429,7 @@ export const router = c.router;
 
 Do not continue until all checks below pass:
 
-1. `bunx better-convex dev --once --typecheck disable` (preferred; includes codegen)
+1. `bunx kitcn dev --once --typecheck disable` (preferred; includes codegen)
 2. `bun run typecheck || bunx tsc --noEmit`
 3. `bun test`
 4. `bun run build`

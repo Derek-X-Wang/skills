@@ -1,6 +1,6 @@
 # Testing (Consumer App Focus)
 
-Use this for testing your app features built on better-convex.
+Use this for testing your app features built on kitcn.
 This intentionally excludes internal package parity harnesses and deep type-matrix maintenance.
 
 What to test + practical checklist → SKILL.md Section 11.

@@ -29,7 +29,7 @@ Rationale:
 "files": {
   "includes": [
     "!**/_generated",   // Convex auto-generated (raw types)
-    "!**/generated",    // better-convex codegen (ORM-wrapped types)
+    "!**/generated",    // kitcn codegen (ORM-wrapped types)
     "!**/convex/shared/api.ts"  // generated shared API
   ]
 }
@@ -51,7 +51,7 @@ Exception: `generated/server.ts` itself imports from `_generated/server` (exclud
 
 #### `ConvexError` is forbidden
 
-Use `CRPCError` from `better-convex/crpc` instead of `ConvexError` from `convex/values`.
+Use `CRPCError` from `kitcn/crpc` instead of `ConvexError` from `convex/values`.
 
 #### `convex/react` and `convex/nextjs` are forbidden in `src/`
 
@@ -101,7 +101,7 @@ import type { ActionCtx } from './_generated/server';
                 "paths": {
                   "convex/values": {
                     "importNames": ["ConvexError"],
-                    "message": "Use CRPCError from 'better-convex/crpc' instead."
+                    "message": "Use CRPCError from 'kitcn/crpc' instead."
                   },
                   "convex/react": "Use useCRPC from '@/lib/convex/crpc' instead.",
                   "convex/nextjs": "Use caller from '@/lib/convex/rsc' or createContext({ headers }).caller from '@/lib/convex/server' instead."
@@ -128,7 +128,7 @@ import type { ActionCtx } from './_generated/server';
                 "paths": {
                   "convex/values": {
                     "importNames": ["ConvexError"],
-                    "message": "Use CRPCError from 'better-convex/crpc' instead."
+                    "message": "Use CRPCError from 'kitcn/crpc' instead."
                   }
                 },
                 "patterns": [

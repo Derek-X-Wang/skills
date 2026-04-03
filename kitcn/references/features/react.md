@@ -2,7 +2,7 @@
 
 > Prerequisites: `setup/react.md`, `setup/next.md`
 
-Covers all better-convex React client, TanStack Query integration, and Next.js RSC patterns. Assumes TanStack Query baseline knowledge.
+Covers all kitcn React client, TanStack Query integration, and Next.js RSC patterns. Assumes TanStack Query baseline knowledge.
 
 ## Setup
 
@@ -11,7 +11,7 @@ Covers all better-convex React client, TanStack Query integration, and Next.js R
 ```ts
 // src/lib/convex/crpc.tsx
 import { api } from '@convex/api';
-import { createCRPCContext } from 'better-convex/react';
+import { createCRPCContext } from 'kitcn/react';
 
 export const { CRPCProvider, useCRPC, useCRPCClient } = createCRPCContext({
   api,
@@ -33,7 +33,7 @@ cRPC auto-sets `staleTime: Infinity`, `refetch*: false` per query (Convex pushes
 ```ts
 // src/lib/convex/query-client.ts
 import { defaultShouldDehydrateQuery, QueryCache, QueryClient } from '@tanstack/react-query';
-import { isCRPCClientError, isCRPCError } from 'better-convex/crpc';
+import { isCRPCClientError, isCRPCError } from 'kitcn/crpc';
 import SuperJSON from 'superjson';
 
 // Shared hydration config for SSR (client + server)
@@ -83,7 +83,7 @@ export function createQueryClient() {
 // src/lib/convex/convex-provider.tsx
 'use client';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { ConvexProvider, ConvexReactClient, getQueryClientSingleton, getConvexQueryClientSingleton } from 'better-convex/react';
+import { ConvexProvider, ConvexReactClient, getQueryClientSingleton, getConvexQueryClientSingleton } from 'kitcn/react';
 import { CRPCProvider } from '@/lib/convex/crpc';
 import { createQueryClient } from '@/lib/convex/query-client';
 
@@ -112,8 +112,8 @@ function QueryProvider({ children }) {
 
 **With auth** — swap `ConvexProvider` for `ConvexAuthProvider`:
 ```tsx
-import { ConvexAuthProvider } from 'better-convex/auth/client';
-import { ConvexReactClient, getConvexQueryClientSingleton, getQueryClientSingleton, useAuthStore } from 'better-convex/react';
+import { ConvexAuthProvider } from 'kitcn/auth/client';
+import { ConvexReactClient, getConvexQueryClientSingleton, getQueryClientSingleton, useAuthStore } from 'kitcn/react';
 
 const convex = new ConvexReactClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
 
@@ -336,10 +336,10 @@ const scrape = useMutation(crpc.scraper.scrapeLink.mutationOptions());
 
 ## Infinite Queries
 
-Import `useInfiniteQuery` from `better-convex/react` (wraps TanStack with Convex subscription logic):
+Import `useInfiniteQuery` from `kitcn/react` (wraps TanStack with Convex subscription logic):
 
 ```ts
-import { useInfiniteQuery } from 'better-convex/react';
+import { useInfiniteQuery } from 'kitcn/react';
 
 const crpc = useCRPC();
 const { data, fetchNextPage, hasNextPage, isLoading, status } = useInfiniteQuery(
@@ -438,7 +438,7 @@ const error = err as Error & { data?: { message?: string } };
 `CRPCClientError` — thrown client-side when queries are skipped (auth):
 
 ```ts
-import { CRPCClientError, isCRPCClientError, isCRPCErrorCode } from 'better-convex/crpc';
+import { CRPCClientError, isCRPCClientError, isCRPCErrorCode } from 'kitcn/crpc';
 
 if (isCRPCClientError(error)) {
   error.code;         // 'UNAUTHORIZED'
@@ -491,7 +491,7 @@ type OrgMember = ApiOutputs['organization']['members']['list'][number]; // array
 ```ts
 // src/lib/convex/server.ts
 import { api } from '@convex/api';
-import { convexBetterAuth } from 'better-convex/auth/nextjs';
+import { convexBetterAuth } from 'kitcn/auth/nextjs';
 
 export const { createContext, createCaller, handler } = convexBetterAuth({
   api,
@@ -532,7 +532,7 @@ export const { GET, POST } = handler;
 ```tsx
 // src/lib/convex/rsc.tsx
 import 'server-only';
-import { createServerCRPCProxy, getServerQueryClientOptions } from 'better-convex/rsc';
+import { createServerCRPCProxy, getServerQueryClientOptions } from 'kitcn/rsc';
 import { cache } from 'react';
 import { headers } from 'next/headers';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';

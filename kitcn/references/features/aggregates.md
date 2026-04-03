@@ -7,7 +7,7 @@ Canonical runtime rules:
 - Use ORM scalar metrics (`aggregateIndex` + `count()`/`aggregate()`) for counts, sums, averages
 - Use `_count` relation loading instead of per-row `.count()` fanout loops
 - Use `rankIndex` + `rank()` for rankings, random access, sorted pagination
-- `aggregateIndex` and `rankIndex` backfill automatically via `better-convex dev` — no manual trigger wiring needed
+- `aggregateIndex` and `rankIndex` backfill automatically via `kitcn dev` — no manual trigger wiring needed
 
 ## ORM Scalar Metrics
 
@@ -307,7 +307,7 @@ rankIndex("global_scores")
 If rank or aggregate state gets out of sync:
 
 ```bash
-better-convex aggregate rebuild
+kitcn aggregate rebuild
 ```
 
 ## When to Use

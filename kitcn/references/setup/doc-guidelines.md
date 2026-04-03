@@ -1,12 +1,12 @@
 # Convex Docs Sync Contract (WWW -> Skill)
 
-This file is the normative process spec for syncing better-convex docs into the Convex skill docs.
+This file is the normative process spec for syncing kitcn docs into the Convex skill docs.
 
 ## 1. Purpose
 
 Keep skill docs as a compressed mirror of `www` docs:
 
-1. Lossless for better-convex/Convex-specific deltas.
+1. Lossless for kitcn/Convex-specific deltas.
 2. Compressed for parity content AI already knows.
 3. Strictly separated by setup vs core feature work vs advanced resources.
 
@@ -14,11 +14,11 @@ Keep skill docs as a compressed mirror of `www` docs:
 
 Primary source:
 
-- `/Users/zbeyens/GitHub/better-convex/www/content/docs/**`
+- `/Users/zbeyens/GitHub/kitcn/www/content/docs/**`
 
 Discovery source:
 
-- All `meta.json` trees under `/Users/zbeyens/GitHub/better-convex/www/content/docs/**`
+- All `meta.json` trees under `/Users/zbeyens/GitHub/kitcn/www/content/docs/**`
 
 Contract:
 
@@ -32,7 +32,7 @@ Baseline assumption: AI already knows tRPC + Drizzle + Better Auth semantics whe
 
 Keep (must keep):
 
-1. better-convex-specific runtime behavior.
+1. kitcn-specific runtime behavior.
 2. Convex constraints, limits, and operational caveats.
 3. Integration gotchas and edge cases.
 4. Non-obvious snippets that encode real behavioral differences.
@@ -41,7 +41,7 @@ Keep (must keep):
 Drop or condense (must condense):
 
 1. Pure parity explanations identical to vanilla tRPC/Drizzle/Better Auth.
-2. Repeated introductory theory when no better-convex delta exists.
+2. Repeated introductory theory when no kitcn delta exists.
 
 Snippet policy:
 
@@ -127,7 +127,7 @@ rg -n "create-next-app|Installation|convex\\.json|\\.env|env sync|one-time setup
 Reject updates that:
 
 1. Mix setup/bootstrap instructions into `SKILL.md`.
-2. Explain parity basics in depth with no better-convex delta.
+2. Explain parity basics in depth with no kitcn delta.
 3. Use hollow placeholders (`see docs`) without enough operational guidance.
 4. Duplicate large snippets across setup/core/resources.
 5. Move advanced niche depth into core and bloat always-loaded context.
@@ -138,7 +138,7 @@ Before merging doc sync changes:
 
 1. Synced from `www` + `meta.json` traversal.
 2. Classified every moved section (`setup/core/resource/parity-drop`).
-3. Preserved all better-convex/Convex deltas.
+3. Preserved all kitcn/Convex deltas.
 4. Removed or compressed parity-only explanation.
 5. Enforced destination matrix with no overlap.
 6. Updated coverage matrix and parity-drop rationale.

@@ -12,8 +12,8 @@ Prerequisite:
 import type { Auth } from "@convex/auth-shared";
 import { adminClient, inferAdditionalFields } from "better-auth/client/plugins";
 import { createAuthClient } from "better-auth/react";
-import { convexClient } from "better-convex/auth/client";
-import { createAuthMutations } from "better-convex/react";
+import { convexClient } from "kitcn/auth/client";
+import { createAuthMutations } from "kitcn/react";
 
 export const authClient = createAuthClient({
   baseURL: process.env.NEXT_PUBLIC_SITE_URL!,
@@ -45,7 +45,7 @@ import {
   QueryCache,
   QueryClient,
 } from "@tanstack/react-query";
-import { isCRPCClientError, isCRPCError } from "better-convex/crpc";
+import { isCRPCClientError, isCRPCError } from "kitcn/crpc";
 import SuperJSON from "superjson";
 
 export const hydrationConfig: Pick<DefaultOptions, "dehydrate" | "hydrate"> = {
@@ -93,7 +93,7 @@ Preconditions:
 
 ```tsx
 import { api } from "@convex/api";
-import { createCRPCContext } from "better-convex/react";
+import { createCRPCContext } from "kitcn/react";
 
 export const { CRPCProvider, useCRPC, useCRPCClient } = createCRPCContext({
   api,
@@ -114,13 +114,13 @@ Hard rule:
 "use client";
 
 import { QueryClientProvider as TanstackQueryClientProvider } from "@tanstack/react-query";
-import { ConvexAuthProvider } from "better-convex/auth/client";
+import { ConvexAuthProvider } from "kitcn/auth/client";
 import {
   ConvexReactClient,
   getConvexQueryClientSingleton,
   getQueryClientSingleton,
   useAuthStore,
-} from "better-convex/react";
+} from "kitcn/react";
 import type { ReactNode } from "react";
 
 import { authClient } from "./auth-client";
