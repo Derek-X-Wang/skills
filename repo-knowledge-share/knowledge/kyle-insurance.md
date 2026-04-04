@@ -2,7 +2,7 @@
 name: kyle-insurance
 repo: Derek-X-Wang/kyle-insurance
 description: Insurance agent management platform with multi-level hierarchy, commission tracking, and agent portal
-last_scanned: 2026-04-03
+last_scanned: 2026-04-04
 ---
 
 ## Tech Stack
@@ -67,10 +67,20 @@ use-intl with `packages/i18n` shared package. TanStack Router `{-$locale}` optio
 - Key file: `apps/web/src/components/locale-switcher.tsx`
 
 ### AI Insurance Chatbot
-Streaming chat via @convex-dev/agent with OpenRouter. Rate-limited for public vs authenticated users (warns when visitorIp missing). Persistent threads in localStorage. Floating widget on all portal pages with accessible labels. Thread-level auth documented as architecturally limited (component tables can't be queried from app code).
+Streaming chat via @convex-dev/agent with OpenRouter. `startThread` is a cRPC `optionalAuthMutation`, `sendMessage` is a cRPC `optionalAuthAction` with direct `Ratelimit` class usage (middleware doesn't apply to actions). `listMessages` stays as raw Convex `query()` because `useUIMessages` from `@convex-dev/agent/react` requires raw Convex query references for streaming/pagination. Persistent threads in localStorage. Floating widget on all portal pages. Thread-level auth is architecturally limited (component tables can't be queried from app code). Client-side `useRatelimit()` hook provides disabled button + countdown UX when rate limited.
 - Key file: `packages/backend/convex/functions/chat.ts`
 - Key file: `packages/backend/convex/functions/chatAction.ts`
 - Key file: `apps/web/src/components/chat-widget.tsx`
+- Key file: `apps/web/src/routes/_portal/chat.tsx`
+
+### Tiered Rate Limiting (kitcn/ratelimit)
+Migrated from `@convex-dev/rate-limiter` (Convex component) to `kitcn/ratelimit` (built-in plugin with local schema tables). Three-tier system: public (unauthenticated), free (authenticated), premium (admin). Middleware-based rate limiting on all cRPC mutation builders (auth middleware runs first, rate limit middleware second so `getUserTier()` can read `ctx.user`). Queries are NOT rate limited (reads are cheap, real-time subscriptions would thrash limits). Chat actions use `Ratelimit` class directly since action context doesn't get mutation middleware. Public chat has stacked limits (5/min + 20/hr + 50/day) with sequential short-circuit to avoid burning higher-tier quota. Rate limit values are consolidated in `CHAT_LIMITS` constant exported from the plugin. Client-side `useRatelimit()` hook uses string-based query references to `hookAPI()` exports — two separate hooks for public (5/min) and auth (30/min) tiers. Schema extension via `defineSchemaExtension()` adds `ratelimitState`, `ratelimitDynamicLimit`, `ratelimitProtectionHit` tables.
+- Key file: `packages/backend/convex/lib/plugins/ratelimit/plugin.ts` (bucket config, tier resolution, CHAT_LIMITS)
+- Key file: `packages/backend/convex/lib/plugins/ratelimit/schema.ts` (schema extension)
+- Key file: `packages/backend/convex/lib/crpc.ts` (middleware wiring)
+- Key file: `packages/backend/convex/functions/chatAction.ts` (direct Ratelimit usage in action)
+- Key file: `packages/backend/convex/functions/ratelimit.ts` (hookAPI exports for client UX)
+- Spec: `docs/superpowers/specs/2026-04-03-ratelimit-migration-design.md`
 
 ### Insurance Calculator
 Client-side coverage estimator based on age, income, gender, marital status, and goals. Calculates recommended coverage, IUL premiums, annuity premiums, and death benefit. Input validation prevents NaN results.
@@ -82,9 +92,10 @@ Both admin and portal sidebars toggle between full width (w-64) and icon-only mo
 - Key file: `apps/web/src/routes/_portal.tsx`
 
 ### cRPC Type-Safe API Layer
-kitcn cRPC provides typed procedure builders (publicQuery, authMutation, adminMutation, etc.) with Zod input validation and SessionUser typing. Frontend consumes via `useCRPC()` hook + TanStack Query. Middleware adds `userId` to ctx but kitcn's generated types don't reflect middleware extensions — `getUserId()` helper uses `Record<string, any>` with runtime validation.
+kitcn cRPC provides typed procedure builders (publicQuery, authMutation, adminMutation, optionalAuthAction, etc.) with Zod input validation and SessionUser typing. All mutation builders have rate limit middleware chained after auth middleware. Frontend consumes via `useCRPC()` hook + TanStack Query. Middleware adds `userId` to ctx but kitcn's generated types don't reflect middleware extensions — requires `(ctx as any).userId` casts. Raw Convex functions (like `listMessages`) that use `mutation()`/`query()` directly are accessed via `@convex/convex-api` import (re-exports raw `_generated/api`), while cRPC procedures use `@convex/api`.
 - Key file: `packages/backend/convex/lib/crpc.ts`
 - Key file: `packages/backend/convex/lib/helpers.ts`
+- Key file: `packages/backend/convex/shared/convex-api.ts` (raw API re-export)
 - Key file: `apps/web/src/lib/convex/crpc.tsx`
 
 ### Resource Library with File Storage
