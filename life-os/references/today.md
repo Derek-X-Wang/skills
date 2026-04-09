@@ -28,13 +28,66 @@ Skip files that are empty placeholders (just an `_Not yet populated_` line).
 ## Step 2: Check Project Repos
 
 For each active project listed in `projects.md` that has a repo path:
-1. `git log --oneline -5` in the repo — what was last worked on?
-2. `git status` — any uncommitted work?
-3. `git branch` — what branch?
 
-This tells you the **real** state of each project, not just what the planning docs say.
+1. Read the "Last Checked" hash from `projects.md`
+2. In the project repo:
+   ```bash
+   cd <repo-path>
+   git fetch origin
+   # If we have a last-checked hash, show only new commits
+   git log <last-hash>..HEAD --oneline  # or git log -5 if no hash
+   git status
+   git branch
+   ```
+3. Check for completed OS tasks:
+   ```bash
+   git log <last-hash>..HEAD --grep="Completed OS task" --oneline
+   ```
+4. Check for pending OS tasks:
+   ```bash
+   ls inbox/os-*.md 2>/dev/null
+   ```
+
+This tells you the **real** state, what's new since last check, and whether dispatched tasks were completed.
 
 Also read the project's wiki page (`wiki/<project>.md`) for backlog items and current focus.
+
+## Step 2.5: Dispatch Tasks to Project Repos (optional)
+
+If the daily plan includes concrete tasks for a project, consider dropping a task file in the project repo's inbox:
+
+```bash
+# File: <repo>/inbox/os-YYYY-MM-DD-<slug>.md
+```
+
+Format:
+```markdown
+# <Task Title>
+
+**From:** Life OS
+**Date:** YYYY-MM-DD
+**Priority:** must-do | should-do
+
+## Context
+[Why this matters, what state the project is in]
+
+## Acceptance Criteria
+- [ ] Concrete, verifiable outcome
+- [ ] Another outcome
+
+## References
+- Wiki: [[wiki/<project>]]
+```
+
+Only dispatch tasks when the user confirms the plan. Don't auto-dispatch.
+
+## Step 2.6: Update Last Checked Hash
+
+After inspecting each project repo, update the "Last Checked" column in `projects.md` with the current HEAD hash and today's date:
+
+```markdown
+| ContextFS | In dev | `abc1234` (04-08) | `~/Development/incubator/ContextFS/ctxfs` |
+```
 
 ## Step 3: Interactive Prioritization
 
@@ -115,7 +168,7 @@ Overwrite `today.md` with the day's plan. If it already exists, read it first �
 
 ```bash
 cd /Users/derekxwang/Development/projects/DXW/mono/os
-git add today.md
+git add today.md projects.md
 git commit -m "chore(os): daily note update"
 git push
 ```
