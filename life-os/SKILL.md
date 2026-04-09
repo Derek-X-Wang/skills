@@ -1,131 +1,91 @@
 ---
 name: life-os
-description: Life OS daily operator and planning system. Manages the OS folder (Obsidian vault) at /Users/derekxwang/Development/projects/DXW/mono/os. Use when the user invokes /today, /ingest, /lint, /remember, or /status. Also use when the user says "remember this", "save this", "what should I do today", "process inbox", "health check", or similar life management phrases. This skill is synced to ~/.claude/skills/ so it works from any project.
+description: >
+  Use this skill when the user wants to plan their day, track personal goals, manage side projects,
+  process captured notes or ideas, or check on life priorities — even if they don't mention "life OS"
+  directly. Triggers on /today, /ingest, /lint, /remember, /status, or phrases like "what should I
+  work on", "remember this", "save this for later", "what's my focus", "process inbox", "how are my
+  goals", "update my projects", "health check the system", or any mention of life pillars (health,
+  financial freedom, MoXiang). Works from any project directory.
 ---
 
-# Life OS — Personal Operating System Skills
+# Life OS
 
-You are the user's life operating system copilot. You help manage daily priorities, planning, and reflection across all life areas.
+Personal operating system copilot. Manages daily priorities, planning, and reflection across all life areas.
 
 ## OS Folder
 
-**All life-os files live in:** `/Users/derekxwang/Development/projects/DXW/mono/os`
+**Path:** `/Users/derekxwang/Development/projects/DXW/mono/os`
 
-This is an Obsidian vault and personal OS repo. **Always use this absolute path when reading or writing files**, especially when invoked from a different project.
+Always use this absolute path, especially when invoked from a different project.
 
-### Git Sync Rule (MANDATORY)
+## Git Sync (MANDATORY)
 
-The OS repo is shared with other agents (e.g., cron jobs). **Always keep it in sync:**
-
-1. **Before reading or editing** any OS files: `cd <OS folder> && git pull --ff-only`
-2. **After editing** OS files: stage, commit, and `git push`
+The OS repo is shared with cron agents. **Always sync before reading and after writing:**
 
 ```bash
 # Before any OS operation
 cd /Users/derekxwang/Development/projects/DXW/mono/os && git pull --ff-only
 
-# After edits are done
-cd /Users/derekxwang/Development/projects/DXW/mono/os && git add <changed files> && git commit -m "chore(os): <description>" && git push
+# After edits
+git add <changed files> && git commit -m "chore(os): <description>" && git push
 ```
-
-**Never skip this.** Stale reads cause wrong daily briefings. Unpushed writes are invisible to cron agents.
 
 ## Architecture
 
-The OS has three layers:
+Three layers — read `.claude/CLAUDE.md` in the OS folder for full schema details.
 
-### Hot Cache (root `*.md` files)
+**Hot cache** (root `*.md`): `today.md`, `goals.md`, `finance.md`, `health.md`, `projects.md`, `study.md`, `career.md`, `family.md`. Snapshot of NOW, 1-2 pages max, links to wiki/ for depth.
 
-Snapshot of NOW for each life area. 1-2 pages max. Links to `wiki/` for depth. Rewritten frequently by the LLM.
+**Wiki** (`wiki/*.md`): Accumulated knowledge. Read `wiki/index.md` first. Update it + append to `wiki/log.md` on every change. Binary files go in `wiki/assets/`.
 
-| File | Area |
-|------|------|
-| `today.md` | Daily plan + log (overwritten each morning) |
-| `goals.md` | Life pillars + quarterly targets (north star) |
-| `finance.md` | Current portfolio, pending decisions |
-| `health.md` | Current weight, active habits |
-| `projects.md` | All projects and their status |
-| `study.md` | Current courses, MoXiang progress |
-| `career.md` | Job context, opportunities |
-| `family.md` | Errands, family health, commitments |
+**Inbox** (`inbox/`): Raw drop zone. Processed by `/ingest` — markdown deleted after processing, binaries moved to `wiki/assets/`.
 
-**Rule:** Hot cache = snapshot of NOW (what, not why). If it changes every week and only the latest matters → hot cache. If you need to look back → wiki.
+## Life Pillars
 
-### Wiki (`wiki/*.md`)
+Always read `goals.md` for current state. Priority order:
+1. **Health** — always include at least one action (walk, weigh-in, meal prep)
+2. **Financial Freedom** — ship side projects, revenue potential > perfection
+3. **MoXiang** — bonus, fit in when pillars 1-2 are on track
 
-Accumulated knowledge. Entity pages, decision records, research, time-series data (weight log, budgets, position history). The LLM owns this layer.
+## Operating Procedure
 
-- **`wiki/index.md`** — Master TOC. **Read this first** to orient yourself. Update it whenever you create/modify a wiki page.
-- **`wiki/log.md`** — Append-only changelog. Format: `## [YYYY-MM-DD] verb | subject`
-- **`wiki/assets/`** — Binary files (PDFs, images) preserved from inbox.
-- **`wiki/*.md`** — Flat folder, lowercase-hyphen naming. No subfolders except `assets/`.
-- Use `[[wikilinks]]` for cross-references.
+For any update to the OS:
 
-### Inbox (`inbox/`)
-
-Raw drop zone. User dumps anything here (markdown, PDFs, images, brain dumps). Processed by `/ingest`:
-- Markdown files → deleted after processing (git preserves)
-- Binary files → moved to `wiki/assets/`
-
-## Life Pillars (North Star)
-
-Every decision and daily plan should serve these three goals. **Always read `goals.md` for the latest state.**
-
-| Priority | Pillar | Goal |
-|----------|--------|------|
-| 1 | **Health** | Lose weight (210 → 175 lbs) |
-| 2 | **Financial Freedom** | Side income ($0 → $1k/mo → $10k/mo) |
-| 3 | **Chinese Medicine** | Write MoXiang (摸象) book |
-
-### Pillar Rules for Daily Planning
-
-- **Health is the foundation.** Every day should include at least one health action, even small (walk, meal prep, weigh-in).
-- **Financial freedom is the priority.** Side projects should be evaluated by revenue potential. Ship > perfect.
-- **Study is a bonus.** Fit it in when pillars 1-2 are on track. This is a lifelong pursuit, no rush.
-- At end of day: "Did I move at least one pillar forward?"
-
-## Persistent Memory
-
-Claude's auto-memory (`MEMORY.md` in the project memory directory) is loaded automatically at the start of every session. It contains project repo paths, active decisions, learnings, and preferences. **You do not need to read it manually — it's already in your context.**
-
-## Operating Rules
-
-When updating any wiki page or hot cache:
-1. Pull latest first
+1. `git pull --ff-only`
 2. Read `wiki/index.md` to orient
 3. Read relevant hot cache + wiki pages
 4. Make changes
-5. Update `wiki/index.md` if any wiki page was touched
-6. Append to `wiki/log.md`
+5. If wiki page touched → update `wiki/index.md` + append to `wiki/log.md`
+6. If project wiki page → inspect actual codebase (`git log -5`, `git status` in the project repo)
 7. Commit + push
-
-When updating a project wiki page, **inspect the actual codebase** if the repo path is known:
-- `git log --oneline -5` in the project repo
-- `git status` and `git branch`
-- Reference specific files and real state, not stale planning docs
 
 ## Command Dispatch
 
-When this skill is invoked, determine which command the user wants based on their input:
+| User says | Command | Load |
+|-----------|---------|------|
+| `/today`, "what should I do today", "plan my day" | today | `references/today.md` |
+| `/ingest`, "process inbox", "file these notes" | ingest | `references/ingest.md` |
+| `/lint`, "health check", "check the system" | lint | `references/lint.md` |
+| `/remember`, "remember this", "save this" | remember | `references/remember.md` |
+| `/status`, "where am I", "recap", "what's my focus" | status | `references/status.md` |
 
-| User says | Command | Reference file |
-|-----------|---------|----------------|
-| `/today` or "what should I do today" | today | `references/today.md` |
-| `/ingest` or "process inbox" | ingest | `references/ingest.md` |
-| `/lint` or "health check" or "check the system" | lint | `references/lint.md` |
-| `/remember` or "remember this" or "save this" | remember | `references/remember.md` |
-| `/status` or "where am I" or "recap" | status | `references/status.md` |
+Read the reference file and follow it exactly.
 
-For each command: read the appropriate reference file and follow its instructions exactly.
+For natural conversation about projects, goals, or life areas — follow the operating procedure above. Common patterns:
 
-### Natural Conversation
+| Intent | Action |
+|--------|--------|
+| New project idea | Create `wiki/<name>.md` + update `projects.md` + index + log |
+| Plan next sprint for X | Read `wiki/x.md` + check repo → update "Current Focus" + `projects.md` |
+| Log outcome for X | Update `wiki/x.md` outcomes + hot cache + log |
+| Add backlog items | Update backlog section of `wiki/<name>.md` + log |
 
-If the user's intent doesn't match a specific command but is about their life OS, follow the operating rules above. Common patterns:
+## Gotchas
 
-| User says | What to do |
-|-----------|-----------|
-| "I have a new project idea called X" | Create `wiki/x.md`, update `projects.md`, update `wiki/index.md` + `wiki/log.md` |
-| "What should the next 2 weeks look like for X?" | Read `wiki/x.md` + check repo state, update "Current Focus" section + `projects.md` |
-| "X: shipped feature Y, got Z result" | Update `wiki/x.md` outcomes section + relevant hot cache + `wiki/log.md` |
-| "Add to X backlog: need A, B, C" | Update backlog section of `wiki/x.md` + `wiki/log.md` |
-| "What's my investment thesis right now?" | Read `finance.md` + relevant wiki pages, synthesize answer |
+- **Always git pull first.** Cron agents update `today.md` overnight. If you read stale state, you'll generate a plan that conflicts with what's already there.
+- **Don't overwrite today.md mid-day.** If it already exists for today, read it first and carry forward unfinished items. Only overwrite on a fresh `/today` run.
+- **Hot cache files are NOT the source of truth for history.** They change constantly. If the user asks "what was my weight last month?" — check `wiki/weight-log.md`, not `health.md`.
+- **Project wiki pages can drift from reality.** Always inspect the actual codebase (`git log`, `git status`) before writing tasks or status updates about a project.
+- **wiki/index.md is the nav layer.** If you create a wiki page but forget to add it to the index, the next agent won't find it. Always update the index.
+- **Binary files from inbox go to `wiki/assets/`, not deleted.** Git history is a poor retrieval mechanism for PDFs and images.
