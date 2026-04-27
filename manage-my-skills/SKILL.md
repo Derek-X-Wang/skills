@@ -38,6 +38,7 @@ Determine the user's intent:
 | "create skill X", "new skill X" | Create a new skill |
 | "install skill X", "add skill X" | Install a skill locally (skip edit/push) |
 | "install all", "sync skills" | Install all skills locally |
+| "remove skill X", "delete skill X" | Delete a skill from repo + uninstall locally |
 | "list skills" | List available skills in the repo |
 
 ## Workflow: Edit / Create a Skill
@@ -106,6 +107,42 @@ npx skills add Derek-X-Wang/skills --skill <skill-name> -g -y -a claude-code -a 
 
 ```bash
 npx skills add Derek-X-Wang/skills -g -y --all -a claude-code -a windsurf -a antigravity -a codex -a gemini-cli -a opencode
+```
+
+## Workflow: Remove / Delete a Skill
+
+### Step 1: Pull latest
+
+```bash
+cd /Users/derekxwang/Development/projects/DXW/tools/skills && git pull
+```
+
+### Step 2: Delete and push
+
+```bash
+cd /Users/derekxwang/Development/projects/DXW/tools/skills
+git rm -r <skill-name>/
+git commit -m "chore: remove <skill-name> skill"
+git push
+```
+
+### Step 3: Uninstall locally
+
+Remove the installed copy from all target agents:
+
+```bash
+npx skills remove -g -y -s <skill-name> -a claude-code -a windsurf -a antigravity -a codex -a gemini-cli -a opencode
+```
+
+Confirm `~/.claude/skills/<skill-name>/` no longer exists.
+
+### Step 4: Report
+
+```
+Skill removed: <skill-name>
+  Commit: <hash>
+  Pushed: github.com/Derek-X-Wang/skills
+  Uninstalled from: claude-code, windsurf, antigravity, codex, gemini-cli, opencode
 ```
 
 ## Workflow: List Skills
