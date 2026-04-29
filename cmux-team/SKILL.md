@@ -166,6 +166,73 @@ If the project has no `.gitignore`, create one at the repo root and add the entr
 - **Pre-approve common permissions.** Teammate permission requests bubble up to the lead and create friction. Either set `--dangerously-skip-permissions` for the team session or pre-allow common operations in `.claude/settings.local.json`.
 - **Shut the team down explicitly when done** — see `SendMessage({type: "shutdown_request"})` above. Otherwise teammates linger in the cmux layout.
 
+## Rotating teammates as context degrades
+
+Long-running teams (multi-task milestones, multi-day debugging loops) hit a problem the cmux harness doesn't solve for you: each teammate has a fixed context window. An engineer teammate who's executed three substantive tasks can drop below 30% remaining before you notice, then exhaust mid-Task-4 and produce garbage.
+
+**Watch the teammate's context-remaining %.** It surfaces in the cmux panel header. Roughly:
+
+| Remaining | Action |
+|---|---|
+| ≥ 50% | Keep going. |
+| 30%–50% | Plan a rotation at the next clean handoff point (end of current task). |
+| < 30% | Rotate now if a non-trivial task is queued; stretching is risky. |
+
+**Rotate at task boundaries, not mid-task.** A task in flight has un-committed mental state (the engineer's plan-in-progress, the partial test, the half-thought-through edge case). Rotating mid-task forces the new teammate to reconstruct that state from terse handoff text — slow and error-prone. Wait for the current task to commit + reviewers to approve, then swap.
+
+**Reviewers usually don't need to rotate.** Spec/quality reviewers do small, self-contained scans per commit; their context grows slowly. Engineers, planners, and any teammate that *produces* output rotate first.
+
+**Handoff doc shape (~30 lines, drop under `docs/<milestone>-handoffs/<role>-T<n>.md`):**
+
+```markdown
+# <Role> handoff — after Task <n>
+
+**Last commit (HEAD):** <sha> — <subject>
+**Status:** <closed / blocked / mid-flight>; <reviewer outcomes>
+
+## What landed in <sha>
+- <files touched>
+- <key decisions / deviations>
+- <tests added>
+
+## Carry-forward minors (fold into Task <n+1>)
+1. <issue + recommended fix>
+2. <issue + recommended fix>
+
+## Next: Task <n+1>
+**Plan reference:** <path>:<line range>
+**Scope:** <one paragraph>
+**Items to create/modify:** <bullet list>
+**Tests:** <bullet list>
+**No-touch:** <areas this task explicitly does NOT change>
+
+## Read order for fresh teammate
+1. `.claude/agents/<role>.md`
+2. This handoff
+3. <plan §>
+4. <relevant code files for style reference>
+
+## Constraints
+<repo-level invariants the new teammate must internalize: lint config, lock-file rules, B-constraints, tag-push policies, ignored test failures>
+
+## Acknowledge
+Reply with `READY_FOR_TASK_<n+1>` + clarifying questions before starting.
+```
+
+**Rotation procedure (in order):**
+
+1. Wait for the current task to commit + both reviewers to approve.
+2. Write the handoff doc to a milestone-scoped folder. Don't put it in CLAUDE.md or other always-loaded locations — it's transient.
+3. Send `SendMessage({to: "<teammate>", message: {type: "shutdown_request"}})` to the outgoing teammate.
+4. Spawn the replacement with `Agent({..., name: "<same role name>", prompt: "Read <handoff path> first, then reply READY_FOR_TASK_<n+1>"})`. cmux usually re-uses the role name; if the slot is held it auto-renames to `<role>-2` — accept it.
+5. Wait for the new teammate's `READY_*` reply before dispatching the next task.
+
+**The handoff doc is the contract.** A fresh teammate with no conversation history must reach equivalent operating capacity from the doc + the agent definition + the milestone plan. If the doc misses something, the next teammate's clarifying questions will surface it — fix the doc and re-spawn.
+
+**Track handoffs in git.** Even if the milestone-handoffs folder is small, commit it. Future debugging ("why did Task 4 drop test coverage?") benefits from the breadcrumb trail.
+
+## Anti-patterns
+
 ## Anti-patterns
 
 - ❌ Manually invoking `tmux split-window` to create a panel. Use `Agent` with `team_name`; cmux handles the panel.
