@@ -45,9 +45,33 @@ For each item, determine where it belongs:
 | General idea/thought | Update the most relevant hot cache or wiki page |
 | Life goal or priority | Update `goals.md` |
 
+### New Wiki Page Skeleton
+
+Every new wiki page starts with YAML frontmatter:
+
+```markdown
+---
+type: Reference
+title: Page Title
+description: One-sentence summary of what this page holds.
+tags: [topic, ai-tools]
+timestamp: 2026-07-01T09:00:00-07:00
+---
+
+# Page Title
+...
+```
+
+- `type` is required — one of: `Project`, `Time-series Log`, `Study Topic`, `Reference` (extend only if none fits)
+- `timestamp` is ISO 8601, set to now
+- `Project` pages carry exactly one status tag: `active`, `planned`, or `archived`
+- No all-numeric tags (every tag needs at least one non-numeric char); use `ai-tools`, not synonyms
+- Links are relative markdown only: `[health](../health.md)` for root files, `[Other Page](other-page.md)` for wiki-internal. Never `[[wikilinks]]`, never leading-slash `(/wiki/x.md)` paths
+- When updating an existing page, bump `timestamp`
+
 Follow the operating rules from SKILL.md:
-- Update `wiki/index.md` if any wiki page was created or significantly modified
-- Append to `wiki/log.md` for each item processed
+- Add every new wiki page to `wiki/index.md` as `* [Title](page.md) - description` (description copied from the page's frontmatter, trailing period trimmed); update the entry if a page's description changed
+- Log to `wiki/log.md` for each item processed: find or create today's `## YYYY-MM-DD` heading at the top of the entry list, append a `* **Verb**: <summary>` bullet under it (prefer verbs Plan/Update/Add/Creation)
 
 ## Step 5: Clean Up Inbox
 

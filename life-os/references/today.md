@@ -76,7 +76,7 @@ Format:
 - [ ] Another outcome
 
 ## References
-- Wiki: [[wiki/<project>]]
+- Wiki: [<project>](wiki/<project>.md) — in the OS repo
 ```
 
 Only dispatch tasks when the user confirms the plan. Don't auto-dispatch.
@@ -104,6 +104,8 @@ Ask the user 1-2 questions using AskUserQuestion:
 ## Step 4: Write today.md
 
 Overwrite `today.md` with the day's plan. If it already exists, read it first — carry forward any unfinished items worth keeping.
+
+`today.md` is a root hot cache outside the OKF bundle: NO YAML frontmatter. Any link to a wiki page uses relative markdown form (`[Project](wiki/<project>.md)`) — never `[[wikilinks]]`, never leading-slash paths.
 
 ### Format
 

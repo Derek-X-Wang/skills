@@ -37,9 +37,20 @@ Three layers — read `.claude/CLAUDE.md` in the OS folder for full schema detai
 
 **Hot cache** (root `*.md`): `today.md`, `goals.md`, `finance.md`, `health.md`, `projects.md`, `study.md`, `career.md`, `family.md`. Snapshot of NOW, 1-2 pages max, links to wiki/ for depth.
 
-**Wiki** (`wiki/*.md`): Accumulated knowledge. Read `wiki/index.md` first. Update it + append to `wiki/log.md` on every change. Binary files go in `wiki/assets/`.
+**Wiki** (`wiki/*.md`): Accumulated knowledge. Read `wiki/index.md` first. Update it + log to `wiki/log.md` on every change. Binary files go in `wiki/assets/`.
 
 **Inbox** (`inbox/`): Raw drop zone. Processed by `/ingest` — markdown deleted after processing, binaries moved to `wiki/assets/`.
+
+## Wiki Conventions (OKF v0.1)
+
+`wiki/` is an OKF v0.1 bundle (Open Knowledge Format; `okf_version` declared in `wiki/index.md`). Root hot caches are outside the bundle — no frontmatter on them.
+
+- **Frontmatter:** Every non-reserved wiki page starts with YAML frontmatter — required `type` (Project, Time-series Log, Study Topic, Reference — extend only if none fits); recommended title, description (one sentence), tags, timestamp (ISO 8601). Bump `timestamp` on meaningful changes. `index.md` and `log.md` are reserved — no frontmatter (except index.md's `okf_version`).
+- **Links:** Standard relative markdown links everywhere. From root files: `[Weight Log](wiki/weight-log.md)`. From wiki pages: `[health](../health.md)`, `[Other Page](other-page.md)`. Never `[[wikilinks]]`, never leading-slash `(/wiki/x.md)` paths.
+- **Log:** In `wiki/log.md`, find or create today's `## YYYY-MM-DD` heading at the top of the entry list, append a `* **Verb**: <summary>` bullet under it (prefer verbs Plan/Update/Add/Creation).
+- **Index:** Entries are `* [Title](page.md) - description`, description synced from the page's frontmatter.
+
+Details (page skeleton, tag rules, lint checks) live in the reference files.
 
 ## Life Pillars
 
