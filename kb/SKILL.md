@@ -42,7 +42,7 @@ The OS repo is shared with cron agents. Always `git pull --ff-only` before readi
 At the start of EVERY invocation:
 
 1. Read `~/.config/kb.json`; match cwd against `projects[*].localPath`.
-2. If matched: freshness is judged from the wiki page's frontmatter `timestamp` (global truth). `lastScanTime` in config is a per-machine cache only. If older than `staleDays` (per-project override allowed): run **scan** first, then the original request.
+2. If matched: freshness is judged by the last real scan, not the raw frontmatter `timestamp` — migrations/reformats can re-stamp timestamps without refreshing content. Authoritative check: the most recent `chore(os): scan <slug> knowledge` commit (or `scan <slug>` bullet in wiki/log.md); fall back to the page timestamp only if neither exists. `lastScanTime` in config is a per-machine cache only. If older than `staleDays` (per-project override allowed): run **scan** first, then the original request.
 3. If not matched: offer to register (see sync-registry) before proceeding.
 
 ## Wiki Page Contracts
@@ -101,10 +101,13 @@ Adoption states: `canonical` (defining implementation), `adopted`, `pending` (ge
 1. Identify project via config; register first if unknown.
 2. Read project signals in order: CLAUDE.md/AGENTS.md → package manifests → directory structure → key configs (auth, schema, routes, CI) → `git log --oneline -30`. Drill into source until every feature entry is specific and confident.
 3. `git pull --ff-only` in the OS repo. Rewrite ONLY the marker-fenced region of `wiki/<slug>.md`. Bump frontmatter `timestamp`.
-4. Link features to existing pattern pages (read `wiki/index.md` → Patterns section). For each pattern this project relates to, update its adoption row evidence (`Last seen`, and `Last verified` when you actually confirmed the implementation matches the pattern).
+4. Link features to existing pattern pages (read `wiki/index.md` → Patterns section). For each pattern this project relates to, update its adoption row evidence (`Last seen`, and `Last verified` when you actually confirmed the implementation matches the pattern). Match adoption rows by exact slug/link — beware near-identical slugs (e.g. `rxweave` vs `rxweave-cloud` are different projects).
 5. Pattern proposal: if a capability now appears in 2+ projects, or this scan found a clearly reusable upgrade, PROPOSE promotion to the user (name, description, canonical project, candidate adopters). Create the pattern page only after user confirms. Never auto-create.
 6. Update `wiki/index.md` descriptions if changed. Append to `wiki/log.md` ONLY if page content actually changed (no-op scans don't log).
 7. Commit `chore(os): scan <slug> knowledge` + push. Update `lastScanTime` in local config.
+
+### Feature ordering
+Group Features by architectural layer (core → protocol → apps/tooling) when the existing list already reads that way; otherwise append new features at the end. Don't reshuffle existing entries just to insert one.
 
 ### Feature granularity
 
