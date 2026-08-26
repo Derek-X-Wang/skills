@@ -20,7 +20,7 @@ Detect the route in this order:
 
 1. Trust injected runtime, host, and session metadata.
 2. Inspect the native coordination tools exposed to the current agent.
-3. Inspect relevant environment markers.
+3. Inspect only exact, known non-secret environment markers. Never print an environment or a broad variable prefix.
 4. Check installed host and harness CLIs and their current help.
 5. Ask the orchestrator when running as a worker, or the human when running at top level, only when ambiguity would materially change the work.
 
@@ -35,7 +35,7 @@ Worth delegating?
    └─ no reliable route          → work locally
 ```
 
-Read the matching runtime references before dispatch:
+Read the matching runtime references before any cross-host operation or dispatch:
 
 - [T3 Code host](references/runtimes/t3-code.md)
 - [Orca host](references/runtimes/orca.md)
