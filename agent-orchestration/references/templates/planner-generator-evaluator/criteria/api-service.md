@@ -1,6 +1,6 @@
 # API / Backend Service Quality Criteria
 
-Evaluation rubric for APIs, backend services, and serverless functions (Express, FastAPI, Convex, Hono, etc.). Customize weights during `/harness setup`.
+Starting rubric for APIs and backend services. Select only dimensions that support the approved task contract, and customize weights and evidence requirements for the repository.
 
 ## Dimensions
 
@@ -14,7 +14,7 @@ Are endpoints logical, consistent, and predictable? Do they follow REST/RPC conv
 | 2 | Some consistency but mix of conventions. Confusing endpoint structure. |
 | 3 | Consistent naming and methods. Standard REST/RPC patterns. |
 | 4 | Well-designed API. Good resource hierarchy, proper status codes, pagination. |
-| 5 | Excellent design. Versioning, HATEOAS or equivalent, OpenAPI spec, consistent error format. |
+| 5 | Excellent project-appropriate design with documented contracts, compatibility strategy, and consistent errors. |
 
 ### 2. Data Integrity (Weight: High)
 
@@ -26,7 +26,7 @@ Does the service handle data correctly? Are writes atomic? Are reads consistent?
 | 2 | Basic validation but gaps. Some edge cases cause incorrect data. |
 | 3 | Validation covers common cases. Transactions used for multi-step writes. |
 | 4 | Thorough validation. Atomic operations. Consistent reads. Idempotent where expected. |
-| 5 | Bulletproof data handling. Optimistic concurrency, conflict resolution, audit trail. |
+| 5 | Contracted concurrency, conflict, durability, and audit behavior is verified with strong evidence. |
 
 ### 3. Error Handling (Weight: High)
 
@@ -50,7 +50,7 @@ Authentication, authorization, input validation, rate limiting, injection preven
 | 2 | Auth exists but bypassable or inconsistent. Basic validation only. |
 | 3 | Auth works correctly. Input validated. Common injection vectors blocked. |
 | 4 | Proper auth with role-based access. Parameterized queries. Rate limiting. CORS configured. |
-| 5 | Defense in depth. Auth + authz + audit logging + rate limiting + input sanitization + CSP. |
+| 5 | Project-appropriate defense in depth is verified across trust boundaries and abuse cases. |
 
 ### 5. Performance (Weight: Medium)
 

@@ -18,8 +18,10 @@ npx skills add Derek-X-Wang/skills --skill convex -g
 
 | Skill | Description |
 |-------|-------------|
+| **agent-orchestration** | Harness-aware, hub-and-spoke delegation, review, and multi-agent workflow routing |
 | **better-convex** | Framework-level Convex skill (cRPC, ORM, auth, React) from [udecode/better-convex](https://github.com/udecode/better-convex) |
 | **convex** | Vanilla Convex backend-as-a-service (queries, mutations, actions, schemas) |
+| **git-project-memory** | Git history research and decision-focused commit messages |
 | **life-os** | Personal life OS daily operator and planning system (Obsidian vault) |
 | **canvas-design** | Visual design creation for posters, art, and static pieces |
 | **cmux** | cmux topology and routing control |
@@ -32,6 +34,7 @@ npx skills add Derek-X-Wang/skills --skill convex -g
 | **grill-me** | Stress-test plans and designs through relentless questioning |
 | **pdf** | PDF manipulation, extraction, and form filling |
 | **pptx** | PowerPoint presentation creation and editing |
+| **pr-writing** | Human-readable PR descriptions with product meaning and verification evidence |
 | **skill-creator** | Guide for creating new skills |
 | **slack-gif-creator** | Animated GIF creation optimized for Slack |
 | **xlsx** | Spreadsheet creation, editing, and analysis |

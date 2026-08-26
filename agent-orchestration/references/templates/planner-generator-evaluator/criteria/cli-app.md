@@ -1,6 +1,6 @@
 # CLI Application Quality Criteria
 
-Evaluation rubric for command-line tools and terminal applications (Rust, Go, Python, Node.js CLIs). Customize weights during `/harness setup`.
+Starting rubric for command-line tools. Select only dimensions that support the approved task contract, and customize weights and evidence requirements for the repository.
 
 ## Dimensions
 
@@ -66,13 +66,13 @@ Startup time, execution speed, memory usage. CLIs should feel instant for simple
 
 ### 6. Configuration (Weight: Low)
 
-Does the tool handle config files, environment variables, and flag precedence correctly? (flag > env > config file > default)
+Does the tool handle config files, environment variables, flags, and defaults according to the project's documented precedence?
 
 | Score | Description |
 |-------|-------------|
 | 1 | No configuration support. Everything hardcoded or flag-only. |
 | 2 | Basic config file but inconsistent precedence. |
-| 3 | Config file + env vars + flags work. Precedence is correct. |
+| 3 | Supported configuration sources work with the documented precedence. |
 | 4 | Good config UX. `init` command, validation, helpful defaults. |
 | 5 | Excellent. Config discovery, migration between versions, dry-run to show resolved config. |
 

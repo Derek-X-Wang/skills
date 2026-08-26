@@ -1,6 +1,6 @@
 # Mobile Application Quality Criteria
 
-Evaluation rubric for mobile apps (React Native, Swift, Kotlin, Flutter). Customize weights during `/harness setup`.
+Starting rubric for mobile applications. Select only dimensions that support the approved task contract, and customize weights and evidence requirements for the repository and available devices.
 
 ## Dimensions
 
@@ -26,7 +26,7 @@ Do all features work correctly? State management, data persistence, offline beha
 | 2 | Main flow works. Secondary features buggy. State management issues. |
 | 3 | All features work on happy path. Some edge cases unhandled. |
 | 4 | Reliable across scenarios. Good offline handling. State persists correctly. |
-| 5 | Bulletproof. Offline-first, conflict resolution, background sync, deep links all work. |
+| 5 | Thorough behavior across the contracted online, offline, background, persistence, and deep-link scenarios. |
 
 ### 3. Performance (Weight: High)
 
@@ -38,7 +38,7 @@ App startup time, scroll performance, animation smoothness (60fps), memory usage
 | 2 | Noticeable performance issues in some views. |
 | 3 | Acceptable performance. No major jank. Reasonable startup time. |
 | 4 | Smooth throughout. Fast startup, efficient rendering, lazy loading. |
-| 5 | Highly optimized. 60fps everywhere, instant transitions, minimal memory footprint. |
+| 5 | Measured performance meets the project's startup, animation, memory, and battery targets. |
 
 ### 4. Visual Design (Weight: Medium)
 
@@ -82,3 +82,5 @@ Network failures, permission denials, low storage, interruptions (calls, notific
 - **Battery**: Background task efficiency, location usage, network polling frequency
 - **App Size**: Bundle size, asset optimization, on-demand resources
 - **Deep Linking**: Universal links, app links, deferred deep links
+
+Use `NOT-RUN` for checks that require unavailable devices, operating systems, sensors, stores, or hardware.

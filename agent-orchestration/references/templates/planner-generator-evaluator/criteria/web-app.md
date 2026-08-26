@@ -1,6 +1,6 @@
 # Web Application Quality Criteria
 
-Evaluation rubric for web applications (React, Next.js, Vue, Svelte, etc.). Customize weights and add project-specific dimensions during `/harness setup`.
+Starting rubric for web applications. Select only dimensions that support the approved task contract, and customize weights and evidence requirements for the repository.
 
 ## Dimensions
 
@@ -26,7 +26,7 @@ Does the UI show deliberate creative decisions, or does it default to generic AI
 | 2 | Mostly defaults with minor customization. |
 | 3 | Some original choices but the overall feel is familiar/safe. |
 | 4 | Clear creative direction. Distinctive look that fits the product. |
-| 5 | Memorable design with bold, intentional choices. Doesn't look AI-generated. |
+| 5 | Memorable design with bold, intentional choices that fit the product. |
 
 ### 3. Craft (Weight: Medium)
 
