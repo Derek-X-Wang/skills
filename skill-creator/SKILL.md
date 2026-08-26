@@ -322,14 +322,16 @@ Write instructions for using the skill and its bundled resources.
 Once development of the skill is complete, it must be packaged into a distributable .skill file that gets shared with the user. The packaging process automatically validates the skill first to ensure it meets all requirements:
 
 ```bash
-scripts/package_skill.py <path/to/skill-folder>
+uv run scripts/package_skill.py <path/to/skill-folder>
 ```
 
 Optional output directory specification:
 
 ```bash
-scripts/package_skill.py <path/to/skill-folder> ./dist
+uv run scripts/package_skill.py <path/to/skill-folder> ./dist
 ```
+
+The script declares its Python dependencies with PEP 723. `uv run` installs them in an isolated environment.
 
 The packaging script will:
 
