@@ -85,6 +85,8 @@ human ↔ orchestrator ↔ worker
 
 Relay useful findings between roles. Do not create worker-to-worker channels, even when the harness supports them. A worker session remains a worker session if the human later opens its panel.
 
+Treat reports from workers, reviewers, bots, and status services as claims, not proof. Verify material completion, test, and safety claims from primary evidence when practical. Otherwise attribute the claim and state the limit.
+
 ## Review and integrate
 
 Require independent cross-model review before accepting material production work. Give the reviewer the task contract, diff, verification evidence, and accepted decisions. Do not give it the implementer's chat or self-review.
