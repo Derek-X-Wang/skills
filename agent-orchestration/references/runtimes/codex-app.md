@@ -16,7 +16,7 @@ Treat Codex as a harness that can also expose a native control plane for subagen
 | Native Codex subagent lifecycle | The tools and schemas exposed by the current Codex session |
 | Focused `counsel` review | Load `counsel` and follow its target-verification step |
 | Durable Orca session | Read [orca.md](orca.md), then load the operational skill it names for the chosen action |
-| OpenCode external worker or reviewer | Read [opencode.md](opencode.md), then use the direct or durable route that fits the work shape |
+| OpenCode external worker or reviewer | Read [opencode.md](opencode.md), then use only a route that it currently marks proven for the work shape |
 
 This reference owns Codex capability mapping and coordination invariants. Each operational source owns its current mechanics. Do not infer native tools or model controls that the current session does not expose.
 
