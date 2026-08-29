@@ -9,13 +9,14 @@ Check injected runtime data first. Then inspect `ORCA_TERMINAL_HANDLE`, `TERM_PR
 ## Operational handoff
 
 - Load `orchestration` before Orca task, dispatch, mailbox, wait, ask/reply, decision-gate, or worker-lifecycle actions.
-- Load `orca-cli` before Orca worktree, terminal, repository, artifact, skill-sharing, or browser-host actions.
+- Load `orca-cli` before Orca account or quota inspection and before worktree, terminal, repository, artifact, skill-sharing, or browser-host actions.
 
 This reference owns Orca capability mapping and orchestration invariants. The operational skills own executable resolution and current commands. Use their version-matched live guide when available. If a required skill or guide is unavailable, use verified read-only discovery only, then choose another route. Never guess a mutating command.
 
 ## Routing
 
 - Use Orca orchestration for work in another Orca terminal or worktree.
+- When current subscription usage can change the worker route, read it through Orca's version-matched public account surface. Treat missing, stale, or failed provider data as unverified. Do not read credential storage.
 
 For a supervised run, prefer an explicit task lifecycle that keeps worker messages visible: create the task, dispatch to the verified terminal, wait on the live coordinator mailbox, and inspect task state. Before declaring a timeout, inspect the inbox and task list because a completion message can land on a newer live handle.
 

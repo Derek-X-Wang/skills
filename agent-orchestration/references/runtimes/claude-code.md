@@ -17,7 +17,7 @@ Treat Claude Code as a harness that can also expose a native control plane for s
 | Codex plugin review | Load the plugin-owned skill when exposed; otherwise use the current command help |
 | Focused `counsel` review | Load `counsel` |
 | Durable Orca session | Read [orca.md](orca.md), then load the operational skill it names for the chosen action |
-| OpenCode external worker or reviewer | Read [opencode.md](opencode.md), then follow its Orca handoff |
+| OpenCode external worker or reviewer | Read [opencode.md](opencode.md), then use the direct or durable route that fits the work shape |
 | Direct cmux topology change | Read [cmux-team.md](cmux-team.md), then load `cmux` |
 
 This reference owns Claude Code capability mapping and coordination invariants. Each operational source owns its current mechanics. Do not infer a plugin command or native lifecycle that the current session does not expose.

@@ -12,13 +12,29 @@ These are Derek's current operating preferences. They combine model capability, 
 | Claude Code subscription | Claude Code | Anthropic Claude models | Native Claude coordination for harness-owned agents; verified host route for external sessions |
 | OpenCode Go | OpenCode | Curated multi-provider model pool centered on open-source models | Direct `opencode run` for focused one-shot workers; Orca-managed terminal for visible, interactive, multi-round, or AFK workers |
 
+## Quota-aware worker routing
+
+Before each implementation-worker selection, inspect current weekly subscription usage through a supported read-only source. In Orca, read [orca.md](runtimes/orca.md) and load `orca-cli`. Outside Orca, load `fuelcheck` when available. Treat unavailable usage as unverified. An unverified branch is a provisional route, not an availability claim; verify it before sustained or parallel worker volume. Do not inspect credential storage or rely on an old UI snapshot.
+
+Apply this tree only after explicit route requests, role eligibility, authorization, review independence, checkout isolation, required tools, and return-path safety. Treat weekly utilization of 80% or more as approaching the limit.
+
+```text
+eligible implementation worker
+├─ Codex weekly < 80% or Codex usage unverified ─> GPT-5.6 Sol
+├─ Codex weekly >= 80%, OpenCode Go weekly < 80% or unverified ─> GLM-5.3-Flash
+└─ both weekly >= 80%
+   └─ Opus if eligible and available; otherwise next eligible verified route
+```
+
+Ignore unused Codex rate-limit reset credits during routing. Derek decides when to spend a reset. After Derek uses one, refresh the usage data and route from the new utilization instead of the prior value or the remaining reset-credit count.
+
 ## Role defaults
 
 | Role | Preferred target | Practical alternative | Operating reason |
 | --- | --- | --- | --- |
 | Difficult new orchestration | Fable in Claude Code | Current capable orchestrator | Prefer Fable for ambiguous, high-coordination work. Do not replace an active orchestrator automatically. |
 | Normal new orchestration | Opus in Claude Code | GPT-5.6 Sol in Codex | Opus is capable and easy to use natively in Claude Code. |
-| Implementation | GPT-5.6 Sol in Codex | Opus in Claude Code | GPT-5.6 Sol is slightly stronger in current use, and Derek has more Codex usage. |
+| Implementation | Apply the quota-aware worker routing above | Opus in Claude Code when both primary routes are constrained | Quota chooses only between models that are already eligible for the task. |
 | Bounded chore | Sonnet in Claude Code | Any verified capable worker | Preserve stronger-model capacity. Follow model-profile eligibility for other roles. |
 | OpenCode implementation worker | GLM-5.3-Flash through `opencode run` for one-shot work | GLM through Orca for durable work; DeepSeek V4 Flash through `opencode run` for bounded one-shot work only after explicit data-location approval | Use GLM for stronger work. Use DeepSeek for much cheaper bounded implementation. Keep the current session as orchestrator. |
 | Review of Claude work | GPT-5.6 Sol through a verified Codex route | A different reviewer-eligible Claude model, or GLM-5.3-Flash through a verified OpenCode route | Prefer model and provider diversity. Follow model-profile eligibility. |
@@ -42,4 +58,4 @@ Choose by review shape, not a fixed product order.
 
 Use `opencode run` for focused one-shot OpenCode work. Use Orca when the work needs a durable external session. Do not pay its setup cost when a proven lighter route satisfies the return contract.
 
-Prefer abundant Codex usage for implementation volume and preserve scarce Fable capacity for difficult orchestration. Use OpenCode Go for cost-efficient external worker volume through the simplest proven route that fits the work shape. Prefer high effort for frontier models as a starting point. Spend more only when representative work shows a useful quality gain. Use the smallest capable model for passive watchers and bounded observation roles.
+Preserve scarce Fable capacity for difficult orchestration. Use the simplest proven route that fits the work shape. Prefer high effort for frontier models as a starting point. Spend more only when representative work shows a useful quality gain. Use the smallest capable model for passive watchers and bounded observation roles.
