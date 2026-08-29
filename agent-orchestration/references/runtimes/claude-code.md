@@ -17,6 +17,7 @@ Treat Claude Code as a harness that can also expose a native control plane for s
 | Codex plugin review | Load the plugin-owned skill when exposed; otherwise use the current command help |
 | Focused `counsel` review | Load `counsel` |
 | Durable Orca session | Read [orca.md](orca.md), then load the operational skill it names for the chosen action |
+| OpenCode external worker or reviewer | Read [opencode.md](opencode.md), then follow its Orca handoff |
 | Direct cmux topology change | Read [cmux-team.md](cmux-team.md), then load `cmux` |
 
 This reference owns Claude Code capability mapping and coordination invariants. Each operational source owns its current mechanics. Do not infer a plugin command or native lifecycle that the current session does not expose.
@@ -28,6 +29,7 @@ Apply the main skill's decision-complete dispatch and communication rules to eve
 - Use the installed Codex plugin for a local Git diff review when its review command and result lifecycle are available.
 - Use `counsel` for a focused custom opinion from Codex.
 - Use Orca for a durable, visible, interactive, or multi-round Codex session.
+- Use the OpenCode route when the routing matrix selects an OpenCode reviewer.
 - Use a fresh native Claude subagent as an R1 fallback only when the preferred route is unavailable and the [routing matrix](../routing-matrix.md) marks the resolved model eligible for review.
 
 Apply the [review policy](../review-policy.md) for budget and independence. Use the [routing matrix](../routing-matrix.md) for current model and route preferences.

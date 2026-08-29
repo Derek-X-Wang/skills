@@ -16,6 +16,7 @@ Use these terms consistently:
 | Entitlement | A subscription, API account, quota, or local compute source |
 | Provider | The organization that supplies a model |
 | Model | The intelligence used for a role |
+| Gateway | A service that exposes models from one or more providers through one access route |
 | Harness | The agent loop, tools, context, and permission system |
 | Session | One running model and harness in one checkout |
 | Host | The UI or terminal environment that displays sessions |
@@ -26,7 +27,7 @@ Treat the environment as a capability graph, not a fixed product stack. One prod
 
 Before the first dispatch, build a small runtime fingerprint:
 
-- Current model, provider, and harness.
+- Current model, originating provider, serving gateway when present, and harness.
 - Current host, control plane, checkout, and worktree.
 - Native agent tools.
 - Verified external routes and return paths.
@@ -40,6 +41,7 @@ Read the references for the current environment and each candidate route before 
 - [Orca](references/runtimes/orca.md)
 - [Claude Code](references/runtimes/claude-code.md)
 - [Codex](references/runtimes/codex-app.md)
+- [OpenCode](references/runtimes/opencode.md)
 - [cmux host and Claude teams overlay](references/runtimes/cmux-team.md)
 
 Read [model-profiles.md](references/model-profiles.md) before comparing model capability. Read [routing-matrix.md](references/routing-matrix.md) before choosing a model, harness, or external route. Treat both files as dated observations, not permanent truth.

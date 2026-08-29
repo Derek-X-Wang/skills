@@ -8,7 +8,7 @@ Use review to add independent evidence. Do not count implementer self-checks as 
 - **Cross-model review:** An independent reviewer uses a different model from the implementer.
 - **Cross-provider review:** An independent reviewer also uses a different model provider. Prefer this when practical, but do not require it.
 
-Classify the review from the actual implementer and reviewer models. A harness, host, control plane, or route does not change the classification.
+Classify the review from the actual implementer and reviewer models. An entitlement, gateway, harness, host, control plane, or route does not change the classification.
 
 ## Select the budget
 

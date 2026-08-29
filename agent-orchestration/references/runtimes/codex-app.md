@@ -16,6 +16,7 @@ Treat Codex as a harness that can also expose a native control plane for subagen
 | Native Codex subagent lifecycle | The tools and schemas exposed by the current Codex session |
 | Focused `counsel` review | Load `counsel` and follow its target-verification step |
 | Durable Orca session | Read [orca.md](orca.md), then load the operational skill it names for the chosen action |
+| OpenCode external worker or reviewer | Read [opencode.md](opencode.md), then follow its Orca handoff |
 
 This reference owns Codex capability mapping and coordination invariants. Each operational source owns its current mechanics. Do not infer native tools or model controls that the current session does not expose.
 
@@ -23,6 +24,7 @@ This reference owns Codex capability mapping and coordination invariants. Each o
 
 - Use `counsel` for a focused fresh Claude review after its dry run proves an eligible target under the [routing matrix](../routing-matrix.md).
 - Use Orca for a durable, visible, interactive, or multi-round Claude session.
+- Use the OpenCode route when the routing matrix selects an OpenCode reviewer.
 - Use a fresh native Codex subagent as an R1 fallback when a different model is unavailable.
 
 Apply the [review policy](../review-policy.md) for budget and independence. Use the [routing matrix](../routing-matrix.md) for current model and route preferences.
