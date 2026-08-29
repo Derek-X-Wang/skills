@@ -34,7 +34,7 @@ Run one item and one integration unit at a time:
 
 1. The orchestrator assigns the item. The worker does not race peers to claim work.
 2. The worker verifies its work and returns a stable identifier plus evidence.
-3. The orchestrator sends material work to an independent cross-model reviewer.
+3. The orchestrator applies the selected [R0, R1, or R2 review budget](../review-policy.md).
 4. The worker handles accepted same-invariant findings.
 5. The orchestrator performs or authorizes the next external step: commit, push, PR, merge, or none.
 6. Observe required CI. Treat CI as evidence, not a replacement for independent review.

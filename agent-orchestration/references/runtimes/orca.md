@@ -1,6 +1,6 @@
-# Orca host
+# Orca host and control plane
 
-Use Orca for Orca-managed worktrees, terminals, mailboxes, and cross-terminal dispatch. It can host different harnesses.
+Use Orca as a host, control plane, and route for Orca-managed worktrees, terminals, mailboxes, and cross-terminal dispatch. It can host different harnesses and model providers.
 
 ## Detection
 
@@ -8,7 +8,7 @@ Check injected runtime data first. Then inspect `ORCA_TERMINAL_HANDLE`, `TERM_PR
 
 ## Routing
 
-- Prefer native harness coordination for subagents owned by the current session.
+- Prefer native harness coordination for subagents owned by the current session when it meets the work shape.
 - Use Orca orchestration for work in another Orca terminal or worktree.
 - Use the installed `orchestration` skill for task and mailbox commands when available.
 - Use the installed `orca-cli` skill for worktree and terminal mechanics when available.
@@ -18,4 +18,4 @@ For a supervised run, prefer an explicit task lifecycle that keeps worker messag
 
 Treat model launch flags, built-in agent identifiers, and mailbox behavior as versioned CLI details. Recheck them before use. Never place approval bypass flags into a durable shared playbook.
 
-Keep one worktree per editing worker. Dispatch only to the intended live terminal. Do not use Orca to create peer communication between workers.
+Use Orca from the start when work needs a durable, visible, interactive, multi-round, or AFK external session. Keep one worktree per editing worker. Dispatch only to the intended live terminal. Do not use Orca to create peer communication between workers.

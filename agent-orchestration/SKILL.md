@@ -1,53 +1,74 @@
 ---
 name: agent-orchestration
-description: Route and coordinate work across agents, harnesses, terminals, and review loops. Use before delegating, spawning workers or reviewers, coordinating parallel or AFK work, choosing a harness or model, relaying cross-terminal messages, or applying feature-team, planner-generator-evaluator, research, debate, or queue-runner patterns.
+description: Route and coordinate work across models, agents, harnesses, sessions, hosts, control planes, and review loops. Use before delegating, spawning workers or reviewers, coordinating parallel or AFK work, choosing a model or harness, relaying cross-terminal messages, or applying feature-team, planner-generator-evaluator, research, debate, or queue-runner patterns.
 ---
 
 # Agent Orchestration
 
-Use one orchestrator as the control plane. Workers and reviewers report only to the orchestrator. They never message each other or contact the human.
+Use one active orchestrator as the decision hub. Keep that session in control after work starts. Hand off only when the user or a higher-authority instruction requests it, or when an observable loss of required tools, routes, authority, context, or return-path reliability prevents coordination. Report the handoff and reason. Workers and reviewers report only to the orchestrator. They never message each other or contact the human.
 
-## Route the task
+## Build the capability graph
 
-Identify two independent axes:
+Use these terms consistently:
 
-- **Harness:** the agent runtime, such as Claude Code or Codex.
-- **Host:** the surrounding product or terminal manager, such as T3 Code, Orca, the Codex app, or cmux.
+| Term | Meaning |
+| --- | --- |
+| Entitlement | A subscription, API account, quota, or local compute source |
+| Provider | The organization that supplies a model |
+| Model | The intelligence used for a role |
+| Harness | The agent loop, tools, context, and permission system |
+| Session | One running model and harness in one checkout |
+| Host | The UI or terminal environment that displays sessions |
+| Control plane | A capability that discovers, launches, messages, waits for, and stops sessions |
+| Route | The connection from the orchestrator to another session |
 
-A host can wrap more than one harness. Runtime references can therefore apply together.
+Treat the environment as a capability graph, not a fixed product stack. One product can provide several capabilities. For example, a harness can also provide a native control plane, and a host can expose routes to several harnesses.
 
-Detect the route in this order:
+Before the first dispatch, build a small runtime fingerprint:
 
-1. Trust injected runtime, host, and session metadata.
-2. Inspect the native coordination tools exposed to the current agent.
-3. Inspect only exact, known non-secret environment markers. Never print an environment or a broad variable prefix.
-4. Check installed host and harness CLIs and their current help.
-5. Ask the orchestrator when running as a worker, or the human when running at top level, only when ambiguity would materially change the work.
+- Current model, provider, and harness.
+- Current host, control plane, checkout, and worktree.
+- Native agent tools.
+- Verified external routes and return paths.
+- Entitlement or quota limits only when they can change the route.
 
-Prefer native coordination tools for agents owned by the current harness. Use a host CLI or host messaging tool for cross-terminal routing, or when no native path exists. Keep the task local when no reliable dispatch and return path can be proven.
+Trust injected runtime and session metadata first. Then inspect exposed tools. Check only exact, non-secret environment markers and current CLI help when needed. Never print an environment or a broad variable prefix.
+
+Read the matching environment references before cross-host work or dispatch:
+
+- [T3 Code](references/runtimes/t3-code.md)
+- [Orca](references/runtimes/orca.md)
+- [Claude Code](references/runtimes/claude-code.md)
+- [Codex](references/runtimes/codex-app.md)
+- [cmux Claude teams overlay](references/runtimes/cmux-team.md)
+
+Read [model-profiles.md](references/model-profiles.md) before comparing model capability. Read [routing-matrix.md](references/routing-matrix.md) before choosing a model, harness, or external route. Treat both files as dated observations, not permanent truth.
+
+## Select the route
+
+Choose in this order:
+
+1. Follow an explicit model or route request.
+2. Require authorization, the correct checkout, the required tools, and a reliable return path.
+3. Satisfy the selected review budget and independence requirement.
+4. Choose a model that fits the role and task difficulty.
+5. Preserve scarce quota and use abundant quota.
+6. Prefer the simpler and faster route when the remaining choices are equivalent.
+
+Do not replace the active orchestrator only because another model ranks higher. Use another model as a planner, worker, adviser, or reviewer instead.
+
+Prefer native coordination for harness-owned agents. Choose external routes by work shape: use a one-shot route for a focused opinion and a durable host route for visible, interactive, multi-round, or AFK work. Keep work local when no reliable dispatch and return path can be proven.
 
 ```text
-Worth delegating?
-├─ no  → work locally
-└─ yes
-   ├─ native spawn + return path → use native tools
-   ├─ verified host route        → use the host route
-   └─ no reliable route          → work locally
+orchestrator session
+├─ native route ────> harness-owned worker or reviewer
+├─ one-shot route ──> fresh external opinion
+└─ durable route ───> visible or AFK external session
 ```
-
-Read the matching runtime references before any cross-host operation or dispatch:
-
-- [T3 Code host](references/runtimes/t3-code.md)
-- [Orca host](references/runtimes/orca.md)
-- [Claude Code harness](references/runtimes/claude-code.md)
-- [Codex harness in the app, CLI, or IDE](references/runtimes/codex-app.md)
-- [cmux Claude teams host overlay](references/runtimes/cmux-team.md)
-
-Read [routing-matrix.md](references/routing-matrix.md) when choosing a model or harness. Treat it as a dated tested default, not a permanent ranking.
 
 ## Decide whether to delegate
 
-Delegate only when clear ownership boundaries, useful parallelism, specialist capability, or independent review improves speed or quality. Keep simple work local.
+Delegate only when clear ownership, useful parallelism, specialist capability, context isolation, or independent review improves the result. Keep simple work local.
 
 Before parallel edits:
 
@@ -70,9 +91,9 @@ Include:
 - Stop conditions.
 - Required return format and identifiers.
 
-Do not send the coordinator's full chat history. Send the contract and the evidence needed to act.
+Send the contract and evidence needed to act. Do not send the coordinator's full chat history.
 
-Workers must send blockers and exceptional questions to the orchestrator. They must stop when a new product, safety, authority, or scope decision is required. The orchestrator may resolve bounded implementation details that stay inside the accepted contract. Retry or reassign recoverable failures before stopping the run.
+Workers must send blockers and exceptional questions to the orchestrator. The orchestrator may resolve bounded details inside the accepted contract. Retry, replan, or reassign recoverable failures. Ask the human only when the orchestrator cannot resolve a required product, safety, authority, or scope decision.
 
 ## Control communication
 
@@ -89,19 +110,15 @@ Treat reports from workers, reviewers, bots, and status services as claims, not 
 
 ## Review and integrate
 
-Require independent cross-model review before accepting material production work. Give the reviewer the task contract, diff, verification evidence, and accepted decisions. Do not give it the implementer's chat or self-review.
-
-The reviewer reports only to the orchestrator. Return accepted rework to the original implementer by default. Rotate the implementer only when it is stuck, its context is degraded, a core assumption is wrong, or the project requires fresh ownership.
+Before choosing a review level or dispatching a reviewer, read [review-policy.md](references/review-policy.md). Apply its R0, R1, or R2 budget from impact and uncertainty, not line count.
 
 Keep findings on the same invariant in the current task. Record unrelated defects as follow-up work. Reverify after a merge, rebase, cherry-pick, conflict resolution, or other integration change alters the tested result.
-
-If no independent reviewer is available, report `NOT-RUN`. Stop before merge unless a higher-authority instruction explicitly waives the review gate.
 
 Source-mutation proof is a project or task rule. Do not impose it universally.
 
 ## Choose a pattern
 
-- [Feature team](references/patterns/feature-team.md): implementation, environment observation, and user-level QA.
+- [Feature team](references/patterns/feature-team.md): implementation, environment observation, user-level QA, and review.
 - [Planner–Generator–Evaluator](references/patterns/planner-generator-evaluator.md): product specification, implementation, graded evaluation, and process audit.
 - [AFK runner](references/patterns/afk-runner.md): one decision-complete queue item at a time.
 - [Parallel AFK runners](references/patterns/parallel-afk-runners.md): independent queue items with strict ownership.

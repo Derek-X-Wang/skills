@@ -1,6 +1,6 @@
 # T3 Code host
 
-T3 Code can host several provider harnesses. Distinguish T3 top-level threads, provider sessions, and harness-native child agents. T3 may display a native child without owning its lifecycle.
+Treat T3 Code as a host that may also expose control-plane routes. It can host several provider harnesses. Distinguish T3 top-level threads, provider sessions, and harness-native child agents. T3 may display a native child without owning its lifecycle.
 
 ## Choose the observed route
 
@@ -19,7 +19,7 @@ Tool names can change. Treat names seen only in unreleased code as discovery hin
 ## Operating rules
 
 - Prefer native tools for agents owned by the current harness. Use T3 to reach another top-level provider session only through a proven route.
-- T3 drives separately installed provider runtimes. Record the host, provider harness, model, project, checkout or worktree, and authentication source. Provider billing follows that runtime's authentication and environment.
+- T3 drives separately installed provider harnesses. Record the host, harness, model, provider, project, checkout or worktree, route, and entitlement source. Provider billing follows that harness's authentication and environment.
 - Keep worker and reviewer traffic in the orchestrator mailbox.
 - Keep work local when dispatch or return cannot be verified.
 

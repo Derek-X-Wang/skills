@@ -28,7 +28,7 @@ Workers never claim from a shared queue and never inspect or message peers. The 
 
 1. Assign one item and one worktree to each runner.
 2. Require status messages with the item identifier.
-3. Review each material result independently before integration.
+3. Apply each item's selected [review budget](../review-policy.md) before integration.
 4. Integrate in a controlled order.
 5. Rebase, merge, or refresh remaining work only when that operation is authorized and mechanical.
 6. Reverify each result after its base changes.

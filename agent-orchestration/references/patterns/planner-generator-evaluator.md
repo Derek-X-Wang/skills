@@ -57,7 +57,7 @@ Artifacts create a durable audit trail. They do not create direct agent handoffs
 2. Check the spec against higher-authority requirements. Resolve only decisions already within orchestrator authority. If the spec adds or changes product behavior that the human did not approve, obtain human approval through the orchestrator before generator dispatch.
 3. Dispatch the generator with the accepted spec, repository context, ownership, authority, and verification contract.
 4. Give the evaluator the accepted spec, criteria, implementation diff, and objective evidence. Do not include the generator's self-review.
-5. Give the independent reviewer the task contract, accepted decisions, diff, and verification evidence.
+5. Apply the selected [review budget](../review-policy.md). Give each reviewer the task contract, accepted decisions, diff, and verification evidence.
 6. Send accepted same-invariant findings to the generator through the orchestrator.
 7. Repeat evaluation and review only for the changed areas and affected invariants, then rerun required verification.
 8. Use the auditor when the spec or evaluation process needs a separate challenge.

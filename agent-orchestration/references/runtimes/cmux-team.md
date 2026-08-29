@@ -1,6 +1,6 @@
 # cmux Claude teams overlay
 
-cmux is a host overlay for a Claude Code team. Use this file only when the current Claude session is running through `cmux claude-teams` or current runtime evidence proves an equivalent setup.
+Treat cmux as a host overlay for a Claude Code team. Use this file only when the current Claude session is running through `cmux claude-teams` or current runtime evidence proves an equivalent setup.
 
 ## Detect the overlay
 

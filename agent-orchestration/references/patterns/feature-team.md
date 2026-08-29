@@ -31,7 +31,7 @@ No role contacts another role. The orchestrator relays each actionable signal.
 5. Relay build or runtime errors from the watcher to the implementer.
 6. Dispatch QA against a stable implementation identifier and explicit acceptance criteria.
 7. Relay accepted QA findings to the implementer. Repeat until the acceptance evidence is green or a stop condition occurs.
-8. Send material work to an independent cross-model reviewer with the contract, diff, accepted decisions, and evidence.
+8. Apply the selected [review budget](../review-policy.md) with the contract, diff, accepted decisions, and evidence.
 9. Relay accepted review findings to the implementer. Reverify the changed result.
 10. Synthesize the final outcome and shut down every role.
 

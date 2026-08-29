@@ -1,6 +1,6 @@
 # Codex harness in the app, CLI, or IDE
 
-Current Codex releases can expose native subagents in the app, CLI, and IDE. The session tool inventory is the source of truth.
+Treat Codex as a harness that can also expose a native control plane for subagents. The session tool inventory is the source of truth.
 
 ## Routing
 
@@ -10,6 +10,14 @@ Current Codex releases can expose native subagents in the app, CLI, and IDE. The
 4. Keep work local when the current Codex surface exposes no reliable subagent return path.
 
 The orchestrator owns task decomposition, dispatch, follow-up, waits, rework, and synthesis. Workers do not message each other. Concurrent editors need separate worktrees or equivalent isolation.
+
+## External review routes
+
+- Use `counsel` for a focused fresh Claude review after its dry run proves an eligible target under the [routing matrix](../routing-matrix.md).
+- Use Orca for a durable, visible, interactive, or multi-round Claude session.
+- Use a fresh native Codex subagent as an R1 fallback when a different model is unavailable.
+
+Verify a `counsel` route with `--dry-run` when its profile or target may have changed. The route is one-shot and read-only; use a durable host when the work needs follow-up turns.
 
 Model inheritance, per-role model configuration, concurrency limits, and tool names can change. Verify the current configuration instead of copying an old launch command.
 
