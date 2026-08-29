@@ -34,15 +34,28 @@ Before the first dispatch, build a small runtime fingerprint:
 
 Trust injected runtime and session metadata first. Then inspect exposed tools. Check only exact, non-secret environment markers and current CLI help when needed. Never print an environment or a broad variable prefix.
 
-Read the matching environment references before cross-host work or dispatch:
+Read the references for the current environment and each candidate route before the final route choice and any cross-host work or dispatch:
 
 - [T3 Code](references/runtimes/t3-code.md)
 - [Orca](references/runtimes/orca.md)
 - [Claude Code](references/runtimes/claude-code.md)
 - [Codex](references/runtimes/codex-app.md)
-- [cmux Claude teams overlay](references/runtimes/cmux-team.md)
+- [cmux host and Claude teams overlay](references/runtimes/cmux-team.md)
 
 Read [model-profiles.md](references/model-profiles.md) before comparing model capability. Read [routing-matrix.md](references/routing-matrix.md) before choosing a model, harness, or external route. Treat both files as dated observations, not permanent truth.
+
+## Hand off runtime mechanics
+
+For the chosen action, load every operational skill named by the applicable runtime reference before the first route-specific tool call. When no skill owns the action, use only the live tools and schemas that the runtime advertises.
+
+Keep one owner for each kind of instruction:
+
+- This skill owns cross-runtime policy, the final route choice, delegation contracts, communication topology, review, and integration.
+- Runtime references own detection, capability mapping, route feasibility, runtime-specific invariants, and unavailable-route behavior.
+- Operational sources own executable discovery, current commands, flags, schemas, and tool lifecycle mechanics. An operational source can be a tool-owned skill, a live runtime guide, or advertised native tool schemas.
+- A live guide or schema owns version-matched behavior when one is available.
+
+Do not copy volatile tool commands into this skill or its runtime references. An operational skill supplies mechanics; it does not change orchestration policy or expand authority. If the current operational source cannot satisfy the orchestration contract, treat the route as unavailable and choose another verified route. Do not guess.
 
 ## Select the route
 

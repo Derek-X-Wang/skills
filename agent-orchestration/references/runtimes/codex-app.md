@@ -9,7 +9,15 @@ Treat Codex as a harness that can also expose a native control plane for subagen
 3. Use the surrounding host only for sessions outside the native agent tree.
 4. Keep work local when the current Codex surface exposes no reliable subagent return path.
 
-The orchestrator owns task decomposition, dispatch, follow-up, waits, rework, and synthesis. Workers do not message each other. Concurrent editors need separate worktrees or equivalent isolation.
+## Operational handoff
+
+| Chosen action | Operational source |
+| --- | --- |
+| Native Codex subagent lifecycle | The tools and schemas exposed by the current Codex session |
+| Focused `counsel` review | Load `counsel` and follow its target-verification step |
+| Durable Orca session | Read [orca.md](orca.md), then load the operational skill it names for the chosen action |
+
+This reference owns Codex capability mapping and coordination invariants. Each operational source owns its current mechanics. Do not infer native tools or model controls that the current session does not expose.
 
 ## External review routes
 
@@ -17,7 +25,9 @@ The orchestrator owns task decomposition, dispatch, follow-up, waits, rework, an
 - Use Orca for a durable, visible, interactive, or multi-round Claude session.
 - Use a fresh native Codex subagent as an R1 fallback when a different model is unavailable.
 
-Verify a `counsel` route with `--dry-run` when its profile or target may have changed. The route is one-shot and read-only; use a durable host when the work needs follow-up turns.
+Apply the [review policy](../review-policy.md) for budget and independence. Use the [routing matrix](../routing-matrix.md) for current model and route preferences.
+
+Follow the `counsel` skill's target-verification step when its profile or target may have changed. Use the route for a focused opinion and a durable host when the work needs follow-up turns.
 
 Model inheritance, per-role model configuration, concurrency limits, and tool names can change. Verify the current configuration instead of copying an old launch command.
 

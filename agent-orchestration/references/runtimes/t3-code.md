@@ -16,11 +16,21 @@ Read injected runtime metadata first. Then inspect the current tool inventory an
 
 Tool names can change. Treat names seen only in unreleased code as discovery hints, not available commands. Do not depend on a T3-specific environment variable or invent a CLI route.
 
+## Operational handoff
+
+| Chosen action | Operational source |
+| --- | --- |
+| Harness-owned child agents | The native tools and schemas exposed by that harness |
+| T3 delegation or top-level thread control | Load a T3-owned operational skill when exposed; otherwise use the advertised live tool schemas |
+| Custom authenticated bridge | The exact installed contract proven for the current version |
+
+This reference owns T3 capability mapping and coordination invariants. The selected operational source owns its mechanics. Do not assume a general T3 agent CLI or operational skill exists. If no source proves dispatch and return, keep the work local.
+
 ## Operating rules
 
-- Prefer native tools for agents owned by the current harness. Use T3 to reach another top-level provider session only through a proven route.
+- Use T3 to reach another top-level provider session only through a proven route.
 - T3 drives separately installed provider harnesses. Record the host, harness, model, provider, project, checkout or worktree, route, and entitlement source. Provider billing follows that harness's authentication and environment.
-- Keep worker and reviewer traffic in the orchestrator mailbox.
+- Keep worker and reviewer traffic on the orchestrator's verified return path.
 - Keep work local when dispatch or return cannot be verified.
 
 T3 has internal authenticated HTTP and WebSocket orchestration contracts. Before using a custom bridge for AFK work, prove the exact installed contract, credential cleanup, provider and model selection, message delivery, completion and failure observation, question and approval handling, transcript reads, interrupt behavior, and thread cleanup. Never expose or persist its bearer credential.

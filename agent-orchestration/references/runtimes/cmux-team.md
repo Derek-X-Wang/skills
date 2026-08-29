@@ -1,17 +1,23 @@
-# cmux Claude teams overlay
+# cmux host and Claude teams overlay
 
-Treat cmux as a host overlay for a Claude Code team. Use this file only when the current Claude session is running through `cmux claude-teams` or current runtime evidence proves an equivalent setup.
+Treat cmux as a host. Use the operational handoff whenever the current session runs in cmux. Apply the team coordination, isolation, and rotation sections only when the current Claude session uses the cmux Claude teams integration or runtime evidence proves an equivalent setup.
 
-## Detect the overlay
+## Detect the host and overlay
 
-Inspect injected metadata, exposed Claude team tools, and these environment signals when present:
+Inspect injected metadata and `CMUX_SOCKET_PATH` for the host. Inspect exposed Claude team tools and these additional signals for the team overlay when present:
 
 - `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS`
 - `TMUX` with a cmux Claude-team shim path
 - `TMUX_PANE`
-- `CMUX_SOCKET_PATH`
 
-Do not require every variable when native tools and visible panel behavior already prove the runtime. If the evidence is partial and spawning could alter the layout, stop and ask the orchestrator or human to relaunch correctly.
+Do not require every variable when native tools and visible panel behavior already prove the runtime. If only the cmux host is proven, use the operational handoff but skip the team sections. If the team evidence is partial and spawning could alter the layout, do not spawn. A worker reports the limit to the orchestrator. The active orchestrator may ask the human to relaunch.
+
+## Operational handoff
+
+- When the team overlay is proven, use the native Claude Code team lifecycle for teammate creation, messages, follow-up work, waits, and shutdown.
+- Load `cmux` before changing cmux windows, workspaces, panes, surfaces, focus, or placement.
+
+This reference owns cmux capability mapping and the Claude-team overlay invariants. Claude Code owns teammate mechanics. The `cmux` skill owns current topology commands. If that skill is unavailable, keep the existing layout and do not guess cmux commands.
 
 ## Spawn and coordinate
 
@@ -20,13 +26,13 @@ Use the native Claude team lifecycle exposed in the session. When supported, a t
 Apply the global hub-and-spoke rule even though Claude teams can support peer messages:
 
 ```text
-cmux lead panel
-├─ worker panel   ── reports only to lead
-├─ watcher panel  ── reports only to lead
-└─ reviewer panel ── reports only to lead
+cmux active-orchestrator panel
+├─ worker panel   ── reports only to orchestrator
+├─ watcher panel  ── reports only to orchestrator
+└─ reviewer panel ── reports only to orchestrator
 ```
 
-Treat idle as available, not failed or complete. Send explicit follow-up work through the lead. Shut down teammates explicitly when the run ends.
+Treat idle as available, not failed or complete. Send explicit follow-up work through the orchestrator. Shut down teammates explicitly when the run ends.
 
 ## Isolate edits
 
@@ -52,6 +58,6 @@ Use a short handoff artifact:
 - Stop conditions: <conditions>
 ```
 
-The replacement must acknowledge the contract to the lead before work starts.
+The replacement must acknowledge the contract to the orchestrator before work starts.
 
 External reference: <https://cmux.com/docs/agent-integrations/claude-code-teams>

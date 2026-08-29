@@ -6,13 +6,16 @@ Use Orca as a host, control plane, and route for Orca-managed worktrees, termina
 
 Check injected runtime data first. Then inspect `ORCA_TERMINAL_HANDLE`, `TERM_PROGRAM`, and the presence of the `orca` CLI. An environment handle can become stale after a pane restart, so verify the live terminal before a long wait.
 
+## Operational handoff
+
+- Load `orchestration` before Orca task, dispatch, mailbox, wait, ask/reply, decision-gate, or worker-lifecycle actions.
+- Load `orca-cli` before Orca worktree, terminal, repository, artifact, skill-sharing, or browser-host actions.
+
+This reference owns Orca capability mapping and orchestration invariants. The operational skills own executable resolution and current commands. Use their version-matched live guide when available. If a required skill or guide is unavailable, use verified read-only discovery only, then choose another route. Never guess a mutating command.
+
 ## Routing
 
-- Prefer native harness coordination for subagents owned by the current session when it meets the work shape.
 - Use Orca orchestration for work in another Orca terminal or worktree.
-- Use the installed `orchestration` skill for task and mailbox commands when available.
-- Use the installed `orca-cli` skill for worktree and terminal mechanics when available.
-- Verify current command syntax with the CLI help before mutation.
 
 For a supervised run, prefer an explicit task lifecycle that keeps worker messages visible: create the task, dispatch to the verified terminal, wait on the live coordinator mailbox, and inspect task state. Before declaring a timeout, inspect the inbox and task list because a completion message can land on a newer live handle.
 

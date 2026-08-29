@@ -25,7 +25,7 @@ Choose by review shape, not a fixed product order.
 | --- | --- | --- |
 | Claude Code; local Git diff review | Installed Codex plugin review command | Use its normal or adversarial review path. Verify the resolved Codex model. |
 | Claude Code; custom one-shot critique | `counsel` to Codex | Use a fresh, focused prompt and inspect the returned artifact. |
-| Codex; custom one-shot critique | `counsel --from codex --deep` after a confirming `--dry-run` | The deep profile selected Opus when last verified. Do not use a profile that resolves to Sonnet for review. |
+| Codex; custom one-shot critique | Use the deep `counsel` profile after its target-verification step | The deep profile selected Opus when last verified. Do not use a profile that resolves to Sonnet for review. |
 | Either harness; R1 fallback | Fresh native independent subagent on an eligible model | The same model is allowed for R1, excluding Sonnet. Keep the reviewer read-only. |
 | Either harness; visible, interactive, multi-round, or AFK review | Orca-managed external session | Use a verified terminal, checkout, mailbox, and return path. |
 | T3 Code | Only a route exposed and verified by the current tool inventory | Browser preview tools do not provide agent routing. |
