@@ -29,6 +29,7 @@ This reference owns T3 capability mapping and coordination invariants. The selec
 ## Operating rules
 
 - Use T3 to reach another top-level provider session only through a proven route.
+- A provider CLI launched by the current harness is not T3 delegation. For example, a Codex session hosted by T3 can launch an `opencode run` worker when the OpenCode runtime reference permits it; the harness owns that child process and return path.
 - T3 drives separately installed provider harnesses. Record the host, harness, model, provider, project, checkout or worktree, route, and entitlement source. Provider billing follows that harness's authentication and environment.
 - Keep worker and reviewer traffic on the orchestrator's verified return path.
 - Keep work local when dispatch or return cannot be verified.
