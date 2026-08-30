@@ -14,7 +14,7 @@ These are Derek's current operating preferences. They combine model capability, 
 
 ## Quota-aware worker routing
 
-Before each implementation-worker selection, inspect current weekly subscription usage through a supported read-only source. In Orca, read [orca.md](runtimes/orca.md) and load `orca-cli`. Outside Orca, load `fuelcheck` when available. Treat unavailable usage as unverified. An unverified branch is a provisional route, not an availability claim; verify it before sustained or parallel worker volume. Do not inspect credential storage or rely on an old UI snapshot.
+Before each implementation-worker selection, inspect current weekly subscription usage through Orca's version-matched public account surface whenever the current machine can reach its local Orca CLI and runtime. Use this source even when the session runs in another harness or host UI. Read [orca.md](runtimes/orca.md) and load `orca-cli`. Treat unavailable Orca or missing, stale, or failed provider data as unverified. An unverified branch is a provisional route, not an availability claim; verify it before sustained or parallel worker volume. Do not install or invoke a second quota checker automatically, inspect credential storage, or rely on an old UI snapshot. Use another quota source only when Derek explicitly requests it.
 
 Apply this tree only after explicit route requests, role eligibility, authorization, review independence, checkout isolation, required tools, and return-path safety. Treat weekly utilization of 80% or more as approaching the limit.
 

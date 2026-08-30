@@ -16,7 +16,7 @@ This reference owns Orca capability mapping and orchestration invariants. The op
 ## Routing
 
 - Use Orca orchestration for work in another Orca terminal or worktree.
-- When current subscription usage can change the worker route, read it through Orca's version-matched public account surface. Treat missing, stale, or failed provider data as unverified. Do not read credential storage.
+- When current subscription usage can change the worker route, read it through Orca's version-matched public account surface whenever the current machine can reach its local Orca CLI and runtime. Use this surface even when another harness or host UI contains the session. Treat missing, stale, or failed provider data as unverified. Do not read credential storage.
 
 For a supervised run, prefer an explicit task lifecycle that keeps worker messages visible: create the task, dispatch to the verified terminal, wait on the live coordinator mailbox, and inspect task state. Use this only when the live guide or observed route proves support for the selected harness. An agent identifier or successful terminal launch does not prove prompt delivery or completion reporting. Before declaring a timeout, inspect the inbox and task list because a completion message can land on a newer live handle.
 
