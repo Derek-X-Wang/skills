@@ -1,0 +1,6 @@
+interface:
+  display_name: "Kickoff"
+  short_description: "Recover prior work and continue safely"
+  default_prompt: "Use $kickoff to recover relevant prior work and continue safely in the right existing session or workspace."
+policy:
+  allow_implicit_invocation: false
