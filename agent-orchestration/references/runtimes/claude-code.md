@@ -11,6 +11,8 @@ Treat Claude Code as a harness that can also expose a native control plane for s
 
 ## Operational handoff
 
+For live browser, native-app, webview, or desktop UI work, load `computer-use-routing` before selecting the local control adapter.
+
 | Chosen action | Operational source |
 | --- | --- |
 | Native subagent, team, or background-session lifecycle | The tools and schemas exposed by the current Claude Code session |
@@ -20,7 +22,7 @@ Treat Claude Code as a harness that can also expose a native control plane for s
 | OpenCode external worker or reviewer | Read [opencode.md](opencode.md), then use only a route that it currently marks proven for the work shape |
 | Direct cmux topology change | Read [cmux-team.md](cmux-team.md), then load `cmux` |
 
-This reference owns Claude Code capability mapping and coordination invariants. Each operational source owns its current mechanics. Do not infer a plugin command or native lifecycle that the current session does not expose.
+This reference owns Claude Code coordination capability mapping and invariants. Each operational source owns its current mechanics. Do not infer a plugin command or native lifecycle that the current session does not expose.
 
 Apply the main skill's decision-complete dispatch and communication rules to every native role.
 

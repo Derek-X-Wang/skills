@@ -14,10 +14,11 @@ Do not require every variable when native tools and visible panel behavior alrea
 
 ## Operational handoff
 
+- For live browser, native-app, webview, or desktop UI work, load `computer-use-routing` before selecting the local control adapter.
 - When the team overlay is proven, use the native Claude Code team lifecycle for teammate creation, messages, follow-up work, waits, and shutdown.
 - Load `cmux` before changing cmux windows, workspaces, panes, surfaces, focus, or placement.
 
-This reference owns cmux capability mapping and the Claude-team overlay invariants. Claude Code owns teammate mechanics. The `cmux` skill owns current topology commands. If that skill is unavailable, keep the existing layout and do not guess cmux commands.
+This reference owns cmux coordination capability mapping and the Claude-team overlay invariants. Claude Code owns teammate mechanics. The `cmux` skill owns current topology commands. If that skill is unavailable, keep the existing layout and do not guess cmux commands.
 
 ## Spawn and coordinate
 

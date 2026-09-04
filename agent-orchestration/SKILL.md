@@ -50,10 +50,12 @@ Read [model-profiles.md](references/model-profiles.md) before comparing model ca
 
 For the chosen action, load every operational skill named by the applicable runtime reference before the first route-specific tool call. When no skill owns the action, use only the live tools and schemas that the runtime advertises.
 
+For work that inspects or operates a live browser, native app, webview, or desktop UI, load `computer-use-routing` before selecting the local control adapter. This skill still owns which session executes, cross-session dispatch, external-write authority, and the return path. `computer-use-routing` owns local adapter eligibility and may return `executor_required`; a worker reports that only to the orchestrator and never contacts another session directly.
+
 Keep one owner for each kind of instruction:
 
-- This skill owns cross-runtime policy, the final route choice, delegation contracts, communication topology, review, and integration.
-- Runtime references own detection, capability mapping, route feasibility, runtime-specific invariants, and unavailable-route behavior.
+- This skill owns cross-runtime policy, the final session route choice, delegation contracts, communication topology, review, and integration.
+- Runtime references in this skill own agent and session detection, coordination capability mapping, route feasibility, runtime-specific invariants, and unavailable-route behavior.
 - Operational sources own executable discovery, current commands, flags, schemas, and tool lifecycle mechanics. An operational source can be a tool-owned skill, a live runtime guide, or advertised native tool schemas.
 - A live guide or schema owns version-matched behavior when one is available.
 
@@ -105,8 +107,11 @@ Include:
 - External-write authority, including commit, push, PR, merge, or settings changes.
 - Stop conditions.
 - Required return format and identifiers.
+- Prior external actions, current observed state, replay constraints, disclosure constraints, and attempted executors when the work follows a `computer-use-routing` escalation.
 
 Send the contract and evidence needed to act. Do not send the coordinator's full chat history.
+
+For a `computer-use-routing` escalation, preserve its redacted safety fields in the next dispatch and attach only evidence permitted by `disclosure_constraints`. If the only eligible executor cannot act without evidence it is not authorized to receive, stop and ask the correct authority to decide; do not dispatch the evidence. Do not return work to an attempted executor unless fresh evidence proves a material capability or state change.
 
 Workers must send blockers and exceptional questions to the orchestrator. The orchestrator may resolve bounded details inside the accepted contract. Retry, replan, or reassign recoverable failures. Ask the human only when the orchestrator cannot resolve a required product, safety, authority, or scope decision.
 

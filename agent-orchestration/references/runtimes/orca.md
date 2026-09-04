@@ -8,10 +8,11 @@ Check injected runtime data first. Then inspect `ORCA_TERMINAL_HANDLE`, `TERM_PR
 
 ## Operational handoff
 
+- For live browser, native-app, webview, or desktop UI work, load `computer-use-routing` before selecting the local control adapter.
 - Load `orchestration` before Orca task, structured dispatch, mailbox, wait, ask/reply, decision-gate, or worker-lifecycle actions.
 - Load `orca-cli` before Orca account or quota inspection and before worktree, terminal, terminal-level prompt delivery, repository, artifact, skill-sharing, or browser-host actions.
 
-This reference owns Orca capability mapping and orchestration invariants. The operational skills own executable resolution and current commands. Use their version-matched live guide when available. If a required skill or guide is unavailable, use verified read-only discovery only, then choose another route. Never guess a mutating command.
+This reference owns Orca coordination capability mapping and orchestration invariants. The operational skills own executable resolution and current commands. Use their version-matched live guide when available. If a required skill or guide is unavailable, use verified read-only discovery only, then choose another route. Never guess a mutating command.
 
 ## Routing
 

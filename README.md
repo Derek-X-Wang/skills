@@ -19,6 +19,7 @@ npx skills add Derek-X-Wang/skills --skill convex -g
 | Skill | Description |
 |-------|-------------|
 | **agent-orchestration** | Harness-aware, hub-and-spoke delegation, review, and multi-agent workflow routing |
+| **computer-use-routing** | Runtime-aware routing across browser, DevTools, embedded-surface, and desktop control adapters |
 | **better-convex** | Framework-level Convex skill (cRPC, ORM, auth, React) from [udecode/better-convex](https://github.com/udecode/better-convex) |
 | **convex** | Vanilla Convex backend-as-a-service (queries, mutations, actions, schemas) |
 | **git-project-memory** | Git history research and decision-focused commit messages |
