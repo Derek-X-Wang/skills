@@ -50,7 +50,7 @@ Read [model-profiles.md](references/model-profiles.md) before comparing model ca
 
 For the chosen action, load every operational skill named by the applicable runtime reference before the first route-specific tool call. When no skill owns the action, use only the live tools and schemas that the runtime advertises.
 
-For work that inspects or operates a live browser, native app, webview, or desktop UI, load `computer-use-routing` before selecting the local control adapter. This skill still owns which session executes, cross-session dispatch, external-write authority, and the return path. `computer-use-routing` owns local adapter eligibility and may return `executor_required`; a worker reports that only to the orchestrator and never contacts another session directly.
+For work that inspects or operates a live browser, native app, webview, or desktop UI, load `computer-use-routing` before selecting the local control adapter. This skill still owns which session executes, cross-session dispatch, external-write authority, and the return path. `computer-use-routing` owns local adapter eligibility; a model's capability does not prove a local adapter exists. It may return `executor_required`, and a worker reports that only to the orchestrator, never to another session directly.
 
 Keep one owner for each kind of instruction:
 
@@ -69,8 +69,10 @@ Choose in this order:
 2. Require authorization, the correct checkout, the required tools, and a reliable return path.
 3. Satisfy the selected review budget and independence requirement.
 4. Choose a model that fits the role and task difficulty.
-5. Preserve scarce quota and use abundant quota.
+5. Balance quota across entitlements per [routing-matrix.md](references/routing-matrix.md).
 6. Prefer the simpler and faster route when the remaining choices are equivalent.
+
+Select each worker's model explicitly for its task. Never inherit the orchestrator's model, including Fable or Astra, merely because the parent session uses it. Prefer a sufficient implementer for decided work and reserve the strongest models for orchestration and difficult judgment. Escalate to a stronger model only for a concrete unresolved difficulty, a failed bounded attempt, high uncertainty or impact that needs judgment, or a required tool. Never stage a deliberate weak-model failure first. State a concise selection rationale, not a verbose audit ritual.
 
 Do not replace the active orchestrator only because another model ranks higher. Use another model as a planner, worker, adviser, or reviewer instead.
 
@@ -85,9 +87,11 @@ orchestrator session
 
 ## Decide whether to delegate
 
-Delegate only when clear ownership, useful parallelism, specialist capability, context isolation, or independent review improves the result. Keep simple work local.
+Delegate substantial implementation, research, execution, and routine verification by default, even when the work is serial. The orchestrator owns intent, scope, decomposition, model and route selection, decisions, synthesis, verification of material evidence, and integration. Keep the orchestrator's context small: do not duplicate a worker's investigation or micromanage execution.
 
-Before parallel edits:
+Keep only tiny, obvious, low-risk edits local when dispatching costs more than doing them, and bound that exception — delegate once the work grows. If reliable delegation is unavailable, report the limitation and continue authorized local work when feasible; that is a reported constraint, not a hard deadlock.
+
+Parallelize only genuinely independent scopes. Before parallel edits:
 
 - Give each task one active owner.
 - Give concurrent editors separate worktrees or equivalent isolation.
