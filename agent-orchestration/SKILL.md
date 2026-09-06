@@ -1,6 +1,6 @@
 ---
 name: agent-orchestration
-description: Route and coordinate work across models, agents, harnesses, sessions, hosts, control planes, and review loops. Use before delegating, spawning workers or reviewers, coordinating parallel or AFK work, choosing a model or harness, relaying cross-terminal messages, taking over a stalled worker task, or applying feature-team, planner-generator-evaluator, research, debate, or queue-runner patterns.
+description: Route and coordinate work across models, agents, harnesses, sessions, hosts, control planes, and review loops. Use before delegating, spawning workers or reviewers, coordinating parallel or AFK work, choosing a model or harness, relaying cross-terminal messages, taking over a stalled worker task, applying feature-team, planner-generator-evaluator, research, debate, or queue-runner patterns, or invoking the bounded `audit-repo` repository audit.
 ---
 
 # Agent Orchestration
@@ -152,6 +152,11 @@ Source-mutation proof is a project or task rule. Do not impose it universally.
 - [Parallel AFK runners](references/patterns/parallel-afk-runners.md): independent queue items with strict ownership.
 - [Parallel research](references/patterns/parallel-research.md): read-only investigation by natural boundaries.
 - [Structured debate](references/patterns/structured-debate.md): time-boxed adversarial analysis through the orchestrator.
+- [Repo audit](references/patterns/repo-audit.md): bounded, evidence-backed repository audit by one explicitly selected Codex GPT-6 Astra at xhigh effort, report-only by default.
+
+## Invoke `audit-repo`
+
+`$agent-orchestration audit-repo` with a named repository and natural-language selected areas is the entrypoint for the bounded repository audit. This is skill prompt vocabulary, not a shell executable or an implemented CLI flag; [repo audit](references/patterns/repo-audit.md) owns the workflow. One auditor runs at Codex GPT-6 Astra xhigh effort — Derek's selected preference for this workflow, not a routine research default — with the active orchestrator preserved, no automatic fanout, and no silent model, effort, or Fable substitution when the requested route is unavailable.
 
 Higher-authority issues, specifications, contracts, ADRs, and repository instructions override this skill. Stop when precedence is unclear.
 
