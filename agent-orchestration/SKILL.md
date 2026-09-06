@@ -1,6 +1,6 @@
 ---
 name: agent-orchestration
-description: Route and coordinate work across models, agents, harnesses, sessions, hosts, control planes, and review loops. Use before delegating, spawning workers or reviewers, coordinating parallel or AFK work, choosing a model or harness, relaying cross-terminal messages, or applying feature-team, planner-generator-evaluator, research, debate, or queue-runner patterns.
+description: Route and coordinate work across models, agents, harnesses, sessions, hosts, control planes, and review loops. Use before delegating, spawning workers or reviewers, coordinating parallel or AFK work, choosing a model or harness, relaying cross-terminal messages, taking over a stalled worker task, or applying feature-team, planner-generator-evaluator, research, debate, or queue-runner patterns.
 ---
 
 # Agent Orchestration
@@ -109,7 +109,7 @@ Include:
 - Acceptance criteria and verification requirements.
 - Assigned worktree and file ownership.
 - External-write authority, including commit, push, PR, merge, or settings changes.
-- Stop conditions.
+- Task budget, checkpoint expectations, and stop conditions.
 - Required return format and identifiers.
 - Prior external actions, current observed state, replay constraints, disclosure constraints, and attempted executors when the work follows a `computer-use-routing` escalation.
 
@@ -118,6 +118,10 @@ Send the contract and evidence needed to act. Do not send the coordinator's full
 For a `computer-use-routing` escalation, preserve its redacted safety fields in the next dispatch and attach only evidence permitted by `disclosure_constraints`. If the only eligible executor cannot act without evidence it is not authorized to receive, stop and ask the correct authority to decide; do not dispatch the evidence. Do not return work to an attempted executor unless fresh evidence proves a material capability or state change.
 
 Workers must send blockers and exceptional questions to the orchestrator. The orchestrator may resolve bounded details inside the accepted contract. Retry, replan, or reassign recoverable failures. Ask the human only when the orchestrator cannot resolve a required product, safety, authority, or scope decision.
+
+## Take over a stalled worker task
+
+When a worker repeats the same material failure without useful new evidence, stop reissuing the unchanged prompt. The worker reports the loop, or the orchestrator detects it from primary observed evidence, including when the worker is unresponsive; the orchestrator coordinates a bounded takeover of that task either way. Takeover replaces the task's worker, not the active orchestrator role. The default replacement worker is Codex GPT-6 Astra at xhigh effort; Fable only when the user explicitly authorizes it for the takeover. Read [worker-takeover.md](references/worker-takeover.md) before triggering: it owns the no-progress threshold, exclusivity fencing of the previous writer and its children before any overlapping mutation, the compact takeover dispatch, and the automatic-cycle stop.
 
 ## Control communication
 

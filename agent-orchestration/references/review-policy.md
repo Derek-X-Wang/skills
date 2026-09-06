@@ -49,7 +49,7 @@ Treat reviewer findings as claims. The orchestrator verifies and accepts or reje
 - For a two-reviewer R2, rerun each reviewer whose material finding caused a fix. When an AI applies the fix, ensure at least one re-review uses a different model. When a human applies the fix, keep the re-reviewers on different models.
 - Do not re-review cosmetic changes unless they affect an invariant.
 
-Continue while findings become smaller or materially different. If the same material defect survives two fix attempts, stop repeating the loop. Replan, change the implementer, or use a stronger specialist. A worker reports the stalled loop to the orchestrator. The orchestrator asks the human only when it still cannot decide.
+Continue while findings become smaller or materially different. If the same material defect survives two fix attempts, stop repeating the loop and report the stalled loop to the orchestrator. Keep normal rework with the original implementer when it is not stuck. The orchestrator then replans or runs a bounded worker-task takeover under [worker-takeover.md](worker-takeover.md). A takeover replacement that edits is an implementer for independence, so a required reviewer must still differ from it under the rules above. The orchestrator asks the human only when it still cannot decide.
 
 ## Handle unavailable routes
 
