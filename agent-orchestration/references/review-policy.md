@@ -8,7 +8,7 @@ Use review to add independent evidence. Do not count implementer self-checks as 
 - **Cross-model review:** An independent reviewer uses a different model from the implementer.
 - **Cross-provider review:** An independent reviewer also uses a different model provider. Prefer this when practical, but do not require it.
 
-Classify the review from the actual implementer and reviewer models. An entitlement, gateway, harness, host, control plane, or route does not change the classification.
+Classify the review from the actual implementer and reviewer models. An entitlement, gateway, harness, host, control plane, route, or different effort setting does not change the classification.
 
 ## Select the budget
 
@@ -23,6 +23,16 @@ Choose from impact and uncertainty, not diff size or implementation effort.
 For human-only R2 work, use two independent reviewers on different models. For mixed-authorship R2 work, also use two independent reviewers on different models, and ensure every AI implementer model is crossed by at least one reviewer. Prefer reviewer models that did not implement the change and prefer different providers.
 
 Honor an explicit review budget. Only the user or a higher-authority instruction may lower a required budget. An orchestrator may apply a downgrade only when its dispatch already grants that authority and scope. It may not waive the gate by itself. Never downgrade silently.
+
+## Select a sufficient reviewer
+
+A required primary reviewer must independently assess the critical risks in the reviewed scope. A lower-ranked model is not automatically disqualified, but model diversity alone does not establish sufficient capability. Supplementary critique cannot replace a required primary review. Apply [model-profiles.md](model-profiles.md) eligibility, including the Sonnet and DeepSeek reviewer exclusions, and [routing-matrix.md](routing-matrix.md) route, quota, and actual model/effort checks.
+
+For Astra-authored R2 work, the default is Claude Opus 5 at max effort in a fresh read-only independent session when sufficient and route/quota eligible. This is Derek's user-selected operating preference dated 2026-09-06, not locally benchmark-proven review superiority or equivalence to Fable. Max applies to this role, not all Opus work; retain scope, verification requirements, budgets, and stop conditions.
+
+Fresh Astra xhigh can add an important same-model review of Astra work when useful, but NEVER satisfies its cross-model R2 gate by itself. It can satisfy cross-model review when the actual implementer is another model. This additional review is optional, not a two-reviewer requirement for every ordinary task; human and mixed authorship rules above remain intact.
+
+Fable review is escalation-only for a concrete unresolved critical correctness question, conflicting evidence, or demonstrated need for stronger judgment. R2 classification, Astra authorship, lower Opus quota, or an unavailable route alone must not automatically spend Fable. Preserve its scarce judgment capacity; use fresh shared Claude and model-specific pool evidence per the routing matrix, not a fixed utilization/reset snapshot. An unavailable or unsupported Opus-max selection must be reported without silent downshift, user-setting changes, or automatic Fable substitution. Other sufficient eligible cross-model reviewers remain possible; when none is available, apply the acceptance block below.
 
 ## Send a neutral review packet
 
