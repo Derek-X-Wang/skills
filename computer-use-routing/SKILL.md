@@ -32,6 +32,8 @@ Treat exposed, installed, running, connected, and targetable as separate states.
 
 Read [runtime-map.md](references/runtime-map.md) for the current environment before choosing an adapter. Treat it as dated selection guidance, not an executable contract.
 
+For Codex Desktop handoffs from another host, apply the [tested manual-send boundary](references/runtime-map.md#codex-desktop-handoff-observation). Do not offer unattended Desktop dispatch until `agent-orchestration` verifies a newly available route.
+
 ## Select the local adapter
 
 Apply these rules in order:

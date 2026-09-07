@@ -18,6 +18,17 @@ These are selection observations, not permanent availability claims. Verify the 
 | cmux browser surface | Page interaction in a cmux WKWebView, including focus-preserving inspection | Host-owned independent browser state with explicit surface identity. Do not infer the target from focus or substitute it for Chrome-only CDP diagnostics or the user's Chrome profile. | `cmux-browser` |
 | Another or unknown runtime | Only work supported by currently advertised tools and an authoritative operational source | Infer nothing from product branding or remembered tool names. If no source proves the required state and action, return `executor_required` or `NOT-RUN`; report a missing user action through the orchestrator in worker mode and ask the user only in direct mode. | Exposed skill, live guide, or tool schema |
 
+## Codex Desktop handoff observation
+
+Tested 2026-09-07 from T3 Code-hosted Codex to native Codex Desktop (ChatGPT app 26.825.51511; bundled Codex CLI 0.151.0-alpha.7.2). Treat this as a version- and configuration-specific observation, not a claim that Desktop can never support automatic dispatch.
+
+- **VERIFIED — attended handoff:** composer prefill → user presses Send → Desktop acknowledgement → read-only local transcript readback. The transcript identified Codex Desktop, the intended workspace, and a completed turn with the matching acknowledgement; no tools ran. This agrees with the [documented prefill-only deep-link behavior](https://learn.chatgpt.com/docs/app/commands#deep-links).
+- **NOT-RUN — automatic submission:** no supported auto-send route to that Desktop backend was established. The default shared control socket was unavailable, and the running Desktop backend exposed neither a named Unix socket nor a TCP listener for external dispatch. An installed `codex queue` command alone did not prove Desktop delivery.
+- **NOT-RUN — computer-use and lifecycle readiness:** the acknowledgement test did not exercise native computer use, permissions, question or approval handling, failure observation, interrupt, or worker disposal. Transcript readback is result evidence, not a Desktop control API or a complete unattended return route.
+- **Verify model and effort separately:** the Desktop turn used its own Sol/high setting, not the orchestrator's preferred Astra/medium worker setting. Prefilling a prompt does not establish the requested worker configuration.
+
+Keep this external Desktop route manual-send unless fresh evidence lets `agent-orchestration` verify its full dispatch and lifecycle contract. Recheck when the installed version, supported endpoint, or exposed tools materially change; do not repeatedly probe the unchanged route or use GUI self-control, private storage edits, or undocumented IPC to bypass the missing send path. This limit concerns external dispatch, not UI work already supported inside a Desktop session.
+
 ## Resolve common ambiguities
 
 - **Chrome is closed or disconnected:** consult the selected attached-browser adapter's readiness flow. If the user's Chrome state is required and cannot be preserved, report the required user action to the orchestrator in worker mode or ask the user in direct mode; otherwise return `executor_required`. Do not fall back to an isolated browser.
