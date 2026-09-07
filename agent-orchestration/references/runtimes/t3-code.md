@@ -16,6 +16,13 @@ Read injected runtime metadata first. Then inspect the current tool inventory an
 
 Tool names can change. Treat names seen only in unreleased code as discovery hints, not available commands. Do not depend on a T3-specific environment variable or invent a CLI route.
 
+Scope each observed surface to what it proves:
+
+- `preview_*` tools prove the browser preview surface only. It is browser-only automation — neither the user's external signed-in Chrome nor a native desktop-control adapter by default — and does not prove that T3 hosts the session or exposes other T3 control-plane capabilities.
+- Harness-native child tools imply no new T3 top-level session and no inherited UI or plugin tools.
+- An installed or copied skill catalog entry, including an OpenAI browser or computer-use plugin, proves nothing until the exact current session exposes the operational tools, the connected service permissions, and the required target state. Plugin readiness is never inherited from another session, host, or skill copy.
+- A reachable `orca` CLI makes Orca an external route, not the active host.
+
 ## Operational handoff
 
 For live browser, native-app, webview, or desktop UI work, load `computer-use-routing` before selecting the local control adapter.

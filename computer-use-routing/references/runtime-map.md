@@ -1,12 +1,13 @@
 # Computer-use runtime map
 
-Last reviewed: 2026-09-04.
+Last reviewed: 2026-09-07.
 
 These are selection observations, not permanent availability claims. Verify the current host, harness, tool inventory, target state, and operational source before acting. A model name never proves that an adapter exists. Similar skill names can identify different adapters, so match the exact exposed skill to the observed runtime.
 
 | Observed runtime or surface | Eligible work | State and fidelity notes | Operational source |
 | --- | --- | --- | --- |
-| T3 Code with `preview_*` tools | Page interaction, screenshots, responsive checks, and local web testing in the collaborative preview | Host-bound page surface. Preserve exact tab identity. A closed or missing preview may have a supported open lifecycle; it is not an agent route or the user's external Chrome profile. | Injected T3 preview instructions and live tool schemas |
+| T3 Code with `preview_*` tools | Page interaction, screenshots, responsive checks, and local web testing in the collaborative preview | Browser-only preview surface. It is not the user's external signed-in Chrome and not a native desktop-control adapter by default. Preserve exact tab identity. A closed or missing preview may have a supported open lifecycle; it is not an agent route. The preview tools prove that surface only, not other T3 capabilities. | Injected T3 preview instructions and live tool schemas |
+| Codex Desktop (native app) | Work supported by the current Desktop session's exposed tools | Desktop and plugin readiness belongs to this session and is never inherited from another host or a copied skill. [Composer-prefill deep links](https://learn.chatgpt.com/docs/app/commands#deep-links) and app launchers start no worker and prove no return path; native [Computer Use](https://learn.chatgpt.com/docs/computer-use) cannot automate ChatGPT itself, terminal apps, or system security or privacy prompts. | Current session tool schemas plus the linked official docs |
 | Codex with the in-app Browser skill | Page interaction in the browser attached to the current chat | Can hold signed-in state. Explicit browser choices remain hard constraints; let the Browser runtime select defaults only when the user did not choose one. | `browser:control-in-app-browser` and its live documentation |
 | Codex with the Chrome or Edge browser adapter | Work requiring the user's connected browser tabs, login state, profile, or extensions | State is attached-browser-specific. Do not replace it with an isolated or in-app browser when that state is required, and do not assume a closed browser can be launched without user action. | `chrome:control-chrome` or the exposed browser-family skill and its live documentation |
 | Codex with local Computer Use | Native macOS apps, app webviews, browser chrome, menus, dialogs, and window-level interaction | Accessibility and screenshot control. Prefer a semantic browser or app adapter when it can satisfy the task. App launch and recovery behavior belongs to the current operational skill. | `computer-use:computer-use` |
@@ -23,4 +24,6 @@ These are selection observations, not permanent availability claims. Verify the 
 - **No preview or browser tab is open:** use a supported create or open lifecycle only when a fresh surface satisfies the task.
 - **A page action is possible through desktop coordinates:** prefer page semantics unless the task needs browser chrome, a native dialog, a webview, or another OS-only feature.
 - **A worker knows another harness has better tools:** return `executor_required` to the orchestrator. The worker does not contact that harness.
+- **Orca is reachable from another host:** a reachable `orca` CLI makes Orca an external route, not the active user-driving host; fingerprint the host from the current session's own metadata and tools.
+- **A skill catalog lists a browser or computer-use plugin:** the exact current session must expose the operational tools, the connected service permissions, and the required target state. Catalog presence alone proves nothing.
 - **A URL was supplied:** treat it as context, not proof that browser interaction is required. Use a connector, API, CLI, or web retrieval when the requested result is semantic and no visual interaction is needed.

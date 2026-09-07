@@ -6,6 +6,8 @@ Use Orca as a host, control plane, and route for Orca-managed worktrees, termina
 
 Check injected runtime data first. Then inspect `ORCA_TERMINAL_HANDLE`, `TERM_PROGRAM`, and the presence of the `orca` CLI. An environment handle can become stale after a pane restart, so verify the live terminal before a long wait.
 
+An installed `orca` CLI or an inherited handle alone is a discovery hint or locator, not proof of live reachability or of the current host. A successful scoped live check can prove the external route; it never proves that Orca is the active user-driving host: a T3 Code or Codex Desktop session can reach Orca while another host drives the user. Establish the host from the current session's own metadata and exposed tools, and record Orca as the control plane or route separately.
+
 ## Operational handoff
 
 - For live browser, native-app, webview, or desktop UI work, load `computer-use-routing` before selecting the local control adapter.
