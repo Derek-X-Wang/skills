@@ -7,6 +7,12 @@ description: Route and coordinate work across models, agents, harnesses, session
 
 Use one active orchestrator as the decision hub. Keep that session in control after work starts. Hand off only when the user or a higher-authority instruction requests it, or when an observable loss of required tools, routes, authority, context, or return-path reliability prevents coordination. Report the handoff and reason. Workers and reviewers report only to the orchestrator. They never message each other or contact the human.
 
+## Worker intake
+
+In a dispatched worker or reviewer session, follow the assigned harness, model, effort, and route. Check only the assigned checkout, task tools, and access needed to execute. Report an observed mismatch, missing capability, blocker, or exceptional question to the orchestrator; do not investigate the host, reload model/effort/quota tables, reroute, spawn agents, or contact the human. Continue task-specific instructions and verification within the dispatch. For UI work, load `computer-use-routing` and verify the actual assigned target, adapter eligibility, exposed tools, and access; parent desktop/plugin availability is never inherited.
+
+The remaining route selection and coordination sections are orchestrator responsibilities. Workers do not repeat them merely because this skill is available or included in a dispatch.
+
 ## Build the capability graph
 
 Use these terms consistently:
@@ -25,7 +31,7 @@ Use these terms consistently:
 
 Treat the environment as a capability graph, not a fixed product stack. One product can provide several capabilities. For example, a harness can also provide a native control plane, and a host can expose routes to several harnesses.
 
-Before the first dispatch, build a small runtime fingerprint, keeping these layers separate:
+The orchestrator establishes a small runtime fingerprint before the first dispatch, reusing verified current-session evidence and keeping these layers separate:
 
 - Active user-driving host — Orca, T3 Code, Codex Desktop, or another host — identified from current session metadata and live exposed tools. Never infer it from the model or executable alone, installed or running apps, a reachable Orca CLI, a shared skill catalog, the project directory, or an inherited marker.
 - Current executing harness, model, originating provider, serving gateway when present, and session.
@@ -34,7 +40,7 @@ Before the first dispatch, build a small runtime fingerprint, keeping these laye
 
 Then list native agent tools, and entitlement or quota limits only when they can change the route.
 
-Trust injected runtime and session metadata first. Then inspect exposed tools. Check only exact, non-secret environment markers and current CLI help when needed. Never print an environment or a broad variable prefix. Leave unknown or conflicting fields unknown; ask only when the ambiguity changes a safe action. Incomplete host identity alone is not a refusal when the needed local adapter and target state owner are independently proven. Re-fingerprint at an actual handoff, reconnect, or session restart and whenever evidence changes; a worker verifies its own runtime instead of inheriting the parent's host or plugin readiness.
+Trust injected runtime and session metadata first. Then inspect exposed tools. Check only exact, non-secret environment markers and current CLI help when needed. Never print an environment or a broad variable prefix. Leave unknown or conflicting fields unknown; ask only when the ambiguity changes a safe action. Incomplete host identity alone is not a refusal when the needed local adapter and target state owner are independently proven. The orchestrator refreshes affected evidence at an actual handoff, reconnect, session restart, or real route/tool/host change. A worker follows the intake above and flags observed mismatches; task-specific UI readiness still requires its own evidence.
 
 Distinguish the common host shapes: Orca hosting Codex, Claude, or OpenCode sessions in its worktrees; T3 Code hosting provider sessions and harness-native children; and a native Codex Desktop session. One harness can appear in several hosts while desktop and plugin readiness and the return route belong to each session. A reachable Orca CLI from T3 Code or Codex Desktop makes Orca an external route, not the active host, and a harness-native child's tools imply no new top-level session.
 
@@ -42,7 +48,7 @@ Opening or prefilling a Codex Desktop composer — deep link or app launcher —
 
 Automatic cross-host dispatch additionally requires verified evidence of the exact endpoint and session identity, the worker's harness, model, effort, and worktree, permitted prompt receipt and start, required tools and target readiness, approval and question handling, result and failure observation, and safe interrupt with owned cleanup and return to this orchestrator. Until then the route is unverified (`NOT-RUN`), and a non-idempotent action that may have landed keeps `PARTIAL` and its replay constraints. Host or adapter switching does not automatically transfer the orchestrator role or the verified parent return path.
 
-Read the references for the current environment and each candidate route before the final route choice and any cross-host work or dispatch:
+Read the references needed for the current environment and candidate routes before making a new route choice or cross-host dispatch. Reuse already-read guidance for an unchanged verified route:
 
 - [T3 Code](references/runtimes/t3-code.md)
 - [Orca](references/runtimes/orca.md)
@@ -106,6 +112,10 @@ Parallelize only genuinely independent scopes. Before parallel edits:
 - Serialize shared files, migrations, generated artifacts, and coupled schema changes.
 - Keep the orchestrator out of worker-owned files. It may do read-only or non-overlapping work.
 
+### Bounded single-worker path
+
+For one decision-complete task on an already verified route, reuse the session's runtime evidence and sufficiently fresh relevant quota. Select the worker's model/effort explicitly under the role defaults, satisfy the applicable review budget, and send a compact dispatch with scope, checkout, tools/access, authority, evidence, return path, and cleanup ownership. Do not rebuild the capability graph, reread unchanged routing tables, or poll quota for every child. Recheck affected evidence after a reset, rate-limit event, or real route/tool/host change, and refresh quota before sustained or parallel volume when the existing snapshot no longer supports the expected work. Unknown quota stays unknown; any provisional route remains bounded under the routing matrix. This path preserves tool eligibility, isolation, independent verification, R2/cross-model gates, takeover, replay safety, and cleanup requirements.
+
 ## Send a decision-complete dispatch
 
 Include:
@@ -115,7 +125,7 @@ Include:
 - Accepted product and architecture decisions.
 - Acceptance criteria and verification requirements.
 - Assigned worktree and file ownership.
-- Origin runtime identity from the orchestrator's verified fingerprint: active host, harness, model, session, machine, and checkout, so the worker re-fingerprints its own runtime instead of inheriting it.
+- Assigned harness, model, effort, route, and return path; origin runtime identity from the orchestrator's verified session evidence (host, harness, model, session, machine, checkout). Tell the worker to check its checkout, task tools, and access and report observed mismatches, without repeating host, model, effort, or quota investigation. UI targets and adapter readiness must be verified in the executing session.
 - Cleanup inventory: exact task-owned session, process, worktree, and resource identifiers; which pre-existed versus which the task created; retention or transfer conditions; and the cleanup owner.
 - External-write authority, including commit, push, PR, merge, or settings changes.
 - Task budget, checkpoint expectations, and stop conditions.

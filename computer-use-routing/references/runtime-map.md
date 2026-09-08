@@ -2,7 +2,7 @@
 
 Last reviewed: 2026-09-07.
 
-These are selection observations, not permanent availability claims. Verify the current host, harness, tool inventory, target state, and operational source before acting. A model name never proves that an adapter exists. Similar skill names can identify different adapters, so match the exact exposed skill to the observed runtime.
+These are selection observations, not permanent availability claims. Verify the task's actual tool inventory, adapter eligibility, target state, and operational source before acting. Reuse assigned runtime context in worker mode; the orchestrator owns host/harness/model/effort/quota investigation and session routing. Report observed mismatches to it. A model name never proves that an adapter exists. Similar skill names can identify different adapters, so match the exact exposed skill to the observed tools and target.
 
 | Observed runtime or surface | Eligible work | State and fidelity notes | Operational source |
 | --- | --- | --- | --- |
@@ -35,6 +35,6 @@ Keep this external Desktop route manual-send unless fresh evidence lets `agent-o
 - **No preview or browser tab is open:** use a supported create or open lifecycle only when a fresh surface satisfies the task.
 - **A page action is possible through desktop coordinates:** prefer page semantics unless the task needs browser chrome, a native dialog, a webview, or another OS-only feature.
 - **A worker knows another harness has better tools:** return `executor_required` to the orchestrator. The worker does not contact that harness.
-- **Orca is reachable from another host:** a reachable `orca` CLI makes Orca an external route, not the active user-driving host; fingerprint the host from the current session's own metadata and tools.
+- **Orca is reachable from another host:** a reachable `orca` CLI makes Orca an external route, not the active user-driving host. The orchestrator owns host identification; workers verify only what affects the assigned adapter and target, reporting mismatches through their return path.
 - **A skill catalog lists a browser or computer-use plugin:** the exact current session must expose the operational tools, the connected service permissions, and the required target state. Catalog presence alone proves nothing.
 - **A URL was supplied:** treat it as context, not proof that browser interaction is required. Use a connector, API, CLI, or web retrieval when the requested result is semantic and no visual interaction is needed.

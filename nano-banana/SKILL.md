@@ -1,6 +1,6 @@
 ---
 name: nano-banana
-description: REQUIRED for all image generation requests. Generate and edit images using Nano Banana (Gemini CLI). Handles blog featured images, YouTube thumbnails, icons, diagrams, patterns, illustrations, photos, visual assets, graphics, artwork, pictures. Use this skill whenever the user asks to create, generate, make, draw, design, or edit any image or visual content.
+description: Generate or edit raster images through the Gemini CLI Nano Banana extension when the user explicitly chooses Nano Banana or wants an alternative after an unsatisfactory native image result. Prefer the current harness's native image capability for ordinary image requests.
 allowed-tools: Bash(gemini:*)
 ---
 
@@ -10,22 +10,18 @@ Generate professional images via the Gemini CLI's nanobanana extension.
 
 ## When to Use This Skill
 
-ALWAYS use this skill when the user:
-- Asks for any image, graphic, illustration, or visual
-- Wants a thumbnail, featured image, or banner
-- Requests icons, diagrams, or patterns
-- Asks to edit, modify, or restore a photo
-- Uses words like: generate, create, make, draw, design, visualize
+Use the current harness's native image capability first when available. Use this route when the user explicitly requests Nano Banana/Gemini image generation, or as an alternative when the user is unsatisfied with the native result. Announce a fallback choice and keep it within the requested image task and existing disclosure authority.
 
-Do NOT attempt to generate images through any other method.
+This skill does not own general visualizations, charts, or diagrams. Prefer the task's appropriate structured or plotting tool for those; `/diagram` below is only an extension option when the user has chosen a raster Nano Banana result.
 
 ## Before First Use
 
-1. Verify extension is installed:
+1. Verify the Gemini CLI and extension are available; inspect current CLI/extension help before relying on command examples:
    ```bash
-   gemini extensions list | grep nanobanana
+   command -v gemini
+   gemini extensions list
    ```
-2. If missing, install it:
+2. If missing, report the unavailable route. Install the extension only when dependency installation is authorized:
    ```bash
    gemini extensions install https://github.com/gemini-cli-extensions/nanobanana
    ```
@@ -48,22 +44,29 @@ Do NOT attempt to generate images through any other method.
 
 ## Available Commands
 
-**Note:** Always use the `--yolo` flag to automatically approve all tool actions.
+Examples below retain the Gemini CLI route and must match the installed extension's help. Use ordinary approval handling; broad autoapproval is not required. Do not infer an Antigravity command or working migration from the Nano Banana name.
+
+For an attended session, pass an initial prompt explicitly while retaining normal approval prompts:
+
+```bash
+gemini --approval-mode default -i "/generate 'minimalist blue mountain illustration, no text'"
+```
+
+`-i` / `--prompt-interactive` submits the initial prompt and keeps the session interactive. The positional examples below also use interactive mode; `-p` selects headless mode. Handle ordinary approvals within the task's authority. If an unattended/headless run cannot satisfy a required approval, report the blocker to the orchestrator in worker mode or the user in direct mode; do not bypass it with broad autoapproval.
 
 | Command | Use Case |
 |---------|----------|
-| `gemini --yolo "/generate 'prompt'"` | Text-to-image generation |
-| `gemini --yolo "/edit file.png 'instruction'"` | Modify existing image |
-| `gemini --yolo "/restore old_photo.jpg 'fix scratches'"` | Repair damaged photos |
-| `gemini --yolo "/icon 'description'"` | App icons, favicons, UI elements |
-| `gemini --yolo "/diagram 'description'"` | Flowcharts, architecture diagrams |
-| `gemini --yolo "/pattern 'description'"` | Seamless textures and patterns |
-| `gemini --yolo "/story 'description'"` | Sequential/narrative images |
-| `gemini --yolo "/nanobanana prompt"` | Natural language interface |
+| `gemini "/generate 'prompt'"` | Text-to-image generation |
+| `gemini "/edit file.png 'instruction'"` | Modify existing image |
+| `gemini "/restore old_photo.jpg 'fix scratches'"` | Repair damaged photos |
+| `gemini "/icon 'description'"` | App icons, favicons, UI elements |
+| `gemini "/diagram 'description'"` | Requested raster diagrams |
+| `gemini "/pattern 'description'"` | Seamless textures and patterns |
+| `gemini "/story 'description'"` | Sequential/narrative images |
+| `gemini "/nanobanana prompt"` | Natural language interface |
 
 ## Common Options
 
-- `--yolo` - **Required.** Auto-approve all tool actions (no confirmation prompts)
 - `--count=N` - Generate N variations (1-8)
 - `--preview` - Auto-open generated images
 - `--styles="style1,style2"` - Apply artistic styles
@@ -81,9 +84,9 @@ Do NOT attempt to generate images through any other method.
 
 ## Model Selection
 
-Default: `gemini-2.5-flash-image` (~$0.04/image)
+Verify supported models and current pricing through the installed extension and provider before selecting a model. Historical extension default: `gemini-2.5-flash-image`.
 
-For higher quality (4K, better reasoning):
+Example model override, only if currently supported:
 ```bash
 export NANOBANANA_MODEL=gemini-3-pro-image-preview
 ```
@@ -92,25 +95,25 @@ export NANOBANANA_MODEL=gemini-3-pro-image-preview
 
 ```bash
 # Modern illustration style
-gemini --yolo "/generate 'modern flat illustration of developer coding at laptop, purple and blue gradient background, minimalist style, no text' --preview"
+gemini "/generate 'modern flat illustration of developer coding at laptop, purple and blue gradient background, minimalist style, no text' --preview"
 
 # Professional photography style
-gemini --yolo "/generate 'professional editorial photo of coffee cup next to laptop on wooden desk, morning sunlight, shallow depth of field, no text' --count=3"
+gemini "/generate 'professional editorial photo of coffee cup next to laptop on wooden desk, morning sunlight, shallow depth of field, no text' --count=3"
 
 # Tech/abstract
-gemini --yolo "/generate 'abstract visualization of neural network connections, dark background with glowing blue nodes, futuristic style' --preview"
+gemini "/generate 'abstract visualization of neural network connections, dark background with glowing blue nodes, futuristic style' --preview"
 ```
 
 ## Icon Generation
 
 ```bash
-gemini --yolo "/icon 'minimalist app logo for productivity tool' --sizes='64,128,256,512' --type='app-icon' --corners='rounded'"
+gemini "/icon 'minimalist app logo for productivity tool' --sizes='64,128,256,512' --type='app-icon' --corners='rounded'"
 ```
 
 ## Diagram Generation
 
 ```bash
-gemini --yolo "/diagram 'user authentication flow with OAuth' --type='flowchart' --style='modern'"
+gemini "/diagram 'user authentication flow with OAuth' --type='flowchart' --style='modern'"
 ```
 
 ## Output Location
@@ -129,7 +132,7 @@ After generation completes:
 When the user asks for changes:
 - **"Try again" / "Give me options"**: Regenerate with `--count=3`
 - **"Make it more [adjective]"**: Adjust prompt and regenerate
-- **"Edit this one"**: Use `gemini --yolo "/edit nanobanana-output/filename.png 'adjustment'"`
+- **"Edit this one"**: Use `gemini "/edit nanobanana-output/filename.png 'adjustment'"`
 - **"Different style"**: Add `--styles="requested_style"` to the command
 
 ## Prompt Tips
@@ -144,7 +147,7 @@ When the user asks for changes:
 | Problem | Solution |
 |---------|----------|
 | `GEMINI_API_KEY` not set | `export GEMINI_API_KEY="your-key"` |
-| Extension not found | Run install command from setup section |
+| Extension not found | Report unavailable; install only when authorized |
 | Quota exceeded | Wait for reset or switch to flash model |
 | Image generation failed | Check prompt for policy violations, simplify request |
 | Output directory missing | Will be created automatically on first run |

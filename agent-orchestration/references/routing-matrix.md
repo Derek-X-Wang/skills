@@ -2,7 +2,7 @@
 
 Last reviewed: 2026-09-06.
 
-These are Derek's current operating preferences. They combine model capability, available subscriptions, route friction, and quota. They are not a pure intelligence ranking. Verify the resolved model, harness, route, tools, checkout, return path, and relevant quota before dispatch.
+These are Derek's current operating preferences. They combine model capability, available subscriptions, route friction, and quota. They are not a pure intelligence ranking. The orchestrator owns model, effort, harness, route, and quota selection and verifies the resolved route, tools, checkout, and return path. Workers follow their assigned route and check only task checkout/tools/access; they do not reload this table or perform quota/host investigation.
 
 ## Current access paths
 
@@ -14,12 +14,12 @@ These are Derek's current operating preferences. They combine model capability, 
 
 ## Quota-aware worker routing
 
-Before each implementation, research, or review selection, inspect current subscription usage through Orca's version-matched public account surface whenever the current machine can reach its local Orca CLI and runtime. Use this source even when the session runs in another harness or host UI. Read [orca.md](runtimes/orca.md) and load `orca-cli`. Treat unavailable Orca or missing, stale, or failed provider data as unverified. An unverified branch is a provisional route, not an availability claim; verify it before sustained or parallel worker volume. Do not install or invoke a second quota checker automatically, inspect credential storage, or rely on an old UI snapshot. Use another quota source only when Derek explicitly requests it.
+At implementation, research, or review selection, the orchestrator reuses sufficiently fresh relevant subscription usage from the verified session. When a refresh is needed and the current machine can reach its local Orca CLI/runtime, inspect Orca's version-matched public account surface, even when another harness or host UI contains the session. Read [orca.md](runtimes/orca.md) and load `orca-cli` for that operation. Treat unavailable Orca or missing, stale, or failed provider data as unverified. An unverified branch is a bounded provisional route, not an availability claim; verify it before sustained or parallel worker volume. Do not install or invoke a second quota checker automatically, inspect credential storage, or rely on an outdated snapshot. Use another quota source only when Derek explicitly requests it.
 
 Apply this balancing after explicit route requests, role eligibility, authorization, review independence, checkout isolation, required tools, and return-path safety:
 
-- Check fresh usage at the dispatch decision and reuse it while it stays fresh. Refresh stale or changed data, after resets or rate-limit events, and before sustained volume. Do not blindly poll every child dispatch.
-- Compare short-window, weekly, model-specific, and monthly limits together with reset timing, expected task cost and duration, and pool reserves. For Claude, check both shared Claude and model-specific pools freshly at dispatch through the Orca policy above. Percentages from different plans are not equal token budgets; API prices and costs do not prove subscription allowance consumption.
+- Reuse fresh usage at the dispatch decision. Judge freshness against reset timing, intervening consumption, concurrent activity, and expected task size. Refresh stale or changed data, after resets or rate-limit events, after real route/tool/host changes affecting the evidence, and before sustained volume. Do not blindly poll every child dispatch or send quota checking to workers.
+- Compare short-window, weekly, model-specific, and monthly limits together with reset timing, expected task cost and duration, and pool reserves. For Claude, require sufficiently fresh shared Claude and model-specific pools under the reuse/refresh policy above. Percentages from different plans are not equal token budgets; API prices and costs do not prove subscription allowance consumption.
 - There is no mandatory spend order, fixed equal split, or cheapest-at-any-cost rule. Low utilization on one plan does not obligate spending it first.
 - Treat unknown usage as unknown. Never assume an entitlement is empty or route to it automatically. A bounded provisional route is allowed; verify before sustained volume.
 - Apply Derek's role defaults among sufficient eligible options with adequate headroom. Rebalance when material capacity constraints, reset timing, or upcoming demand justify another eligible route. Reserve Fable for orchestration and difficult judgment; Astra medium is eligible for normal Codex worker use. Preserve Opus capacity when it is in use elsewhere. Abundant Codex remains useful for suitable coding and review.

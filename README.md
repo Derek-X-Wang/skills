@@ -10,7 +10,7 @@ npx skills add Derek-X-Wang/skills -g
 
 # Install a specific skill
 npx skills add Derek-X-Wang/skills --skill life-os -g
-npx skills add Derek-X-Wang/skills --skill better-convex -g
+npx skills add Derek-X-Wang/skills --skill kitcn -g
 npx skills add Derek-X-Wang/skills --skill convex -g
 ```
 
@@ -20,7 +20,7 @@ npx skills add Derek-X-Wang/skills --skill convex -g
 |-------|-------------|
 | **agent-orchestration** | Harness-aware, hub-and-spoke delegation, review, and multi-agent workflow routing |
 | **computer-use-routing** | Runtime-aware routing across browser, DevTools, embedded-surface, and desktop control adapters |
-| **better-convex** | Framework-level Convex skill (cRPC, ORM, auth, React) from [udecode/better-convex](https://github.com/udecode/better-convex) |
+| **kitcn** | Kitcn (formerly Better Convex) projects: cRPC, ORM, auth, and React |
 | **convex** | Vanilla Convex backend-as-a-service (queries, mutations, actions, schemas) |
 | **git-project-memory** | Git history research and decision-focused commit messages |
 | **life-os** | Personal life OS daily operator and planning system (Obsidian vault) |
@@ -36,7 +36,7 @@ npx skills add Derek-X-Wang/skills --skill convex -g
 | **pdf** | PDF manipulation, extraction, and form filling |
 | **pptx** | PowerPoint presentation creation and editing |
 | **pr-writing** | Human-readable PR descriptions with product meaning and verification evidence |
-| **skill-creator** | Guide for creating new skills |
+| **manage-my-skills** | Personal skill lifecycle using the current harness creator or a portable supporting reference |
 | **slack-gif-creator** | Animated GIF creation optimized for Slack |
 | **xlsx** | Spreadsheet creation, editing, and analysis |
 | **youtube-transcript** | Download YouTube video transcripts |

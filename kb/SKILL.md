@@ -1,6 +1,6 @@
 ---
 name: kb
-description: Portfolio knowledge base in the Life OS wiki. Catalogs tech stacks, features, and reusable patterns across all projects and tracks pattern adoption gaps. Use when building a feature another project might already have ("has any project done X?"), after landing a reusable upgrade ("save this as a pattern"), when the user says "scan this project" / "update knowledge" / "kb sync", or automatically when the current project's knowledge is stale (>7 days since last scan).
+description: Look up project features and reusable patterns in the Life OS portfolio wiki, or update knowledge when the user requests a scan, pattern, adoption change, or kb sync. Lookups are read-only and report stale evidence.
 ---
 
 # kb — Portfolio Knowledge Base
@@ -15,7 +15,7 @@ Cross-project knowledge sharing, stored in the Life OS wiki (an OKF v0.1 bundle)
   - Never write machine-specific paths into the wiki. Key-file references are repo-relative.
 - **Per-machine config (NOT git-tracked):** `~/.config/kb.json`
 
-The OS repo is shared with cron agents. Always `git pull --ff-only` before reading, and stage + commit (`chore(os): <description>`) + push after writing. Follow the OS wiki rules in its `.claude/CLAUDE.md` (index.md sync, log.md, relative links only).
+The OS repo is shared with cron agents. Lookups use existing local knowledge without pulling, scanning, creating config, committing, or pushing. Report missing or stale evidence. Refresh, write, and publish only when requested or already authorized. For an authorized update, inspect the worktree, `git pull --ff-only` before writing, and stage only the intended wiki changes; commit (`chore(os): <description>`) and push when publishing is authorized. Follow the OS wiki rules in its `.claude/CLAUDE.md` (index.md sync, log.md, relative links only). Load `git-project-memory` before inspecting project history or creating commits. KB work does not require reinstalling Life OS or other skills.
 
 ## Config Schema (`~/.config/kb.json`)
 
@@ -35,15 +35,15 @@ The OS repo is shared with cron agents. Always `git pull --ff-only` before readi
 
 - `machine`: human label for this machine (used in log/commit wording, e.g. `scan rxweave (main-mac)`).
 - `localPath` is per-machine; the portable project identity is the `resource:` GitHub URL in the wiki page frontmatter.
-- If the file doesn't exist, create it with `{"machine": "<hostname>", "projects": {}, "settings": {"staleDays": 7}}` and run sync-registry.
+- If the file does not exist during a lookup, continue from available wiki pages and report unavailable local-path/freshness data. Create it with `{"machine": "<hostname>", "projects": {}, "settings": {"staleDays": 7}}` only for an authorized registry/config setup.
 
 ## Staleness Check
 
-At the start of EVERY invocation:
+For the relevant project, check available freshness evidence:
 
 1. Read `~/.config/kb.json`; match cwd against `projects[*].localPath`.
-2. If matched: freshness is judged by the last real scan, not the raw frontmatter `timestamp` — migrations/reformats can re-stamp timestamps without refreshing content. Authoritative check: the most recent `chore(os): scan <slug> knowledge` commit (or `scan <slug>` bullet in wiki/log.md); fall back to the page timestamp only if neither exists. `lastScanTime` in config is a per-machine cache only. If older than `staleDays` (per-project override allowed): run **scan** first, then the original request.
-3. If not matched: offer to register (see sync-registry) before proceeding.
+2. Freshness is judged by the last real scan, not the raw frontmatter `timestamp` — migrations/reformats can re-stamp it. Prefer a `scan <slug>` entry in wiki/log.md or, when history inspection is needed, the most recent `chore(os): scan <slug> knowledge` commit. Fall back to the page timestamp with that limitation; `lastScanTime` is only a per-machine cache. If older than `staleDays` (per-project override allowed), report staleness with the answer. Run **scan** only when requested or already authorized.
+3. An unmatched cwd or missing config does not block a wiki lookup or trigger registration. Report the missing mapping when relevant.
 
 ## Wiki Page Contracts
 
@@ -96,7 +96,7 @@ Adoption states: `canonical` (defining implementation), `adopted`, `pending` (ge
 
 ## Mode: scan
 
-**Triggers:** "scan this project" / "update knowledge", or staleness check.
+**Triggers:** "scan this project" / "update knowledge", or an already authorized refresh.
 
 1. Identify project via config; register first if unknown.
 2. Read project signals in order: CLAUDE.md/AGENTS.md → package manifests → directory structure → key configs (auth, schema, routes, CI) → `git log --oneline -30`. Drill into source until every feature entry is specific and confident.
@@ -104,7 +104,7 @@ Adoption states: `canonical` (defining implementation), `adopted`, `pending` (ge
 4. Link features to existing pattern pages (read `wiki/index.md` → Patterns section). For each pattern this project relates to, update its adoption row evidence (`Last seen`, and `Last verified` when you actually confirmed the implementation matches the pattern). Match adoption rows by exact slug/link — beware near-identical slugs (e.g. `rxweave` vs `rxweave-cloud` are different projects).
 5. Pattern proposal: if a capability now appears in 2+ projects, or this scan found a clearly reusable upgrade, PROPOSE promotion to the user (name, description, canonical project, candidate adopters). Create the pattern page only after user confirms. Never auto-create.
 6. Update `wiki/index.md` descriptions if changed. Append to `wiki/log.md` ONLY if page content actually changed (no-op scans don't log).
-7. Commit `chore(os): scan <slug> knowledge` + push. Update `lastScanTime` in local config.
+7. When publishing is authorized, commit `chore(os): scan <slug> knowledge` + push. Update `lastScanTime` in local config for the completed scan; report any unpublished changes.
 
 ### Feature ordering
 Group Features by architectural layer (core → protocol → apps/tooling) when the existing list already reads that way; otherwise append new features at the end. Don't reshuffle existing entries just to insert one.
@@ -118,8 +118,8 @@ Too granular: "Zod validation on sign-in form". Too vague: "Authentication", "AP
 
 **Triggers:** "has any project done X?", or invoked while building a feature.
 
-1. Staleness check (scan current project first if stale).
-2. `git pull --ff-only` in OS repo; read `wiki/index.md`, then relevant project + pattern pages. Semantic matching — understand what the user is building, find prior art.
+1. Check available freshness evidence; keep stale or unknown freshness visible in the answer.
+2. Read local `wiki/index.md`, then relevant project + pattern pages. Semantic matching — understand what the user is building, find prior art. Do not pull or scan as part of the lookup.
 3. Present matches: project, feature/pattern, how it works, key files. Prefer pointing at the pattern page's canonical implementation when one exists.
 4. Offer to read the real implementation. Resolve `localPath` from `~/.config/kb.json`; if the path is missing on this machine, say so and offer to work from the knowledge summary or update the path.
 
@@ -127,15 +127,15 @@ Too granular: "Zod validation on sign-in form". Too vague: "Authentication", "AP
 
 **Triggers:** "mark <project> as adopted for <pattern>", "that pattern doesn't apply to <project>".
 
-Primary adoption tracking is scan-verified. This verb is the escape hatch: flip the project's row in the pattern's Adoption table (`adopted` after a migration, `n/a` to permanently silence a candidate), set `Last verified` to today, bump pattern `timestamp`, log + commit + push.
+Primary adoption tracking is scan-verified. This verb is the escape hatch: flip the project's row in the pattern's Adoption table (`adopted` after a migration, `n/a` to permanently silence a candidate), set `Last verified` to today, bump pattern `timestamp`, and log. Commit + push when publishing is authorized.
 
 ## Mode: sync-registry
 
-**Triggers:** "kb sync", first run on a new machine, or cwd not found in config.
+**Triggers:** "kb sync" or an authorized registry setup/update.
 
 1. Run `cmux list-workspaces --json` → title + current_directory per workspace. cmux is an intent SIGNAL, not authority: absence from cmux on this machine never implies the project is globally inactive, and repos worked outside cmux may be registered manually.
 2. Diff against config + wiki Project pages (match by GitHub remote URL: `git -C <dir> remote get-url origin`).
-3. New repo → ASK the user to confirm slug + GitHub URL before doing anything. On confirm: add to config; create stub wiki page (frontmatter + one-liner + `resource` + lifecycle/attention the user picks) if none exists; index + log + commit + push.
+3. New repo → confirm slug + GitHub URL unless already provided or approved. Add to config; create stub wiki page (frontmatter + one-liner + `resource` + approved lifecycle/attention) if none exists; update index + log, then commit + push when publishing is authorized.
 4. Wiki-active project with no workspace on this machine → report as candidate-stale ONLY. Never auto-demote lifecycle or attention.
 5. Skip non-project workspaces (the OS vault itself, duplicate workspaces pointing at the same repo).
 
@@ -147,6 +147,6 @@ Primary adoption tracking is scan-verified. This verb is the escape hatch: flip 
 | "has any project done X?" | query |
 | "save this as a pattern" | scan step 5 (proposal) directly |
 | "mark X adopted / n-a" | adopt |
-| "kb sync", new machine, unknown cwd | sync-registry |
+| "kb sync", authorized registry setup | sync-registry |
 | "what projects do I have?" | read wiki/index.md, summarize |
-| invocation + stale project | scan first, then proceed |
+| lookup + stale project | answer with staleness; refresh only when authorized |

@@ -1,6 +1,6 @@
 # Codex harness in the app, CLI, or IDE
 
-Treat Codex as a harness that can also expose a native control plane for subagents. The session tool inventory is the source of truth.
+Treat Codex as a harness that can also expose a native control plane for subagents. The session tool inventory is the source of truth. Route selection and lifecycle checks below belong to the orchestrator. Assigned workers follow [worker intake](../../SKILL.md#worker-intake), reuse the supplied route, and check task checkout/tools/access without repeating host, model, effort, or quota investigation.
 
 ## Routing
 
@@ -24,7 +24,7 @@ This reference owns Codex coordination capability mapping and invariants. Each o
 
 ## Distinguish the Codex host shapes
 
-Codex runs as a native Desktop app and can also be hosted inside Orca or T3 Code. The harness is similar, but desktop and plugin readiness, the computer-use service, and return routes belong to each session and are never inherited from another host, a copied skill, or the model identity. Verify which shape drives the user from the current session's own metadata and tools.
+Codex runs as a native Desktop app and can also be hosted inside Orca or T3 Code. The harness is similar, but desktop and plugin readiness, the computer-use service, and return routes belong to each session and are never inherited from another host, a copied skill, or the model identity. The orchestrator verifies which shape drives the user from current session metadata and tools; UI workers verify their assigned adapter and actual target locally.
 
 ## Documented handoff boundaries
 

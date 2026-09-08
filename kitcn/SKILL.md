@@ -1,11 +1,13 @@
 ---
 name: kitcn
-description: ALWAYS use this skill when working with convex, kitcn, or better-convex (renamed to kitcn). Covers the common end-to-end feature path using cRPC + ORM + auth + React, with setup/bootstrap and niche depth in references.
+description: Build features in projects using Kitcn (formerly Better Convex), or when the user explicitly requests Kitcn or Better Convex. Covers cRPC, ORM, auth, and React with setup and feature references. Does not apply to plain Convex projects.
 ---
 
 # kitcn Core Skill (80% Path)
 
 Use this file first for everyday feature delivery in an already configured kitcn app.
+
+Kitcn is the renamed Better Convex; `kitcn` is the canonical skill name for both. Before applying imports or examples, inspect the project's package manifests, lockfile version, and existing wiring to establish which package and API version it actually uses. Preserve that project's dependencies and conventions; the rename does not authorize a migration, installation, upgrade, or removal. For plain Convex work without an explicit Kitcn request, use the plain Convex guidance instead. Setup references apply only within an authorized Kitcn setup task.
 
 - If setup/bootstrap/env/auth wiring or project structure mirroring is missing, use `references/setup/index.md` (then the relevant setup file).
 - If the task is advanced or niche, load only the specific feature reference listed at the end.
@@ -76,7 +78,7 @@ Only remember these non-parity deltas:
 
 ## Directory Boundary (Important)
 
-This skill is directory-scoped. Do not depend on reading files outside `skills/convex/**`.
+Resolve this skill's supporting references relative to this `kitcn/` directory. Project source inspection remains scoped to the assigned checkout.
 
 Use `references/setup/` when the task needs:
 
