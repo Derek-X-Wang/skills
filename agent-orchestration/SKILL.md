@@ -11,6 +11,8 @@ Use one active orchestrator as the decision hub. Keep that session in control af
 
 In a dispatched worker or reviewer session, follow the assigned harness, model, effort, and route. Check only the assigned checkout, task tools, and access needed to execute. Report an observed mismatch, missing capability, blocker, or exceptional question to the orchestrator; do not investigate the host, reload model/effort/quota tables, reroute, spawn agents, or contact the human. Continue task-specific instructions and verification within the dispatch. For UI work, load `computer-use-routing` and verify the actual assigned target, adapter eligibility, exposed tools, and access; parent desktop/plugin availability is never inherited.
 
+A dispatched worker may ask the orchestrator to run a substantial separable bounded job with a helper. Workers never spawn, reroute, manage, or message helper sessions or peers; the request and its results travel through the orchestrator under [bounded-assistance.md](references/bounded-assistance.md).
+
 The remaining route selection and coordination sections are orchestrator responsibilities. Workers do not repeat them merely because this skill is available or included in a dispatch.
 
 ## Build the capability graph
@@ -116,6 +118,10 @@ Parallelize only genuinely independent scopes. Before parallel edits:
 
 For one decision-complete task on an already verified route, reuse the session's runtime evidence and sufficiently fresh relevant quota. Select the worker's model/effort explicitly under the role defaults, satisfy the applicable review budget, and send a compact dispatch with scope, checkout, tools/access, authority, evidence, return path, and cleanup ownership. Do not rebuild the capability graph, reread unchanged routing tables, or poll quota for every child. Recheck affected evidence after a reset, rate-limit event, or real route/tool/host change, and refresh quota before sustained or parallel volume when the existing snapshot no longer supports the expected work. Unknown quota stays unknown; any provisional route remains bounded under the routing matrix. This path preserves tool eligibility, isolation, independent verification, R2/cross-model gates, takeover, replay safety, and cleanup requirements.
 
+### Bounded assistance mid-task
+
+When a substantial separable bounded job emerges during a task — from the orchestrator's plan or a worker's request — the orchestrator may run it with a helper session under [bounded-assistance.md](references/bounded-assistance.md); the standard dispatch, isolation, review, takeover, and cleanup requirements still apply.
+
 ## Send a decision-complete dispatch
 
 Include:
@@ -154,6 +160,8 @@ human ↔ orchestrator ↔ worker
 Relay useful findings between roles. Do not create worker-to-worker channels, even when the harness supports them. A worker session remains a worker session if the human later opens its panel.
 
 Treat reports from workers, reviewers, bots, and status services as claims, not proof. Verify material completion, test, and safety claims from primary evidence when practical. Otherwise attribute the claim and state the limit.
+
+In direct mode, end each substantive orchestrator response with a concise next action, its owner, and a proceeding, awaiting-decision, or complete state. Continue already-authorized work without needless approval and do not invent more work after completion. Worker return contracts remain separate.
 
 ## Review and integrate
 

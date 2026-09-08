@@ -1,6 +1,6 @@
 # Operating routing matrix
 
-Last reviewed: 2026-09-06.
+Last reviewed: 2026-09-08; operating-policy review only, model capability claims and dated preferences keep their own dates.
 
 These are Derek's current operating preferences. They combine model capability, available subscriptions, route friction, and quota. They are not a pure intelligence ranking. The orchestrator owns model, effort, harness, route, and quota selection and verifies the resolved route, tools, checkout, and return path. Workers follow their assigned route and check only task checkout/tools/access; they do not reload this table or perform quota/host investigation.
 
@@ -28,6 +28,10 @@ Apply this balancing after explicit route requests, role eligibility, authorizat
 
 The GLM-5.3-Flash route requires an owned foreground `opencode run` for bounded work or an attended Orca terminal. If the task must run unattended or AFK, or no orchestrator can attend the terminal, skip this route and choose the next eligible verified route.
 
+Model and effort may vary by coherent work phase: retain strong judgment on orchestration, planning, and undecided or difficult work, and route decided implementation to a sufficient implementer. Prefer eligible OpenCode Go GLM-5.3-Flash for bounded implementation and for repository or supplied-material research. Skipping it needs a concrete capability, tool, quota, route, or coupling/overhead reason; native convenience alone is insufficient.
+
+Separate web search and source discovery from repository and supplied-material research. For web work, prefer Codex or Claude sessions with verified hosted search tools — a dated user preference, not a provider-superiority claim. OpenCode remains eligible for repository investigation and supplied documents. Tools do not inherit across routes: a route without a verified required search tool stays unavailable for that web work. The foreground and AFK restrictions above still apply.
+
 Ignore banked Codex rate-limit reset credits during routing and never claim they are already-available current quota. Derek redeems a reset only by explicit request. After Derek uses one, refresh the usage data and route from the new utilization instead of the prior value or the remaining reset-credit count.
 
 ## Role defaults
@@ -36,7 +40,8 @@ Ignore banked Codex rate-limit reset credits during routing and never claim they
 | --- | --- | --- | --- |
 | Difficult new orchestration | Fable in Claude Code | GPT-6 Astra; the current capable orchestrator | Reserve Fable for orchestration and difficult judgment. Astra is the preferred alternative when Fable capacity runs out. Do not automatically replace a healthy active orchestrator. |
 | Normal new orchestration | Opus in Claude Code | GPT-5.6 Sol in Codex | Opus is capable and preserves capacity for difficult work. |
-| Routine research | Opus, GLM-5.3-Flash, or Codex GPT-6 Astra at medium effort by evidence, tools, and quota | GPT-5.6 Sol or any verified research-capable worker | Astra medium is an eligible normal worker when research is routed to Codex. Ordinary research is not Fable work by default. |
+| Web search and source discovery | Codex GPT-6 Astra at medium effort or Opus in Claude Code, in a session with verified hosted search tools | GLM-5.3-Flash where its route verifies hosted search tools; GPT-5.6 Sol or any verified research-capable worker with verified hosted search tools | Dated operating preference, 2026-09-08: web work prefers Codex or Claude sessions with verified hosted search tools; tools do not inherit across routes and missing tools stay missing. Preference only, not fresh capability-test evidence. Ordinary research is not Fable work by default. |
+| Repository and supplied-material research | Opus, GLM-5.3-Flash, or Codex GPT-6 Astra at medium effort by evidence, tools, and quota, with eligible OpenCode GLM preferred per the phase rules above | GPT-5.6 Sol or any verified research-capable worker | Astra medium is an eligible normal worker when research is routed to Codex. Ordinary research is not Fable work by default. |
 | Implementation | GLM-5.3-Flash through OpenCode Go for ordinary bounded implementation when sufficient, authorized, and route/quota eligible | Codex GPT-6 Astra (`gpt-6-astra`) at medium effort — the default within Codex; GPT-5.6 Sol (`gpt-5.6-sol`) at high effort remains a proven implementation fallback; Opus in Claude Code when delegated routes are constrained | GLM remains Derek's preferred capability, price, and allowance balance. Astra medium is a user-selected operating preference dated 2026-09-06, not locally benchmark-proven superiority or cost savings over Sol high. Task difficulty and required tools precede defaults and quota balance; choose a stronger model directly when needed. Explicit task model requests always win. Quota chooses only between eligible models. |
 | Bounded chore | DeepSeek V4 Flash through a foreground `opencode run` for small, clear, readily verifiable implementation and chore tasks, when eligible | GLM-5.3-Flash or Sonnet in Claude Code; any verified capable worker otherwise | A DeepSeek data-location consent gate was observed on 2026-08-28; verify current consent state before use. Changing that choice requires Derek's explicit approval; existing approval does not need to be requested again. Never select DeepSeek as reviewer. Follow model-profile eligibility for other roles. Preserve stronger-model capacity. |
 | Complex computer use | A capable session that has loaded `computer-use-routing` | Any eligible local adapter the router approves | Model ability does not prove an adapter exists; `computer-use-routing` owns adapter eligibility and may return `executor_required`. |
