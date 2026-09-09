@@ -146,7 +146,7 @@ Workers must send blockers and exceptional questions to the orchestrator. The or
 
 ## Take over a stalled worker task
 
-When a worker repeats the same material failure without useful new evidence, stop reissuing the unchanged prompt. The worker reports the loop, or the orchestrator detects it from primary observed evidence, including when the worker is unresponsive; the orchestrator coordinates a bounded takeover of that task either way. Takeover replaces the task's worker, not the active orchestrator role. The default replacement worker is Codex GPT-6 Astra at xhigh effort; Fable only when the user explicitly authorizes it for the takeover. Read [worker-takeover.md](references/worker-takeover.md) before triggering: it owns the no-progress threshold, exclusivity fencing of the previous writer and its children before any overlapping mutation, the compact takeover dispatch, and the automatic-cycle stop.
+When a worker repeats the same material failure without useful new evidence, stop reissuing the unchanged prompt. The worker reports the loop, or the orchestrator detects it from primary observed evidence, including when the worker is unresponsive; the orchestrator coordinates a bounded takeover of that task either way. Takeover replaces the task's worker, not the active orchestrator role. The default replacement worker is Codex GPT-6 Astra, with high or xhigh selected conditionally from the failed-attempt evidence under the takeover policy; Fable only when the user explicitly authorizes it for the takeover. Read [worker-takeover.md](references/worker-takeover.md) before triggering: it owns the no-progress threshold, exclusivity fencing of the previous writer and its children before any overlapping mutation, the compact takeover dispatch, and the automatic-cycle stop.
 
 ## Control communication
 
@@ -197,11 +197,11 @@ Report completion with a compact cleanup outcome: items removed or stopped, item
 - [Parallel AFK runners](references/patterns/parallel-afk-runners.md): independent queue items with strict ownership.
 - [Parallel research](references/patterns/parallel-research.md): read-only investigation by natural boundaries.
 - [Structured debate](references/patterns/structured-debate.md): time-boxed adversarial analysis through the orchestrator.
-- [Repo audit](references/patterns/repo-audit.md): bounded, evidence-backed repository audit by one explicitly selected Codex GPT-6 Astra at xhigh effort, report-only by default.
+- [Repo audit](references/patterns/repo-audit.md): bounded, evidence-backed repository audit by one explicitly selected Codex GPT-6 Astra at high effort by default, with targeted xhigh escalation for a specifically identified difficult question; report-only by default.
 
 ## Invoke `audit-repo`
 
-`$agent-orchestration audit-repo` with a named repository and natural-language selected areas is the entrypoint for the bounded repository audit. This is skill prompt vocabulary, not a shell executable or an implemented CLI flag; [repo audit](references/patterns/repo-audit.md) owns the workflow. One auditor runs at Codex GPT-6 Astra xhigh effort — Derek's selected preference for this workflow, not a routine research default — with the active orchestrator preserved, no automatic fanout, and no silent model, effort, or Fable substitution when the requested route is unavailable.
+`$agent-orchestration audit-repo` with a named repository and natural-language selected areas is the entrypoint for the bounded repository audit. This is skill prompt vocabulary, not a shell executable or an implemented CLI flag; [repo audit](references/patterns/repo-audit.md) owns the workflow. One auditor runs at Codex GPT-6 Astra high effort by default, with targeted xhigh escalation under the audit pattern — Derek's selected preference for this workflow, not a routine research default — with the active orchestrator preserved, no automatic fanout, and no silent model, effort, or Fable substitution when the requested route is unavailable.
 
 Higher-authority issues, specifications, contracts, ADRs, and repository instructions override this skill. Stop when precedence is unclear.
 

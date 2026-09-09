@@ -14,9 +14,10 @@ The worker reports the loop upstream; it never decides its own replacement. The 
 
 ## Choose the replacement worker
 
-Default replacement worker: Codex GPT-6 Astra at xhigh effort. The xhigh effort is the user's selected takeover preference for this role, not a measured universal effort. Before dispatch, verify the resolved model, that the serving harness actually supports the requested effort value, the tools, route, checkout, return path, relevant quota, and that positive task budget remains when a finite budget applies.
+Default replacement worker: Codex GPT-6 Astra. Choose high when fresh context or challenging a bad assumption is the main recovery need; choose xhigh directly when prior attempts demonstrate a genuinely difficult reasoning problem. State the evidence for the effort choice. This conditional choice is Derek's operating preference dated 2026-09-09, not measured quality equivalence or subscription savings. Before dispatch, verify the resolved model, that the serving harness actually supports the selected effort value, the tools, route, checkout, return path, relevant quota, and that positive task budget remains when a finite budget applies.
 
-- No silent downgrade of the model or the effort, including to GPT-5.6 Sol or a lower effort. If Astra is unavailable, report the bounded inability and preserve the work.
+- Honor an explicitly requested effort; otherwise select high or xhigh under the criteria above. No silent model substitution or effort change after selection. If the selected Astra route or effort is unavailable, report the bounded inability and preserve the work.
+- Do not add an automatic high-to-xhigh retry ladder. A high-effort takeover that reaches the no-progress threshold follows the stop-and-replan rule below; changing effort does not reset attempts or consumed budget.
 - Fable replaces Astra only when the user explicitly selects or authorizes it for this takeover. There is no automatic Fable fallback and no automatic redemption of reset credits.
 - Any other replacement is allowed only within existing dispatch authority and must be disclosed as a deviation from the default. Do not repeatedly retry a route that already failed.
 

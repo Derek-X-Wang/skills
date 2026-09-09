@@ -6,7 +6,7 @@ Invoke it inside this skill with the convention `$agent-orchestration audit-repo
 
 ## Route and authority
 
-- One auditor session: Codex GPT-6 Astra at xhigh effort through a verified route. This role and effort are Derek's selected preference for this workflow, not a benchmark claim and not a routine research default.
+- One auditor session: Codex GPT-6 Astra at high effort by default through a verified route. Reserve xhigh for a specifically identified difficult finding or question, not an automatic second whole-repository pass. The orchestrator selects and discloses any targeted escalation within the existing scope and remaining budget; the auditor does not reroute itself. Honor an explicit effort request. This is Derek's operating preference dated 2026-09-09, not a benchmark or measured savings claim and not a routine research default.
 - Verify the resolved model, that the serving harness supports the requested effort, the required tools, checkout, and return path as any dispatch does. Apply the quota and return-path rules from [routing-matrix.md](../routing-matrix.md) by reference. Quota balancing chooses among eligible routes only; it never changes the requested model or effort.
 - The active orchestrator stays the hub. It owns the dispatch, checks material evidence in the report, and coordinates any follow-up. The auditor reports only to the orchestrator. No automatic fanout — not even one auditor per area — and no worker-to-worker channels.
 - No silent substitution: if the requested model, effort, or route is unavailable, report the bounded inability and request direction. Never switch the model or effort silently, and never substitute Fable automatically.
@@ -14,7 +14,7 @@ Invoke it inside this skill with the convention `$agent-orchestration audit-repo
 - A report-only audit claims no source changes and no speedups. It grants no commit, push, install, publish, merge, closure, or repository-settings authority.
 
 ```text
-orchestrator ────> one auditor session (Astra xhigh)
+orchestrator ────> one auditor session (Astra high by default)
       ↑
 report path + compact summary
 ```
