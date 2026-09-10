@@ -1,6 +1,6 @@
 # Dated model observations
 
-Last reviewed: 2026-09-09 for Astra specialist effort preferences; capability evidence retains its stated dates.
+Last reviewed: 2026-09-10 for bounded-worker candidates; capability evidence retains its stated dates.
 
 These are Derek's observed working defaults. They are not vendor claims, universal rankings, or permanent truths. Keep capability judgments separate from quota, route convenience, and other operating preferences.
 
@@ -16,7 +16,7 @@ Assess these dimensions separately:
 
 Do not infer fresh-review quality from self-correction quality.
 
-The evidence comes from Derek's project work and explicit operating judgments through 2026-09-08, not a formal benchmark. Keep only material per-model differences below.
+The evidence comes from Derek's project work and explicit operating judgments through 2026-09-10, not a formal benchmark. Keep only material per-model differences below.
 
 | Originating provider | Exact model observed | Routing alias or model ID | Conditions | Observed strengths | Observed limits | Current role fit | Evidence and confidence |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -28,7 +28,18 @@ The evidence comes from Derek's project work and explicit operating judgments th
 | Z.ai | GLM-5.3-Flash | `opencode-go/glm-5.3-flash` | OpenCode 1.18.25 with OpenCode Go; effort not yet standardized | Below GPT-5.6 Sol and Opus, but not far behind in Derek's current judgment; capable implementation and fresh review | Less capable than the current frontier defaults. GLM-5.3 (non-Flash) is a different, untested configuration; do not silently substitute it or inherit Flash evidence | Cost-efficient implementer and eligible independent reviewer; Derek's preferred default for ordinary bounded work when sufficient, authorized, and route/quota eligible — a capability, price, and allowance judgment, not a benchmark ranking | Derek's current operating judgment and 2026-09-05 default preference; medium confidence |
 | DeepSeek | DeepSeek V4 Flash | `opencode-go/deepseek-v4-flash` | OpenCode 1.18.25 with OpenCode Go; effort not yet standardized; a data-location consent gate was observed on 2026-08-28 | Implementation quality comparable to Sonnet and possibly stronger in Derek's current judgment | Not approved for fresh review. Verify current consent state through the supported route; changing the account's data-location choice requires Derek's explicit approval. A routing preference does not change that choice | Preferred for small, clear, readily verifiable implementation and chore tasks when eligible, falling back to GLM-5.3-Flash or Sonnet; otherwise cost-efficient implementer or chore worker only; never select as reviewer | Derek's current operating judgment and 2026-09-05 chore preference; medium confidence |
 
-Mark any other model or materially changed version as `untested` until representative work supplies evidence. Newly listed OpenCode Go models start untested; only representative work changes that. Record vendor-documented context, tools, or aliases as facts, but do not convert marketing claims into a capability ranking.
+Mark any other model or materially changed version as `untested` until representative work supplies evidence. Newly listed OpenCode Go models start untested; only representative work changes that. The explicitly approved bounded trials below may proceed without claiming prior operational validation. Record vendor-documented context, tools, or aliases as facts, but do not convert marketing claims into a capability ranking.
+
+## Bounded-worker candidates, 2026-09-10
+
+Derek requested proactive consideration of these cost-conscious candidates. Use them for small, decision-complete implementation or chore tasks with clear acceptance checks, bounded ownership and a stop contract. They remain locally untested until representative work provides evidence; do not require an unrelated benchmark run before every bounded trial. Keep GLM-5.3-Flash as the ordinary bounded implementation preference and Sol high as the normal Codex worker default. Required independent review still uses an existing sufficient eligible reviewer; neither candidate is approved as a reviewer. Record the actual model, route, effort, result, verification, and material rework in the task handoff; do not silently promote a default or edit shared profiles after a single success.
+
+| Candidate | Catalog and documentation evidence | Bounded use and limits |
+| --- | --- | --- |
+| DeepSeek V4.1 Flash | OpenCode 1.18.30 refreshed catalog on 2026-09-10 resolves `opencode-go/deepseek-flash` to DeepSeek V4.1 Flash, with image input, tool calling, and low/high/max variants; [OpenCode Go documentation](https://opencode.ai/docs/go/) lists the model and gateway ID | Consider bounded implementation/chore trials, including supplied-image interpretation where relevant. Select and record an actually supported effort for the task; no standardized default or measured local quality/savings yet. Verify current data-location consent before use; changing consent requires Derek's explicit approval. The previous DeepSeek reviewer exclusion remains. |
+| GPT-5.6 Luna at max | [Official OpenAI documentation](https://developers.openai.com/api/docs/models/gpt-5.6-luna) supports max. The refreshed OpenCode catalog lists `opencode-go/gpt-5.6-luna` with max; Codex uses `gpt-5.6-luna` when its serving route verifies max | Consider bounded implementation/chore trials at explicit max effort through an eligible Codex or OpenCode Go route, balancing the actual entitlement consumed. Do not silently map max to high/xhigh or inherit the orchestrator's effort. Prior benchmark evidence below is dated, not local quality or allowance proof. |
+
+DeepSeek V4.1 Flash is a new configuration: do not inherit V4 Flash's implementation ranking or silently use `deepseek-v4-flash` or `deepseek-v4-flash-vision-exp` as substitutes. Resolve the current model behind each alias; a remapped alias makes the old evidence stale. The V4 row above is historical evidence for that exact version, not proof that it remains served unchanged. Vision metadata establishes advertised image-input support, not tested screenshot accuracy, hosted web search, or a usable browser/desktop adapter. Live UI work still requires `computer-use-routing` and executing-session readiness. Both OpenCode candidates retain the owned-foreground/attended-route restrictions; new models or bonus quota do not make that route AFK-capable.
 
 ## DeepSWE evidence use
 
@@ -48,7 +59,7 @@ These are candidate comparison points only. Do not import the whole leaderboard 
 
 ## Dated preference notes, 2026-09-05
 
-- **GPT-5.6 Luna (max effort)** is a benchmark-supported implementation candidate, not a locally validated profile. It stays `untested` under the rule above and does not replace the current role defaults. A bounded representative trial could establish implementation eligibility; do not use it as a required independent reviewer until review-specific evidence and eligibility exist.
+- **GPT-5.6 Luna (max effort)** was a benchmark-supported implementation candidate, not a locally validated profile. Derek explicitly approved proactive bounded-worker consideration on 2026-09-10 under the candidate policy above; it remains untested and does not replace current role defaults or gain reviewer eligibility.
 - **Kimi (family-level note; no exact version verified):** Derek judges capability good but the allowance scarce, so reserve it for justified specialist needs. Verify the exact version, effort, task evidence, and the actual entitlement pool before routing. Do not invent per-model quota and do not grant reviewer eligibility automatically.
 - **DeepSeek Pro:** no routine routing. Derek currently judges its value insufficient for the cost — a value judgment, not a claim about intelligence.
 

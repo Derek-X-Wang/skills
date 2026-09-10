@@ -91,6 +91,8 @@ Select each worker's model explicitly for its task. Never inherit the orchestrat
 
 Do not replace the active orchestrator only because another model ranks higher. Use another model as a planner, worker, adviser, or reviewer instead.
 
+Proactively consider DeepSeek V4.1 Flash through OpenCode Go and GPT-5.6 Luna at max effort for small, decision-complete, readily verifiable worker tasks under the [candidate policy](references/model-profiles.md#bounded-worker-candidates-2026-09-10). They are bounded trial candidates, not replacements for the GLM or Sol defaults and not approved reviewers. Any temporary usage promotion is a dated routing opportunity, not permanent capacity; [routing-matrix.md](references/routing-matrix.md) owns its revalidation.
+
 Prefer native coordination for harness-owned agents. Choose external routes by work shape: use a one-shot route for a focused opinion and a durable host route for visible, interactive, multi-round, or AFK work. Keep work local when no reliable dispatch and return path can be proven.
 
 ```text
