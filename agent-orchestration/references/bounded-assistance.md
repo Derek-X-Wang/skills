@@ -1,6 +1,6 @@
 # Bounded assistance
 
-Helper support for a substantial, separable, bounded job that emerges during a task. The orchestrator initiates it from its own plan and phase transitions, proactively evaluating whenever uncertain work becomes decided whether a sufficient lower-cost helper can own a coherent slice; a dispatched worker's request is an optional trigger, not a path to wait for. Triggers include a stalled task, an overloaded orchestrator context, or cost-effective delegation of a decided slice; none is mandatory — decide on net benefit against coupling and overhead, and state the concrete reason when retaining the work. A helper is an ordinary orchestrator-owned peer worker: no new hierarchy, no worker-to-worker channel, no automatic sub-ticket. Nothing here relaxes the standard dispatch, review, takeover, or cleanup rules.
+Helper support for a substantial, separable, bounded job that emerges during a task. The orchestrator initiates it from its own plan and phase transitions, proactively evaluating whenever uncertain work becomes decided whether a sufficient lower-cost helper can own a coherent slice; a dispatched worker's request is an optional trigger, not a path to wait for. Triggers include a stalled task, an overloaded orchestrator context, or cost-effective delegation of a decided slice; none is mandatory — decide on net benefit against coupling and overhead, and state a one-line concrete reason whether splitting or retaining the work. The default shape is one ticket with one active worker at a time; a sequential phase handoff is the normal split, and a concurrent helper is the exception. A helper is an ordinary orchestrator-owned peer worker: no new hierarchy, no worker-to-worker channel, no automatic sub-ticket. Nothing here relaxes the standard dispatch, review, takeover, or cleanup rules.
 
 ## Roles and decision
 
@@ -28,7 +28,7 @@ The orchestrator may resolve bounded details inside this contract; dispatch auth
 ## Run the helper
 
 - Save a durable checkpoint before the helper edits. Keep the original worker session alive when the route supports it; the helper remains a separate peer session. If the original session is lost or compacted, reconstruct its continuation from the durable checkpoint, not chat history.
-- Pause the original worker's overlapping edits while the helper works. Run parallel work only with isolated scopes: one active owner per file, separate worktrees or equivalent isolation, shared files and generated artifacts serialized.
+- Pause the original worker's overlapping edits while the helper works. Run parallel work only with isolated scopes: a stated separability claim (disjoint files, no shared schema or generated artifact), one active owner per file, separate worktrees or equivalent isolation, shared files and generated artifacts serialized, and a named integration owner. Default to one concurrent helper per ticket; the orchestrator states why more is safe before adding another.
 - Do not poll a model actively just to wait; use the route's completion reporting or agreed checkpoints.
 
 ## Return and integrate
