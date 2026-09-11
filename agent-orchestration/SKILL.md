@@ -11,7 +11,7 @@ Use one active orchestrator as the decision hub. Keep that session in control af
 
 In a dispatched worker or reviewer session, follow the assigned harness, model, effort, and route. Check only the assigned checkout, task tools, and access needed to execute. Report an observed mismatch, missing capability, blocker, or exceptional question to the orchestrator; do not investigate the host, reload model/effort/quota tables, reroute, spawn agents, or contact the human. Continue task-specific instructions and verification within the dispatch. For UI work, load `computer-use-routing` and verify the actual assigned target, adapter eligibility, exposed tools, and access; parent desktop/plugin availability is never inherited.
 
-A dispatched worker may ask the orchestrator to run a substantial separable bounded job with a helper. Workers never spawn, reroute, manage, or message helper sessions or peers; the request and its results travel through the orchestrator under [bounded-assistance.md](references/bounded-assistance.md).
+A dispatched worker may ask the orchestrator to run a substantial separable bounded job with a helper; that request is an optional trigger, not a path the orchestrator waits for. Workers never spawn, reroute, manage, or message helper sessions or peers; the request and its results travel through the orchestrator under [bounded-assistance.md](references/bounded-assistance.md).
 
 The remaining route selection and coordination sections are orchestrator responsibilities. Workers do not repeat them merely because this skill is available or included in a dispatch.
 
@@ -84,14 +84,16 @@ Choose in this order:
 2. Require authorization, the correct checkout, the required tools, and a reliable return path.
 3. Satisfy the selected review budget and independence requirement.
 4. Choose a model that fits the role and task difficulty.
-5. Balance quota across entitlements per [routing-matrix.md](references/routing-matrix.md).
+5. Balance quota across entitlements per [routing-matrix.md](references/routing-matrix.md), with sufficiently fresh relevant quota evidence behind every dispatch decision.
 6. Prefer the simpler and faster route when the remaining choices are equivalent.
 
 Select each worker's model explicitly for its task. Never inherit the orchestrator's model, including Fable or Astra, merely because the parent session uses it. Prefer a sufficient implementer for decided work under the dated role defaults in [routing-matrix.md](references/routing-matrix.md): GLM-5.3-Flash remains the global ordinary bounded implementation preference; GPT-5.6 Sol (`gpt-5.6-sol`) at high effort is the default for normal Codex implementation and research workers. Astra medium is no longer the routine worker default. Reserve Fable for orchestration and difficult judgment; [review-policy.md](references/review-policy.md) owns its review escalation criteria and the Astra-authored R2 gate. Escalate to a stronger model only for a concrete unresolved difficulty, a failed bounded attempt, high uncertainty or impact that needs judgment, or a required tool. Never stage a deliberate weak-model failure first. State a concise selection rationale, not a verbose audit ritual.
 
+Every dispatch decision rests on sufficiently fresh relevant quota evidence: reuse a genuinely fresh snapshot, otherwise query Orca's public account surface when reachable before selecting the model and route. A user report of near-exhaustion invalidates contradictory prior headroom and triggers a refresh; missing or stale data never becomes healthy. Role defaults are conditional on actual remaining budget and reset timing. When Codex is near or at its limit without headroom for the expected work, route new ordinary workers to a sufficient authorized Claude model (Opus, or Sonnet for implementation only) or an OpenCode Go option with actual quota; native or default convenience is not a reason to keep spawning Codex workers. Explicit user routes, required tools, review independence, data consent, and authority still win; if the requested route cannot run, report that rather than silently substituting. [routing-matrix.md](references/routing-matrix.md) owns the refresh, headroom, and gateway-entitlement rules.
+
 Do not replace the active orchestrator only because another model ranks higher. Use another model as a planner, worker, adviser, or reviewer instead.
 
-Proactively consider DeepSeek V4.1 Flash through OpenCode Go and GPT-5.6 Luna at max effort for small, decision-complete, readily verifiable worker tasks under the [candidate policy](references/model-profiles.md#bounded-worker-candidates-2026-09-10). They are bounded trial candidates, not replacements for the GLM or Sol defaults and not approved reviewers. Any temporary usage promotion is a dated routing opportunity, not permanent capacity; [routing-matrix.md](references/routing-matrix.md) owns its revalidation.
+Proactively consider DeepSeek V4.1 Flash through OpenCode Go and GPT-5.6 Luna at max effort for decision-complete, readily verifiable bounded worker tasks under the [candidate policy](references/model-profiles.md#bounded-worker-candidates-2026-09-10), not gated by a blanket small-only rule. They are locally untested bounded trial candidates: not replacements for the GLM or Sol defaults, not approved reviewers, and not automatically eligible for hard or high-risk judgment. Any temporary usage promotion is a dated routing opportunity, not permanent capacity; [routing-matrix.md](references/routing-matrix.md) owns its revalidation.
 
 Prefer native coordination for harness-owned agents. Choose external routes by work shape: use a one-shot route for a focused opinion and a durable host route for visible, interactive, multi-round, or AFK work. Keep work local when no reliable dispatch and return path can be proven.
 
@@ -105,6 +107,10 @@ orchestrator session
 ## Decide whether to delegate
 
 Delegate substantial implementation, research, execution, and routine verification by default, even when the work is serial. The orchestrator owns intent, scope, decomposition, model and route selection, decisions, synthesis, verification of material evidence, and integration. Keep the orchestrator's context small: do not duplicate a worker's investigation or micromanage execution.
+
+Cost-effective delegation is an active orchestrator duty, not passive availability. Before substantial execution, and whenever an uncertain phase becomes decided, identify coherent work a sufficient lower-cost worker can own; dispatch it under the standard contract or briefly state the concrete reason to retain it (coupling, briefing or integration overhead, a required tool, or judgment the work still needs). Do not wait for a worker to request help. Classify difficulty by phase or slice, not by the whole ticket. Prefer coherent end-to-end worker ownership over artificial microtasks, and account for briefing, integration, review, and rework overhead. There is no utilization target, and a deliberate weak-model failure is never staged.
+
+Bounded means constrained responsibility and outcome — explicit scope, interfaces, no-touch areas, required evidence, and stop or escalation conditions — not tiny or trivial, and not a fully solved implementation handed over for typing. Decision-complete means the material product and architecture decisions are settled; the worker still investigates the code and makes ordinary implementation decisions within the contract without reopening settled architecture.
 
 Keep only tiny, obvious, low-risk edits local when dispatching costs more than doing them, and bound that exception — delegate once the work grows. If reliable delegation is unavailable, report the limitation and continue authorized local work when feasible; that is a reported constraint, not a hard deadlock.
 
@@ -122,7 +128,7 @@ For one decision-complete task on an already verified route, reuse the session's
 
 ### Bounded assistance mid-task
 
-When a substantial separable bounded job emerges during a task — from the orchestrator's plan or a worker's request — the orchestrator may run it with a helper session under [bounded-assistance.md](references/bounded-assistance.md); the standard dispatch, isolation, review, takeover, and cleanup requirements still apply.
+When a substantial separable bounded job emerges during a task, the orchestrator initiates a helper session under [bounded-assistance.md](references/bounded-assistance.md); a worker's request is an optional trigger, not the required path. The standard dispatch, isolation, review, takeover, and cleanup requirements still apply.
 
 ## Send a decision-complete dispatch
 
