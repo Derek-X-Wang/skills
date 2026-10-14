@@ -25,16 +25,17 @@ The OS repo is shared with cron agents. Lookups use existing local knowledge wit
   "projects": {
     "<slug>": {
       "localPath": "/abs/path/on/this/machine",
-      "workspace": "<cmux workspace title or null>",
       "lastScanTime": "ISO 8601"
     }
   },
-  "settings": { "staleDays": 7 }
+  "settings": { "staleDays": 7, "roots": ["/abs/dev/root"], "activeDays": 30 }
 }
 ```
 
 - `machine`: human label for this machine (used in log/commit wording, e.g. `scan rxweave (main-mac)`).
 - `localPath` is per-machine; the portable project identity is the `resource:` GitHub URL in the wiki page frontmatter.
+- `settings.roots` lists the directories that registry sync searches for repos (default `~/Development`); `settings.activeDays` is the local-commit window that counts as recent activity (default 30).
+- A legacy `workspace` field from the former cmux-based sync may remain on old entries; ignore it.
 - If the file does not exist during a lookup, continue from available wiki pages and report unavailable local-path/freshness data. Create it with `{"machine": "<hostname>", "projects": {}, "settings": {"staleDays": 7}}` only for an authorized registry/config setup.
 
 ## Staleness Check
@@ -133,11 +134,13 @@ Primary adoption tracking is scan-verified. This verb is the escape hatch: flip 
 
 **Triggers:** "kb sync" or an authorized registry setup/update.
 
-1. Run `cmux list-workspaces --json` → title + current_directory per workspace. cmux is an intent SIGNAL, not authority: absence from cmux on this machine never implies the project is globally inactive, and repos worked outside cmux may be registered manually.
-2. Diff against config + wiki Project pages (match by GitHub remote URL: `git -C <dir> remote get-url origin`).
-3. New repo → confirm slug + GitHub URL unless already provided or approved. Add to config; create stub wiki page (frontmatter + one-liner + `resource` + approved lifecycle/attention) if none exists; update index + log, then commit + push when publishing is authorized.
-4. Wiki-active project with no workspace on this machine → report as candidate-stale ONLY. Never auto-demote lifecycle or attention.
-5. Skip non-project workspaces (the OS vault itself, duplicate workspaces pointing at the same repo).
+Discovery is host-agnostic: it reads git repos on disk, not any terminal or agent host.
+
+1. Find primary git checkouts under `settings.roots` (default `~/Development`), a few levels deep. A directory whose `.git` is a directory is a primary checkout. Skip linked worktrees (`.git` is a file), dependency and build directories (`node_modules`, `vendor`, `.sst`), and the OS vault itself. For each, read `git remote get-url origin` and the last local commit date (`git log -1 --format=%cI`).
+2. Diff against config + wiki Project pages, matching by GitHub remote URL (normalize `git@github.com:o/r.git` and `https://github.com/o/r`). Collapse several checkouts of one remote into one candidate.
+3. A local commit within `settings.activeDays` is an intent SIGNAL, not authority. A quiet checkout on this machine never implies the project is globally inactive, and a repo can be registered manually.
+4. New repo with recent activity → confirm slug + GitHub URL unless already provided or approved. Skip repos without an origin, and clones of third-party projects the user doesn't own. Add to config; create a stub wiki page (frontmatter + one-liner + `resource` + approved lifecycle/attention) if none exists; update index + log, then commit + push when publishing is authorized.
+5. Registered project whose `localPath` is missing, or whose checkout has no local commit within `activeDays` → report as candidate-stale ONLY. Never auto-demote lifecycle or attention.
 
 ## Quick Reference
 
