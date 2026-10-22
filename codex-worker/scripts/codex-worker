@@ -1,0 +1,364 @@
+#!/usr/bin/env python3
+"""Launch, resume, and inspect foreground Codex CLI workers."""
+import argparse
+from contextlib import contextmanager
+import fcntl
+import json
+import os
+from pathlib import Path
+import re
+import subprocess
+import sys
+
+
+class WorkerError(Exception):
+    pass
+
+
+def uncomment(text):
+    """Remove TOML comments outside quoted strings, preserving line structure."""
+    result = []
+    quote = None
+    i = 0
+    while i < len(text):
+        char = text[i]
+        if quote:
+            if text.startswith(quote, i):
+                result.append(quote)
+                i += len(quote)
+                quote = None
+                continue
+            if quote[0] == '"' and char == '\\':
+                result.append(text[i:i + 2])
+                i += 2
+                continue
+        elif char in "\"'":
+            quote = char * 3 if text.startswith(char * 3, i) else char
+            result.append(quote)
+            i += len(quote)
+            continue
+        elif char == '#':
+            end = text.find('\n', i)
+            i = len(text) if end == -1 else end
+            continue
+        result.append(char)
+        i += 1
+    return ''.join(result)
+
+
+def string_array(value):
+    """Parse only a TOML array of basic or literal strings; reject everything else."""
+    index = 0
+
+    def spaces():
+        nonlocal index
+        while index < len(value) and value[index].isspace():
+            index += 1
+
+    spaces()
+    if value[index:index + 1] != '[':
+        raise WorkerError('configured writable_roots must be an array of strings')
+    index += 1
+    roots = []
+    while True:
+        spaces()
+        if value[index:index + 1] == ']':
+            return roots, value[index + 1:]
+        quote = value[index:index + 1]
+        if quote not in ('"', "'"):
+            raise WorkerError('cannot parse configured writable_roots string')
+        index += 1
+        chars = []
+        while index < len(value) and value[index] != quote:
+            char = value[index]
+            index += 1
+            if char in '\n\r' or ord(char) < 32:
+                raise WorkerError('control character in configured writable_roots')
+            if char == '\\' and quote == '"':
+                escape = value[index:index + 1]
+                index += 1
+                replacements = {'b': '\b', 't': '\t', 'n': '\n', 'f': '\f', 'r': '\r',
+                                '"': '"', '\\': '\\'}
+                if escape in replacements:
+                    char = replacements[escape]
+                elif escape in ('u', 'U'):
+                    size = 4 if escape == 'u' else 8
+                    digits = value[index:index + size]
+                    if len(digits) != size or not re.fullmatch(r'[0-9a-fA-F]+', digits):
+                        raise WorkerError('invalid Unicode escape in writable_roots')
+                    point = int(digits, 16)
+                    if point > 0x10FFFF or 0xD800 <= point <= 0xDFFF:
+                        raise WorkerError('invalid Unicode scalar in writable_roots')
+                    char = chr(point)
+                    index += size
+                else:
+                    raise WorkerError('invalid escape in configured writable_roots')
+            chars.append(char)
+        if index >= len(value):
+            raise WorkerError('unterminated configured writable_roots string')
+        index += 1
+        roots.append(''.join(chars))
+        spaces()
+        separator = value[index:index + 1]
+        if separator == ']':
+            return roots, value[index + 1:]
+        if separator != ',':
+            raise WorkerError('missing comma or closing bracket in writable_roots')
+        index += 1
+
+
+def statement_lines(text):
+    """Distinguish TOML statements from lines inside unrelated multiline strings."""
+    quote = None
+    for line in text.splitlines(keepends=True):
+        outside = quote is None
+        index = 0
+        while index < len(line):
+            char = line[index]
+            if quote:
+                if line.startswith(quote, index):
+                    index += len(quote)
+                    quote = None
+                    continue
+                if quote[0] == '"' and char == '\\':
+                    index += 2
+                    continue
+            elif char in "\"'":
+                quote = char * 3 if line.startswith(char * 3, index) else char
+                index += len(quote)
+                continue
+            index += 1
+        yield line, outside
+
+
+def configured_roots():
+    home = Path(os.environ.get('CODEX_HOME', '~/.codex')).expanduser()
+    config = home / 'config.toml'
+    if not config.exists():
+        return []
+    text = uncomment(config.read_text())
+    active = False
+    sections, keys = [], []
+    offset = 0
+    key = r"(?:writable_roots|\"writable_roots\"|'writable_roots')"
+    table = r"\s*\[\s*(?:sandbox_workspace_write|\"sandbox_workspace_write\"|'sandbox_workspace_write')\s*\]\s*"
+    for line, outside in statement_lines(text):
+        if outside and re.match(r'^\s*\[', line):
+            active = bool(re.fullmatch(table, line))
+        elif active:
+            if outside:
+                assignment = re.match(r'^\s*' + key + r'\s*=', line)
+                if assignment:
+                    keys.append(offset + assignment.end())
+                elif re.match(r'^\s*' + key + r'(?:\s|=|:|$)', line):
+                    raise WorkerError('cannot parse configured writable_roots assignment')
+            sections.append(line)
+            offset += len(line)
+    if len(keys) > 1:
+        raise WorkerError('duplicate configured writable_roots key')
+    if not keys:
+        return []
+    roots, remainder = string_array(''.join(sections)[keys[0]:])
+    if remainder.split('\n', 1)[0].strip():
+        raise WorkerError('unexpected text after configured writable_roots array')
+    return roots
+
+
+def merged_roots(directory, extra):
+    return list(dict.fromkeys([str(directory)] + [str(Path(p).expanduser().resolve()) for p in extra]
+                              + configured_roots()))
+
+
+def safe_file(path):
+    original = Path(path).expanduser()
+    path = original.resolve()
+    if any(part == '.env' or part.startswith('.env.') for part in original.parts + path.parts):
+        raise WorkerError('.env files cannot be used as briefs or messages')
+    return path
+
+
+def write_meta(directory, meta):
+    temporary = directory / 'meta.json.tmp'
+    temporary.write_text(json.dumps(meta, indent=2) + '\n')
+    temporary.replace(directory / 'meta.json')
+
+
+@contextmanager
+def run_lock(directory):
+    # A thread must have only one writer. The OS releases this lock after crashes too.
+    with (directory / '.worker.lock').open('a') as lock:
+        try:
+            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError as exc:
+            raise WorkerError('another worker is running in this directory') from exc
+        try:
+            yield
+        finally:
+            fcntl.flock(lock, fcntl.LOCK_UN)
+
+
+def launch(args, directory):
+    meta_path = directory / 'meta.json'
+    if args.command == 'start':
+        if meta_path.exists() or (directory / 'thread_id').exists():
+            raise WorkerError('directory already records a worker; use resume or a new directory')
+        worktree = Path(args.worktree).expanduser().resolve()
+        model, effort = args.model, args.effort
+        network = args.network or 'off'
+        meta = {'model': model, 'effort': effort, 'worktree': str(worktree),
+                'network': network, 'runs': []}
+        thread = None
+        brief_path = args.brief or directory / 'brief.md'
+    else:
+        meta = json.loads(meta_path.read_text())
+        thread = (directory / 'thread_id').read_text().strip()
+        if not thread:
+            raise WorkerError('thread_id is empty')
+        worktree = Path(meta['worktree'])
+        model, effort = args.model or meta['model'], args.effort or meta['effort']
+        network = args.network or meta['network']
+        brief_path = args.message
+    if not worktree.is_dir():
+        raise WorkerError('worktree is not a directory: {}'.format(worktree))
+    brief = safe_file(brief_path).read_text()
+    suffix = '-' + args.tag if args.tag else ''
+    events = directory / ('events' + suffix + '.jsonl')
+    stderr = directory / ('stderr' + suffix + '.log')
+    last = directory / ('last' + suffix + '.md')
+    if any(path.exists() for path in (events, stderr, last)):
+        raise WorkerError('run output already exists; choose a new --tag')
+    roots = merged_roots(directory, args.writable)
+    config = ['-c', 'model_reasoning_effort=' + effort,
+              '-c', 'sandbox_workspace_write.network_access=' + str(network == 'on').lower(),
+              '-c', 'sandbox_workspace_write.writable_roots=' + json.dumps(roots, ensure_ascii=False)]
+    command = ['codex', 'exec']
+    if args.command == 'resume':
+        command += ['resume', thread, '-m', model, '-c', 'sandbox_mode=workspace-write'] + config
+    else:
+        command += ['-m', model, '-s', 'workspace-write'] + config + ['-C', str(worktree)]
+    command += ['--skip-git-repo-check', '--json', '-o', str(last), '-']
+    environment = os.environ.copy()
+    for key, name in [('GOCACHE', 'gocache'), ('GOTMPDIR', 'gotmp'),
+                      ('GOLANGCI_LINT_CACHE', 'golangci-lint-cache')]:
+        if key not in environment:
+            cache = directory / name
+            cache.mkdir(exist_ok=True)
+            environment[key] = str(cache)
+    record = {'tag': args.tag, 'exit_code': None, 'model': model, 'effort': effort,
+              'network': network, 'last': str(last)}
+    meta['runs'].append(record)
+    write_meta(directory, meta)
+    code = 127
+    try:
+        with events.open('w') as output, stderr.open('w') as errors:
+            # A file for stdin avoids deadlocks on large briefs and JSON event streams.
+            import tempfile
+            with tempfile.TemporaryFile(mode='w+') as input_file:
+                input_file.write(brief)
+                input_file.seek(0)
+                process = subprocess.Popen(command, cwd=str(worktree), env=environment,
+                                           stdin=input_file, stdout=subprocess.PIPE,
+                                           stderr=errors, text=True)
+                record['pid'] = process.pid
+                write_meta(directory, meta)
+                try:
+                    for line in process.stdout:
+                        output.write(line)
+                        output.flush()
+                        if thread is None:
+                            try:
+                                event = json.loads(line)
+                            except ValueError:
+                                continue
+                            if isinstance(event, dict) and event.get('type') == 'thread.started' and event.get('thread_id'):
+                                thread = str(event['thread_id'])
+                                (directory / 'thread_id').write_text(thread + '\n')
+                    code = process.wait()
+                except BaseException:
+                    process.terminate()
+                    try:
+                        process.wait(timeout=10)
+                    except subprocess.TimeoutExpired:
+                        process.kill()
+                        process.wait()
+                    code = 130
+                    raise
+    except OSError as exc:
+        print('codex-worker: {}'.format(exc), file=sys.stderr)
+    finally:
+        code = 128 - code if code < 0 else code
+        record['exit_code'] = code
+        write_meta(directory, meta)
+        print('codex exit={} thread={} last={}'.format(code, thread or 'unknown', last), flush=True)
+    return code
+
+
+def status(directory):
+    meta = json.loads((directory / 'meta.json').read_text())
+    thread_path = directory / 'thread_id'
+    thread = thread_path.read_text().strip() if thread_path.exists() else 'unknown'
+    print('thread={}'.format(thread))
+    for run in meta['runs']:
+        print('tag={} exit={}'.format(run['tag'] or '(untagged)',
+                                     run['exit_code'] if run['exit_code'] is not None else 'pending'))
+    result = subprocess.run(['ps', '-axo', 'pid=,command='], capture_output=True, text=True)
+    if result.returncode:
+        print('running=unknown (ps unavailable)')
+    else:
+        pids = {str(r['pid']) for r in meta['runs'] if r.get('exit_code') is None and r.get('pid')}
+        running = False
+        for line in result.stdout.splitlines():
+            fields = line.strip().split(None, 1)
+            if len(fields) != 2:
+                continue
+            pid, command = fields
+            is_codex = bool(re.search(r'(?:^|[/\s])codex(?:\s|$)', command))
+            if is_codex and (pid in pids or (thread != 'unknown' and thread in command.split())):
+                running = True
+        print('running={} (ps observation)'.format('yes' if running else 'no'))
+    lasts = list(directory.glob('last*.md'))
+    newest = max(lasts, key=lambda p: p.stat().st_mtime_ns) if lasts else None
+    print('last={}'.format(newest or '(none)'))
+    return 0
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(description=__doc__)
+    sub = parser.add_subparsers(dest='command', required=True)
+    for name in ('start', 'resume', 'status'):
+        command = sub.add_parser(name)
+        command.add_argument('--dir', required=True, help='Worker state and output directory')
+        if name == 'status':
+            continue
+        command.add_argument('--model', required=name == 'start')
+        command.add_argument('--effort', required=name == 'start')
+        command.add_argument('--network', choices=('on', 'off'), help='Start default: off; resume: recorded value')
+        command.add_argument('--writable', action='append', default=[], metavar='PATH')
+        command.add_argument('--tag', help='Unique output suffix (letters, numbers, underscore, hyphen)')
+        if name == 'start':
+            command.add_argument('--worktree', required=True)
+            command.add_argument('--brief', help='Default: DIR/brief.md; never an .env file')
+        else:
+            command.add_argument('--message', required=True, help='Message file; never an .env file')
+    args = parser.parse_args(argv)
+    if getattr(args, 'tag', None) and not re.fullmatch(r'[A-Za-z0-9_-]+', args.tag):
+        parser.error('--tag must contain only letters, numbers, underscore or hyphen')
+    if getattr(args, 'effort', None) and not re.fullmatch(r'[a-z]+', args.effort):
+        parser.error('--effort must be a lowercase effort name')
+    directory = Path(args.dir).expanduser().resolve()
+    try:
+        if args.command == 'status':
+            return status(directory)
+        directory.mkdir(parents=True, exist_ok=True)
+        with run_lock(directory):
+            return launch(args, directory)
+    except (WorkerError, OSError, ValueError, KeyError) as exc:
+        print('codex-worker: {}'.format(exc), file=sys.stderr)
+        return 2
+
+
+if __name__ == '__main__':
+    try:
+        sys.exit(main())
+    except KeyboardInterrupt:
+        sys.exit(130)

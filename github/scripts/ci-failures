@@ -1,0 +1,97 @@
+#!/usr/bin/env python3
+"""Extract failure signals and step tails from one gh failed-log download."""
+import argparse
+from collections import OrderedDict
+import re
+import sys
+
+from ci_common import GhError, gh, pages, repository
+
+
+DEFAULT_PATTERNS = [r'--- FAIL', r'^FAIL\s', r'panic:', r'Error Trace:', r'Error:',
+                    r'DATA RACE', r'\.go:\d+:', r'\([\w-]+\)\s*$', r'##\[error\]',
+                    r'Traceback', r'Error', r'not ok']
+PRIORITY_PATTERNS = [r'--- FAIL', r'^FAIL\s', r'panic:', r'Error Trace:', r'Error:',
+                     r'DATA RACE', r'##\[error\]', r'Traceback', r'not ok', r'\b\w*Error\b']
+TIMESTAMP = re.compile(r'^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(?:\.\d+)?(?:Z|[+-]\d\d:\d\d)\s*')
+
+
+def grouped(log):
+    jobs = OrderedDict()
+    for raw in log.splitlines():
+        fields = raw.split('\t', 2)
+        if len(fields) != 3:
+            # Preserve unexpected CLI lines rather than silently lose failure evidence.
+            job, step, line = '(unparsed)', '(log)', raw
+        else:
+            job, step, line = fields
+        jobs.setdefault(job, OrderedDict()).setdefault(step, []).append(TIMESTAMP.sub('', line))
+    return jobs
+
+
+def render(log, job_filter, patterns, max_lines, tail, priority_patterns=None):
+    priority_patterns = priority_patterns or patterns
+    for job, steps in grouped(log).items():
+        if job_filter and job != job_filter:
+            continue
+        print('Job: {}'.format(job))
+        strong, context, matches = [], [], []
+        for step, lines in steps.items():
+            for i, line in enumerate(lines):
+                key = (step, i)
+                if any(p.search(line) for p in priority_patterns):
+                    strong.append(key)
+                if any(p.search(line) for p in patterns):
+                    matches.append(key)
+            if tail:
+                context.extend((step, i) for i in range(max(0, len(lines) - tail), len(lines)))
+        # Broad signals such as .go line numbers can be noisy. Keep explicit failures
+        # and step tails before filling spare capacity with those weaker signals.
+        candidates = list(dict.fromkeys(strong + context + matches))
+        selected = set(candidates[:max_lines])
+        for step, lines in steps.items():
+            indices = [i for i in range(len(lines)) if (step, i) in selected]
+            if indices:
+                print('  Step: {}'.format(step))
+                for i in indices:
+                    print('    ' + lines[i])
+        omitted = len(candidates) - len(selected)
+        if omitted:
+            print('  [{} selected lines omitted; --max-lines {} per job]'.format(omitted, max_lines))
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('run_id', type=int)
+    parser.add_argument('--repo')
+    parser.add_argument('--job', help='Exact job name')
+    parser.add_argument('--max-lines', type=int, default=80, help='Log lines per job, including tails')
+    parser.add_argument('--tail', type=int, default=15, help='Context lines per failed step')
+    parser.add_argument('--pattern', action='append', default=[], help='Additional regex (repeatable)')
+    args = parser.parse_args(argv)
+    if args.run_id < 1 or args.max_lines < 1 or args.tail < 0:
+        parser.error('run ID and --max-lines must be positive; --tail must be nonnegative')
+    try:
+        patterns = [re.compile(p) for p in DEFAULT_PATTERNS + args.pattern]
+        priority = [re.compile(p) for p in PRIORITY_PATTERNS + args.pattern]
+    except re.error as exc:
+        parser.error('invalid --pattern: {}'.format(exc))
+    try:
+        repo = repository(args.repo)
+        log = gh('run', 'view', str(args.run_id), '--repo', repo, '--log-failed')
+        if log.strip():
+            render(log, args.job, patterns, args.max_lines, args.tail, priority)
+        else:
+            print('No failed log; job conclusions:')
+            for job in pages(repo, 'runs/{}/jobs'.format(args.run_id), 'jobs'):
+                if not args.job or args.job == job.get('name'):
+                    print('{}\t{}\t{}'.format(job.get('name', ''), job.get('conclusion'),
+                                              job.get('html_url', '')))
+        return 0
+    except GhError as exc:
+        print('gh error: {}'.format(exc), file=sys.stderr)
+        return 1
+
+
+if __name__ == '__main__':
+    sys.exit(main())

@@ -29,6 +29,7 @@ npx skills add Derek-X-Wang/skills --skill convex -g
 | **cmux-browser** | Browser automation with cmux |
 | **cmux-debug-windows** | cmux debug window management |
 | **cmux-markdown** | Markdown viewer panel with live reload |
+| **codex-worker** | Launch, resume, and inspect headless Codex CLI workers |
 | **doc-coauthoring** | Structured documentation co-authoring workflow |
 | **docx** | Word document creation, editing, and analysis |
 | **github** | GitHub PR, issue, and comment interaction via gh CLI |
