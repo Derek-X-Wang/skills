@@ -11,7 +11,6 @@ import time
 import sys
 import tempfile
 import unittest
-from unittest.mock import patch
 
 
 HERE = Path(__file__).resolve().parent
@@ -39,8 +38,14 @@ pathlib.Path(sys.argv[sys.argv.index('-o') + 1]).write_text('worker result')
 sys.exit(int(os.environ.get('FAKE_CODEX_EXIT', '0')))
 '''
 FAKE_PS = '''#!/usr/bin/env python3
-import os
-print(os.environ.get('FAKE_PS_OUTPUT', ''))
+import json, os, pathlib, sys
+root = pathlib.Path(os.environ['FAKE_CODEX_DIR'])
+with (root / 'ps-calls').open('a') as f:
+    f.write(json.dumps(sys.argv[1:]) + '\\n')
+if os.environ.get('FAKE_PS_FAIL'):
+    print('ps blocked', file=sys.stderr)
+    sys.exit(1)
+print(os.environ.get('FAKE_PS_COMMAND' if '-p' in sys.argv else 'FAKE_PS_OUTPUT', ''))
 '''
 
 
@@ -72,8 +77,6 @@ class WorkerTests(unittest.TestCase):
     def tearDown(self):
         self.temp.cleanup()
 
-    def config(self, text):
-        (self.home / 'config.toml').write_text(text)
 
     def command(self, *args):
         return subprocess.run([sys.executable, str(SCRIPT), *args], env=self.environment,
@@ -87,86 +90,68 @@ class WorkerTests(unittest.TestCase):
         return self.command('resume', '--dir', str(self.state), '--message', str(self.message), *args)
 
     def calls(self):
-        return [json.loads(line) for line in (self.root / 'calls').read_text().splitlines()]
+        calls = [json.loads(line) for line in (self.root / 'calls').read_text().splitlines()]
+        for call in calls:
+            self.assertFalse(any('writable_roots' in arg for arg in call['argv']))
+        return calls
 
     def meta(self):
         return json.loads((self.state / 'meta.json').read_text())
 
-    def roots(self, call):
-        value = next(arg for arg in call['argv'] if arg.startswith('sandbox_workspace_write.writable_roots='))
-        return json.loads(value.split('=', 1)[1])
 
-    def test_merge_single_double_quotes_multiline_comments_order_and_duplicates(self):
-        self.config('''[other]
-writable_roots = ["ignore"]
-[sandbox_workspace_write] # comment
-writable_roots = [
-    '/configured/one', # root comment
-    "/configured/two#literal", # keep hash
-    "/configured/one",
-]
-network_access = true
-[next]
-writable_roots = ["also-ignore"]
-''')
-        extra = self.root / 'extra'
-        result = self.start('--writable', str(extra), '--writable', str(extra), '--network', 'on')
+    def test_add_dir_start_and_resume_exact_order_and_deduplication(self):
+        extra = self.root / 'extra folder'
+        result = self.start('--writable', str(extra), '--writable', str(extra), '--writable', str(self.state))
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertEqual(self.roots(self.calls()[0]), [str(self.state), str(extra),
-                                                     '/configured/one', '/configured/two#literal'])
-        self.assertIn('sandbox_workspace_write.network_access=true', self.calls()[0]['argv'])
+        self.assertEqual(self.calls()[0]['argv'], [
+            'exec', '--add-dir', str(self.state), '--add-dir', str(extra),
+            '-m', 'chosen-model', '-s', 'workspace-write', '-c', 'model_reasoning_effort=high',
+            '-c', 'sandbox_workspace_write.network_access=false', '-C', str(self.tree),
+            '--skip-git-repo-check', '--json', '-o', str(self.state / 'last.md'), '-'])
+        result = self.resume('--tag', 'r1', '--writable', str(extra), '--writable', str(extra))
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(self.calls()[1]['argv'], [
+            'exec', '--add-dir', str(self.state), '--add-dir', str(extra), 'resume', 'thread-test',
+            '-m', 'chosen-model', '-c', 'sandbox_mode=workspace-write', '-c', 'model_reasoning_effort=high',
+            '-c', 'sandbox_workspace_write.network_access=false',
+            '--skip-git-repo-check', '--json', '-o', str(self.state / 'last-r1.md'), '-'])
 
-    def test_config_quotes_escapes_and_unicode(self):
-        self.config(r'''[sandbox_workspace_write]
-writable_roots = ['literal\path', "/quote\"path", "/slash\\path", "/\u00e9/\U0001F600"]
-''')
+    def test_launcher_does_not_read_config(self):
+        # Reading this as a file would fail. Codex alone owns config loading.
+        (self.home / 'config.toml').mkdir()
+        result = self.start()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(self.resume('--tag', 'r1').returncode, 0)
+        self.assertEqual(self.meta()['runs'][0]['last'], str(self.state / 'last.md'))
+        self.assertIsInstance(self.meta()['runs'][0]['pid'], int)
+        self.assertNotEqual(self.meta()['runs'][0]['last'], self.meta()['runs'][1]['last'])
+
+    def test_reused_pid_is_lost_and_resume_continues(self):
         self.assertEqual(self.start().returncode, 0)
-        self.assertEqual(self.roots(self.calls()[0])[1:], ['literal\\path', '/quote"path', '/slash\\path', '/é/😀'])
+        meta = self.meta()
+        meta['runs'][0].update({'pid': os.getpid(), 'exit_code': None})
+        (self.state / 'meta.json').write_text(json.dumps(meta))
+        self.environment['FAKE_PS_COMMAND'] = 'python3 -m unittest'
+        result = self.resume('--tag', 'after-reuse')
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertNotIn('kill', result.stderr)
+        self.assertEqual(self.meta()['runs'][0]['state'], 'lost')
+        self.assertEqual(len(self.calls()), 2)
+        self.assertIn('state=lost', self.command('status', '--dir', str(self.state)).stdout)
 
-    def test_empty_array_and_missing_key(self):
-        for text in ('', '[sandbox_workspace_write]\nnetwork_access = true\n',
-                     '[sandbox_workspace_write]\nwritable_roots = []\n'):
-            with self.subTest(text=text), patch.dict(os.environ, self.environment, clear=True):
-                self.config(text)
-                self.assertEqual(WORKER.merged_roots(self.state, []), [str(self.state)])
-
-    def test_unrelated_multiline_strings_cannot_hide_or_inject_roots(self):
-        lines = ['[other]', 'prompt = """', '[sandbox_workspace_write]',
-                 "writable_roots = ['/wrong']", '"""', '[sandbox_workspace_write]',
-                 'note = ".env is only text here"', 'prompt = \'\'\'', '[other]',
-                 "writable_roots = ['/also-wrong']", '\'\'\'',
-                 "writable_roots = ['/correct']"]
-        self.config('\n'.join(lines))
+    def test_unreadable_identity_refuses_without_kill_advice(self):
         self.assertEqual(self.start().returncode, 0)
-        self.assertEqual(self.roots(self.calls()[0]), [str(self.state), '/correct'])
-
-    def test_quoted_key(self):
-        self.config('[sandbox_workspace_write]\n"writable_roots" = ["/root"]\n')
-        self.assertEqual(self.start().returncode, 0)
-        self.assertEqual(self.roots(self.calls()[0])[-1], '/root')
-
-    def test_escaped_and_quoted_keys_and_tables_preserve_roots(self):
-        headers = ['[sandbox_workspace_write]', '["sandbox_workspace_write"]',
-                   "['sandbox_workspace_write']", r'["sandbox\u005fworkspace_write"]',
-                   r'["sandbox_workspace_\U00000077rite"]']
-        keys = ['writable_roots', '"writable_roots"', "'writable_roots'",
-                r'"writable\u005froots"', r'"writable_\U00000072oots"']
-        with patch.dict(os.environ, self.environment, clear=True):
-            for header in headers:
-                for key in keys:
-                    with self.subTest(header=header, key=key):
-                        self.config(header + '\n' + key + ' = ["/must-keep"]\n')
-                        self.assertEqual(WORKER.configured_roots(), ['/must-keep'])
-
-    def test_unresolvable_quoted_name_fails_before_launch(self):
-        for text in (r'["sandbox\qworkspace_write"]',
-                     '[sandbox_workspace_write]\n' + r'"writable\qroots" = ["/keep"]'):
-            with self.subTest(text=text):
-                self.config(text)
-                result = self.start()
-                self.assertEqual(result.returncode, 2)
-                self.assertIn('writable_roots', result.stderr)
-                self.assertFalse((self.root / 'calls').exists())
+        meta = self.meta()
+        meta['runs'][0].update({'pid': os.getpid(), 'exit_code': None, 'tag': 'orphan'})
+        (self.state / 'meta.json').write_text(json.dumps(meta))
+        self.environment['FAKE_PS_FAIL'] = '1'
+        result = self.resume('--tag', 'blocked')
+        self.assertEqual(result.returncode, 2)
+        self.assertIn('cannot verify whether run orphan (PID {}) is still running; '
+                      'check it before resuming'.format(os.getpid()), result.stderr)
+        self.assertNotIn('kill', result.stderr)
+        self.assertEqual(len(self.calls()), 1)
+        self.assertNotIn('state', self.meta()['runs'][0])
 
     def test_killed_launcher_does_not_allow_resume_while_child_is_alive(self):
         environment = self.environment.copy()
@@ -188,10 +173,14 @@ writable_roots = ['literal\path', "/quote\"path", "/slash\\path", "/\u00e9/\U000
             process.kill()
             process.communicate(timeout=5)
             os.kill(child_pid, 0)
+            self.environment['FAKE_PS_COMMAND'] = 'python3 fake-codex ' + ' '.join(self.calls()[0]['argv'])
             result = self.resume('--tag', 'after-death')
             self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
             self.assertIn('PID {}'.format(child_pid), result.stderr)
             self.assertIn('kill -TERM {}'.format(child_pid), result.stderr)
+            self.assertIn('thread thread-test', result.stderr)
+            ps_calls = [json.loads(line) for line in (self.root / 'ps-calls').read_text().splitlines()]
+            self.assertEqual(ps_calls, [['-o', 'command=', '-p', str(child_pid)]])
             self.assertEqual(len(self.calls()), 1)
             self.assertEqual(len(self.meta()['runs']), 1)
         finally:
@@ -204,11 +193,6 @@ writable_roots = ['literal\path', "/quote\"path", "/slash\\path", "/\u00e9/\U000
                 except ProcessLookupError:
                     pass
 
-    def test_resume_pending_child_probe_permission_denied_fails_closed(self):
-        meta = {'runs': [{'pid': 123, 'exit_code': None}]}
-        with patch.object(WORKER.os, 'kill', side_effect=PermissionError), \
-                self.assertRaisesRegex(WORKER.WorkerError, 'still alive'):
-            WORKER.refuse_pending_children(meta)
 
     def test_resume_allows_dead_pending_child(self):
         self.assertEqual(self.start().returncode, 0)
@@ -219,20 +203,24 @@ writable_roots = ['literal\path', "/quote\"path", "/slash\\path", "/\u00e9/\U000
         result = self.resume('--tag', 'after-exit')
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(len(self.calls()), 2)
+        self.assertEqual(self.meta()['runs'][0]['state'], 'lost')
+        result = self.command('status', '--dir', str(self.state))
+        self.assertIn('state=lost', result.stdout)
 
     def test_read_only_start_resume_flags_and_metadata(self):
-        self.config('[sandbox_workspace_write]\nwritable_roots = ["/configured"]\n')
         result = self.start('--sandbox', 'read-only', '--network', 'on', '--writable', str(self.tree))
         self.assertEqual(result.returncode, 0, result.stderr)
         call = self.calls()[0]
         self.assertEqual(call['argv'][call['argv'].index('-s') + 1], 'read-only')
         self.assertFalse(any(arg.startswith('sandbox_workspace_write.') for arg in call['argv']))
+        self.assertNotIn('--add-dir', call['argv'])
         self.assertEqual(self.meta()['sandbox'], 'read-only')
         self.assertEqual(self.meta()['runs'][0]['sandbox'], 'read-only')
         result = self.resume('--tag', 'review')
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn('sandbox_mode=read-only', self.calls()[1]['argv'])
         self.assertFalse(any(arg.startswith('sandbox_workspace_write.') for arg in self.calls()[1]['argv']))
+        self.assertNotIn('--add-dir', self.calls()[1]['argv'])
         self.assertEqual(self.meta()['runs'][1]['sandbox'], 'read-only')
 
     def test_resume_sandbox_override_in_both_directions(self):
@@ -240,7 +228,7 @@ writable_roots = ['literal\path', "/quote\"path", "/slash\\path", "/\u00e9/\U000
         result = self.resume('--tag', 'write', '--sandbox', 'workspace-write', '--network', 'on')
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn('sandbox_mode=workspace-write', self.calls()[1]['argv'])
-        self.assertEqual(self.roots(self.calls()[1]), [str(self.state)])
+        self.assertEqual(self.calls()[1]['argv'][:3], ['exec', '--add-dir', str(self.state)])
         self.assertEqual(self.meta()['runs'][1]['sandbox'], 'workspace-write')
         # Default still comes from start, not the preceding override.
         self.assertEqual(self.resume('--tag', 'review-again').returncode, 0)
@@ -249,34 +237,13 @@ writable_roots = ['literal\path', "/quote\"path", "/slash\\path", "/\u00e9/\U000
         self.assertEqual(result.returncode, 0)
         self.assertFalse(any(arg.startswith('sandbox_workspace_write.') for arg in self.calls()[3]['argv']))
 
-    def test_broken_key_fails_without_codex(self):
-        values = ['["/one"', 'not_an_array', '[123]', '["bad\\q"]', '["/one" "/two"]',
-                  '["/one"] trailing', '["unterminated]', '["/one",\n[next]\na=1']
-        for value in values:
-            with self.subTest(value=value):
-                self.config('[sandbox_workspace_write]\nwritable_roots = ' + value + '\n')
-                result = self.start()
-                self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
-                self.assertIn('writable_roots', result.stderr)
-                self.assertFalse((self.root / 'calls').exists())
-
-    def test_broken_assignment_and_duplicate_key(self):
-        for text in ('writable_roots', 'writable_roots ["/must-keep"]',
-                     'writable_roots.child = []', 'writable_roots : []', '"writable_roots" : []', "'writable_roots' : []",
-                     'writable_roots = []\nwritable_roots = []'):
-            with self.subTest(text=text):
-                self.config('[sandbox_workspace_write]\n' + text + '\n')
-                result = self.start()
-                self.assertEqual(result.returncode, 2)
-                self.assertFalse((self.root / 'calls').exists())
 
     def test_start_argv_environment_capture_files_and_meta(self):
         result = self.start()
         self.assertEqual(result.returncode, 0, result.stderr)
         call = self.calls()[0]
-        self.assertEqual(call['argv'], ['exec', '-m', 'chosen-model', '-s', 'workspace-write',
+        self.assertEqual(call['argv'], ['exec', '--add-dir', str(self.state), '-m', 'chosen-model', '-s', 'workspace-write',
             '-c', 'model_reasoning_effort=high', '-c', 'sandbox_workspace_write.network_access=false',
-            '-c', 'sandbox_workspace_write.writable_roots=' + json.dumps([str(self.state)]),
             '-C', str(self.tree), '--skip-git-repo-check', '--json', '-o', str(self.state / 'last.md'), '-'])
         self.assertEqual(call['stdin'], 'do this task\n')
         self.assertEqual(call['cwd'], str(self.tree))
@@ -307,10 +274,9 @@ writable_roots = ['literal\path', "/quote\"path", "/slash\\path", "/\u00e9/\U000
         result = self.resume('--tag', 'r1')
         self.assertEqual(result.returncode, 0, result.stderr)
         call = self.calls()[1]
-        self.assertEqual(call['argv'], ['exec', 'resume', 'thread-test', '-m', 'chosen-model',
+        self.assertEqual(call['argv'], ['exec', '--add-dir', str(self.state), 'resume', 'thread-test', '-m', 'chosen-model',
             '-c', 'sandbox_mode=workspace-write', '-c', 'model_reasoning_effort=high',
-            '-c', 'sandbox_workspace_write.network_access=true', '-c',
-            'sandbox_workspace_write.writable_roots=' + json.dumps([str(self.state)]),
+            '-c', 'sandbox_workspace_write.network_access=true',
             '--skip-git-repo-check', '--json', '-o', str(self.state / 'last-r1.md'), '-'])
         self.assertEqual(call['cwd'], str(self.tree))
         self.assertEqual(call['stdin'], 'continue task\n')
@@ -328,7 +294,7 @@ writable_roots = ['literal\path', "/quote\"path", "/slash\\path", "/\u00e9/\U000
         self.assertIn('other-model', call['argv'])
         self.assertIn('model_reasoning_effort=medium', call['argv'])
         self.assertIn('sandbox_workspace_write.network_access=true', call['argv'])
-        self.assertEqual(self.roots(call), [str(self.state), str(self.tree)])
+        self.assertEqual(call['argv'][:6], ['exec', '--add-dir', str(self.state), '--add-dir', str(self.tree), 'resume'])
         self.assertEqual(self.meta()['runs'][1]['model'], 'other-model')
 
     def test_workspace_write_start_can_resume_as_read_only(self):
@@ -337,6 +303,7 @@ writable_roots = ['literal\path', "/quote\"path", "/slash\\path", "/\u00e9/\U000
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn('sandbox_mode=read-only', self.calls()[1]['argv'])
         self.assertFalse(any(arg.startswith('sandbox_workspace_write.') for arg in self.calls()[1]['argv']))
+        self.assertNotIn('--add-dir', self.calls()[1]['argv'])
         self.assertEqual(self.meta()['runs'][1]['sandbox'], 'read-only')
 
     def test_nonzero_exit_propagated_and_recorded(self):
@@ -404,19 +371,6 @@ writable_roots = ['literal\path', "/quote\"path", "/slash\\path", "/\u00e9/\U000
             self.assertEqual(self.command(name, '--help').returncode, 0)
         self.assertEqual(self.command('start', '--dir', str(self.state), '--worktree', str(self.tree)).returncode, 2)
         self.assertEqual(self.start('--tag', '../escape').returncode, 2)
-
-    def test_codex_home_respected_and_default_home(self):
-        self.config('[sandbox_workspace_write]\nwritable_roots = ["/from-codex-home"]\n')
-        with patch.dict(os.environ, self.environment, clear=True):
-            self.assertEqual(WORKER.configured_roots(), ['/from-codex-home'])
-        fallback = self.root / '.codex'
-        fallback.mkdir()
-        (fallback / 'config.toml').write_text('[sandbox_workspace_write]\nwritable_roots = ["/fallback"]\n')
-        environment = self.environment.copy()
-        environment.pop('CODEX_HOME')
-        environment['HOME'] = str(self.root)
-        with patch.dict(os.environ, environment, clear=True):
-            self.assertEqual(WORKER.configured_roots(), ['/fallback'])
 
 
 if __name__ == '__main__':

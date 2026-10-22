@@ -15,193 +15,8 @@ class WorkerError(Exception):
     pass
 
 
-def uncomment(text):
-    """Remove TOML comments outside quoted strings, preserving line structure."""
-    result = []
-    quote = None
-    i = 0
-    while i < len(text):
-        char = text[i]
-        if quote:
-            if text.startswith(quote, i):
-                result.append(quote)
-                i += len(quote)
-                quote = None
-                continue
-            if quote[0] == '"' and char == '\\':
-                result.append(text[i:i + 2])
-                i += 2
-                continue
-        elif char in "\"'":
-            quote = char * 3 if text.startswith(char * 3, i) else char
-            result.append(quote)
-            i += len(quote)
-            continue
-        elif char == '#':
-            end = text.find('\n', i)
-            i = len(text) if end == -1 else end
-            continue
-        result.append(char)
-        i += 1
-    return ''.join(result)
-
-
-def string_array(value):
-    """Parse only a TOML array of basic or literal strings; reject everything else."""
-    index = 0
-
-    def spaces():
-        nonlocal index
-        while index < len(value) and value[index].isspace():
-            index += 1
-
-    spaces()
-    if value[index:index + 1] != '[':
-        raise WorkerError('configured writable_roots must be an array of strings')
-    index += 1
-    roots = []
-    while True:
-        spaces()
-        if value[index:index + 1] == ']':
-            return roots, value[index + 1:]
-        quote = value[index:index + 1]
-        if quote not in ('"', "'"):
-            raise WorkerError('cannot parse configured writable_roots string')
-        index += 1
-        chars = []
-        while index < len(value) and value[index] != quote:
-            char = value[index]
-            index += 1
-            if char in '\n\r' or ord(char) < 32:
-                raise WorkerError('control character in configured writable_roots')
-            if char == '\\' and quote == '"':
-                escape = value[index:index + 1]
-                index += 1
-                replacements = {'b': '\b', 't': '\t', 'n': '\n', 'f': '\f', 'r': '\r',
-                                '"': '"', '\\': '\\'}
-                if escape in replacements:
-                    char = replacements[escape]
-                elif escape in ('u', 'U'):
-                    size = 4 if escape == 'u' else 8
-                    digits = value[index:index + size]
-                    if len(digits) != size or not re.fullmatch(r'[0-9a-fA-F]+', digits):
-                        raise WorkerError('invalid Unicode escape in writable_roots')
-                    point = int(digits, 16)
-                    if point > 0x10FFFF or 0xD800 <= point <= 0xDFFF:
-                        raise WorkerError('invalid Unicode scalar in writable_roots')
-                    char = chr(point)
-                    index += size
-                else:
-                    raise WorkerError('invalid escape in configured writable_roots')
-            chars.append(char)
-        if index >= len(value):
-            raise WorkerError('unterminated configured writable_roots string')
-        index += 1
-        roots.append(''.join(chars))
-        spaces()
-        separator = value[index:index + 1]
-        if separator == ']':
-            return roots, value[index + 1:]
-        if separator != ',':
-            raise WorkerError('missing comma or closing bracket in writable_roots')
-        index += 1
-
-
-def statement_lines(text):
-    """Distinguish TOML statements from lines inside unrelated multiline strings."""
-    quote = None
-    for line in text.splitlines(keepends=True):
-        outside = quote is None
-        index = 0
-        while index < len(line):
-            char = line[index]
-            if quote:
-                if line.startswith(quote, index):
-                    index += len(quote)
-                    quote = None
-                    continue
-                if quote[0] == '"' and char == '\\':
-                    index += 2
-                    continue
-            elif char in "\"'":
-                quote = char * 3 if line.startswith(char * 3, index) else char
-                index += len(quote)
-                continue
-            index += 1
-        yield line, outside
-
-
-def key_path(value):
-    """Decode bare, basic-string and literal-string TOML key components."""
-    parts = []
-    while True:
-        value = value.lstrip()
-        token = re.match(r'''(?:[A-Za-z0-9_-]+|"(?:[^"\\\r\n]|\\[^\r\n])*"|'[^'\r\n]*')''', value)
-        if token is None:
-            raise WorkerError('cannot resolve TOML key or table name; writable_roots cannot be preserved')
-        name = token.group()
-        if name[0] in "\"'":
-            name = string_array('[' + name + ']')[0][0]
-        parts.append(name)
-        value = value[token.end():].lstrip()
-        if not value.startswith('.'):
-            return tuple(parts), value
-        value = value[1:]
-
-
-def configured_roots():
-    home = Path(os.environ.get('CODEX_HOME', '~/.codex')).expanduser()
-    config = home / 'config.toml'
-    if not config.exists():
-        return []
-    text = uncomment(config.read_text())
-    active = False
-    roots = None
-    consumed_until = 0
-    offset = 0
-    for line, outside in statement_lines(text):
-        start = offset
-        offset += len(line)
-        if start < consumed_until:
-            continue
-        if outside and re.match(r'^\s*\[', line):
-            header = line.strip()
-            array_table = header.startswith('[[')
-            brackets = 2 if array_table else 1
-            if not header.endswith(']' * brackets):
-                raise WorkerError('cannot resolve TOML table header; writable_roots cannot be preserved')
-            names, remainder = key_path(header[brackets:-brackets])
-            if remainder:
-                raise WorkerError('cannot resolve TOML table header; writable_roots cannot be preserved')
-            active = names == ('sandbox_workspace_write',)
-            if active and array_table:
-                raise WorkerError('sandbox_workspace_write must be a TOML table, not an array')
-        elif active and outside and line.strip():
-            # Array continuations of unrelated settings are outside this one-key parser.
-            # Decode every quoted assignment key so an escaped roots key cannot be lost.
-            if line.lstrip().startswith(('"', "'")) or re.match(r'^\s*[A-Za-z0-9_-]+\s*(?:[.=]|:)', line):
-                names, remainder = key_path(line)
-                if not remainder.startswith('='):
-                    raise WorkerError('cannot parse configured writable_roots table assignment')
-                if names != ('writable_roots',):
-                    if names[0] == 'writable_roots':
-                        raise WorkerError('configured writable_roots must be an array, not a dotted table')
-                    continue
-                if roots is not None:
-                    raise WorkerError('duplicate configured writable_roots key')
-                value_start = start + len(line) - len(remainder) + 1
-                roots, remainder = string_array(text[value_start:])
-                consumed_until = len(text) - len(remainder)
-                if remainder.split('\n', 1)[0].strip():
-                    raise WorkerError('unexpected text after configured writable_roots array')
-            elif re.match(r'^\s*writable_roots(?:\s|$)', line):
-                raise WorkerError('cannot parse configured writable_roots assignment')
-    return roots if roots is not None else []
-
-
-def merged_roots(directory, extra):
-    return list(dict.fromkeys([str(directory)] + [str(Path(p).expanduser().resolve()) for p in extra]
-                              + configured_roots()))
+def added_directories(directory, extra):
+    return list(dict.fromkeys([str(directory)] + [str(Path(p).expanduser().resolve()) for p in extra]))
 
 
 def safe_file(path):
@@ -232,21 +47,40 @@ def run_lock(directory):
             fcntl.flock(lock, fcntl.LOCK_UN)
 
 
-def refuse_pending_children(meta):
+def refuse_pending_children(meta, directory, thread):
     for run in meta['runs']:
-        if run.get('exit_code') is not None:
+        if run.get('exit_code') is not None or run.get('state') == 'lost':
             continue
         pid = run.get('pid')
+        tag = run.get('tag') or '(untagged)'
+        unknown = 'cannot verify whether run {} (PID {}) is still running; check it before resuming'.format(tag, pid)
         if not isinstance(pid, int) or isinstance(pid, bool) or pid <= 0:
-            raise WorkerError('pending run has no valid child PID; inspect it before resuming')
+            raise WorkerError(unknown)
         try:
             os.kill(pid, 0)
         except ProcessLookupError:
+            run['state'] = 'lost'
+            write_meta(directory, meta)
             continue
         except PermissionError:
-            pass  # An inaccessible process is still alive; fail closed.
-        raise WorkerError('pending Codex child PID {} is still alive; wait for it to exit, or '
-                          'stop that child with kill -TERM {} and retry resume'.format(pid, pid))
+            pass  # ps can still establish identity; otherwise fail closed below.
+        identity = run.get('last')
+        if not isinstance(identity, str) or not identity:
+            raise WorkerError(unknown)
+        try:
+            result = subprocess.run(['ps', '-o', 'command=', '-p', str(pid)],
+                                    capture_output=True, text=True, timeout=10)
+        except (OSError, subprocess.TimeoutExpired) as exc:
+            raise WorkerError(unknown) from exc
+        if result.returncode or not result.stdout.strip():
+            raise WorkerError(unknown)
+        if identity not in result.stdout:
+            run['state'] = 'lost'
+            write_meta(directory, meta)
+            continue
+        raise WorkerError('Codex child PID {} for thread {} is still running (run {}); '
+                          'wait for it to exit, or stop that confirmed child with '
+                          'kill -TERM {} before resuming'.format(pid, thread, tag, pid))
 
 
 def launch(args, directory):
@@ -264,10 +98,10 @@ def launch(args, directory):
         brief_path = args.brief or directory / 'brief.md'
     else:
         meta = json.loads(meta_path.read_text())
-        refuse_pending_children(meta)
         thread = (directory / 'thread_id').read_text().strip()
         if not thread:
             raise WorkerError('thread_id is empty')
+        refuse_pending_children(meta, directory, thread)
         worktree = Path(meta['worktree'])
         model, effort = args.model or meta['model'], args.effort or meta['effort']
         network = args.network or meta['network']
@@ -283,11 +117,11 @@ def launch(args, directory):
     if any(path.exists() for path in (events, stderr, last)):
         raise WorkerError('run output already exists; choose a new --tag')
     config = ['-c', 'model_reasoning_effort=' + effort]
-    if sandbox == 'workspace-write':
-        roots = merged_roots(directory, args.writable)
-        config += ['-c', 'sandbox_workspace_write.network_access=' + str(network == 'on').lower(),
-                   '-c', 'sandbox_workspace_write.writable_roots=' + json.dumps(roots, ensure_ascii=False)]
     command = ['codex', 'exec']
+    if sandbox == 'workspace-write':
+        for path in added_directories(directory, args.writable):
+            command += ['--add-dir', path]
+        config += ['-c', 'sandbox_workspace_write.network_access=' + str(network == 'on').lower()]
     if args.command == 'resume':
         command += ['resume', thread, '-m', model, '-c', 'sandbox_mode=' + sandbox] + config
     else:
@@ -356,12 +190,13 @@ def status(directory):
     print('thread={}'.format(thread))
     for run in meta['runs']:
         print('tag={} exit={}'.format(run['tag'] or '(untagged)',
-                                     run['exit_code'] if run['exit_code'] is not None else 'pending'))
+                                     run['exit_code'] if run['exit_code'] is not None else 'pending')
+              + (' state=lost' if run.get('state') == 'lost' else ''))
     result = subprocess.run(['ps', '-axo', 'pid=,command='], capture_output=True, text=True)
     if result.returncode:
         print('running=unknown (ps unavailable)')
     else:
-        pids = {str(r['pid']) for r in meta['runs'] if r.get('exit_code') is None and r.get('pid')}
+        pids = {str(r['pid']) for r in meta['runs'] if r.get('exit_code') is None and r.get('state') != 'lost' and r.get('pid')}
         running = False
         for line in result.stdout.splitlines():
             fields = line.strip().split(None, 1)
