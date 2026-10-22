@@ -56,6 +56,7 @@ def wait(args):
     delay = args.interval
     repo, sha = args.repo, args.sha
     appeared = False
+    seen = {}
     while True:
         elapsed = time.monotonic() - started
         limit = args.timeout if appeared else min(args.timeout, args.appear_timeout)
@@ -77,8 +78,23 @@ def wait(args):
                 runs = pages(repo, 'runs', 'workflow_runs', urlencode({'head_sha': sha}) + '&')
             if time.monotonic() - started >= limit:
                 continue
-            if any(not isinstance(r, dict) or not r.get('id') or not r.get('status') for r in runs):
-                raise GhError('Missing run identity or status in gh response')
+            current = {}
+            for run in runs:
+                if not isinstance(run, dict) or not run.get('id') or not run.get('status'):
+                    raise GhError('Missing run identity or status in gh response')
+                seen.setdefault(run['id'], None)
+                current[run['id']] = run
+            if len(seen) >= args.min_runs:
+                appeared = True
+            # Listings can shrink while workflows rerun or GitHub updates its index.
+            # Every observed ID remains part of this set, even after fetch errors.
+            for identity in seen:
+                if identity not in current:
+                    run = gh_json('api', 'repos/{}/actions/runs/{}'.format(repo, identity))
+                    if (not isinstance(run, dict) or run.get('id') != identity or not run.get('status')):
+                        raise GhError('Missing or mismatched run {} in gh response'.format(identity))
+                    current[identity] = run
+            runs = [current[identity] for identity in seen]
             if len(runs) >= args.min_runs:
                 appeared = True
                 if all(r['status'] == 'completed' and r.get('conclusion') for r in runs):

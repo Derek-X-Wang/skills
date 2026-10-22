@@ -131,6 +131,24 @@ def statement_lines(text):
         yield line, outside
 
 
+def key_path(value):
+    """Decode bare, basic-string and literal-string TOML key components."""
+    parts = []
+    while True:
+        value = value.lstrip()
+        token = re.match(r'''(?:[A-Za-z0-9_-]+|"(?:[^"\\\r\n]|\\[^\r\n])*"|'[^'\r\n]*')''', value)
+        if token is None:
+            raise WorkerError('cannot resolve TOML key or table name; writable_roots cannot be preserved')
+        name = token.group()
+        if name[0] in "\"'":
+            name = string_array('[' + name + ']')[0][0]
+        parts.append(name)
+        value = value[token.end():].lstrip()
+        if not value.startswith('.'):
+            return tuple(parts), value
+        value = value[1:]
+
+
 def configured_roots():
     home = Path(os.environ.get('CODEX_HOME', '~/.codex')).expanduser()
     config = home / 'config.toml'
@@ -138,30 +156,47 @@ def configured_roots():
         return []
     text = uncomment(config.read_text())
     active = False
-    sections, keys = [], []
+    roots = None
+    consumed_until = 0
     offset = 0
-    key = r"(?:writable_roots|\"writable_roots\"|'writable_roots')"
-    table = r"\s*\[\s*(?:sandbox_workspace_write|\"sandbox_workspace_write\"|'sandbox_workspace_write')\s*\]\s*"
     for line, outside in statement_lines(text):
+        start = offset
+        offset += len(line)
+        if start < consumed_until:
+            continue
         if outside and re.match(r'^\s*\[', line):
-            active = bool(re.fullmatch(table, line))
-        elif active:
-            if outside:
-                assignment = re.match(r'^\s*' + key + r'\s*=', line)
-                if assignment:
-                    keys.append(offset + assignment.end())
-                elif re.match(r'^\s*' + key + r'(?:\s|=|:|$)', line):
-                    raise WorkerError('cannot parse configured writable_roots assignment')
-            sections.append(line)
-            offset += len(line)
-    if len(keys) > 1:
-        raise WorkerError('duplicate configured writable_roots key')
-    if not keys:
-        return []
-    roots, remainder = string_array(''.join(sections)[keys[0]:])
-    if remainder.split('\n', 1)[0].strip():
-        raise WorkerError('unexpected text after configured writable_roots array')
-    return roots
+            header = line.strip()
+            array_table = header.startswith('[[')
+            brackets = 2 if array_table else 1
+            if not header.endswith(']' * brackets):
+                raise WorkerError('cannot resolve TOML table header; writable_roots cannot be preserved')
+            names, remainder = key_path(header[brackets:-brackets])
+            if remainder:
+                raise WorkerError('cannot resolve TOML table header; writable_roots cannot be preserved')
+            active = names == ('sandbox_workspace_write',)
+            if active and array_table:
+                raise WorkerError('sandbox_workspace_write must be a TOML table, not an array')
+        elif active and outside and line.strip():
+            # Array continuations of unrelated settings are outside this one-key parser.
+            # Decode every quoted assignment key so an escaped roots key cannot be lost.
+            if line.lstrip().startswith(('"', "'")) or re.match(r'^\s*[A-Za-z0-9_-]+\s*(?:[.=]|:)', line):
+                names, remainder = key_path(line)
+                if not remainder.startswith('='):
+                    raise WorkerError('cannot parse configured writable_roots table assignment')
+                if names != ('writable_roots',):
+                    if names[0] == 'writable_roots':
+                        raise WorkerError('configured writable_roots must be an array, not a dotted table')
+                    continue
+                if roots is not None:
+                    raise WorkerError('duplicate configured writable_roots key')
+                value_start = start + len(line) - len(remainder) + 1
+                roots, remainder = string_array(text[value_start:])
+                consumed_until = len(text) - len(remainder)
+                if remainder.split('\n', 1)[0].strip():
+                    raise WorkerError('unexpected text after configured writable_roots array')
+            elif re.match(r'^\s*writable_roots(?:\s|$)', line):
+                raise WorkerError('cannot parse configured writable_roots assignment')
+    return roots if roots is not None else []
 
 
 def merged_roots(directory, extra):
@@ -197,6 +232,23 @@ def run_lock(directory):
             fcntl.flock(lock, fcntl.LOCK_UN)
 
 
+def refuse_pending_children(meta):
+    for run in meta['runs']:
+        if run.get('exit_code') is not None:
+            continue
+        pid = run.get('pid')
+        if not isinstance(pid, int) or isinstance(pid, bool) or pid <= 0:
+            raise WorkerError('pending run has no valid child PID; inspect it before resuming')
+        try:
+            os.kill(pid, 0)
+        except ProcessLookupError:
+            continue
+        except PermissionError:
+            pass  # An inaccessible process is still alive; fail closed.
+        raise WorkerError('pending Codex child PID {} is still alive; wait for it to exit, or '
+                          'stop that child with kill -TERM {} and retry resume'.format(pid, pid))
+
+
 def launch(args, directory):
     meta_path = directory / 'meta.json'
     if args.command == 'start':
@@ -205,18 +257,21 @@ def launch(args, directory):
         worktree = Path(args.worktree).expanduser().resolve()
         model, effort = args.model, args.effort
         network = args.network or 'off'
+        sandbox = args.sandbox or 'workspace-write'
         meta = {'model': model, 'effort': effort, 'worktree': str(worktree),
-                'network': network, 'runs': []}
+                'network': network, 'sandbox': sandbox, 'runs': []}
         thread = None
         brief_path = args.brief or directory / 'brief.md'
     else:
         meta = json.loads(meta_path.read_text())
+        refuse_pending_children(meta)
         thread = (directory / 'thread_id').read_text().strip()
         if not thread:
             raise WorkerError('thread_id is empty')
         worktree = Path(meta['worktree'])
         model, effort = args.model or meta['model'], args.effort or meta['effort']
         network = args.network or meta['network']
+        sandbox = args.sandbox or meta.get('sandbox', 'workspace-write')
         brief_path = args.message
     if not worktree.is_dir():
         raise WorkerError('worktree is not a directory: {}'.format(worktree))
@@ -227,15 +282,16 @@ def launch(args, directory):
     last = directory / ('last' + suffix + '.md')
     if any(path.exists() for path in (events, stderr, last)):
         raise WorkerError('run output already exists; choose a new --tag')
-    roots = merged_roots(directory, args.writable)
-    config = ['-c', 'model_reasoning_effort=' + effort,
-              '-c', 'sandbox_workspace_write.network_access=' + str(network == 'on').lower(),
-              '-c', 'sandbox_workspace_write.writable_roots=' + json.dumps(roots, ensure_ascii=False)]
+    config = ['-c', 'model_reasoning_effort=' + effort]
+    if sandbox == 'workspace-write':
+        roots = merged_roots(directory, args.writable)
+        config += ['-c', 'sandbox_workspace_write.network_access=' + str(network == 'on').lower(),
+                   '-c', 'sandbox_workspace_write.writable_roots=' + json.dumps(roots, ensure_ascii=False)]
     command = ['codex', 'exec']
     if args.command == 'resume':
-        command += ['resume', thread, '-m', model, '-c', 'sandbox_mode=workspace-write'] + config
+        command += ['resume', thread, '-m', model, '-c', 'sandbox_mode=' + sandbox] + config
     else:
-        command += ['-m', model, '-s', 'workspace-write'] + config + ['-C', str(worktree)]
+        command += ['-m', model, '-s', sandbox] + config + ['-C', str(worktree)]
     command += ['--skip-git-repo-check', '--json', '-o', str(last), '-']
     environment = os.environ.copy()
     for key, name in [('GOCACHE', 'gocache'), ('GOTMPDIR', 'gotmp'),
@@ -245,7 +301,7 @@ def launch(args, directory):
             cache.mkdir(exist_ok=True)
             environment[key] = str(cache)
     record = {'tag': args.tag, 'exit_code': None, 'model': model, 'effort': effort,
-              'network': network, 'last': str(last)}
+              'network': network, 'sandbox': sandbox, 'last': str(last)}
     meta['runs'].append(record)
     write_meta(directory, meta)
     code = 127
@@ -332,6 +388,8 @@ def main(argv=None):
             continue
         command.add_argument('--model', required=name == 'start')
         command.add_argument('--effort', required=name == 'start')
+        command.add_argument('--sandbox', choices=('read-only', 'workspace-write'),
+                             help='Start default: workspace-write; resume: recorded value')
         command.add_argument('--network', choices=('on', 'off'), help='Start default: off; resume: recorded value')
         command.add_argument('--writable', action='append', default=[], metavar='PATH')
         command.add_argument('--tag', help='Unique output suffix (letters, numbers, underscore, hyphen)')

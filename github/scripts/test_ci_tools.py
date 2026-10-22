@@ -235,10 +235,41 @@ class CITests(unittest.TestCase):
         first = [run(identity=i + 1) for i in range(100)]
         code, _, _, clock = self.wait([response({'workflow_runs': first}),
                                       response({'workflow_runs': [run(None, 'queued', 101)]}),
-                                      response({'workflow_runs': [run()]})])
+                                      response({'workflow_runs': first}),
+                                      response({'workflow_runs': [run(identity=101)]})])
         self.assertEqual(code, 0)
         self.assertEqual(clock.sleeps, [120])
         self.assertIn('page=2', self.calls()[1][1])
+
+    def test_seen_run_missing_from_listing_is_fetched_until_complete(self):
+        code, out, _, clock = self.wait([
+            response({'workflow_runs': [run(None, 'in_progress'), run(None, 'queued', 11)]}),
+            response({'workflow_runs': [run()]}), response(run(None, 'in_progress', 11)),
+            response({'workflow_runs': [run()]}), response(run(identity=11))])
+        self.assertEqual(code, 0)
+        self.assertIn('11\tbuild', out)
+        self.assertEqual(clock.sleeps, [120, 120])
+        self.assertEqual(sum(c[1] == 'repos/org/repo/actions/runs/11' for c in self.calls()), 2)
+
+    def test_missing_seen_run_failure_is_not_lost(self):
+        code, out, _, _ = self.wait([
+            response({'workflow_runs': [run(None, 'in_progress', 11)]}),
+            response({'workflow_runs': [run()]}), response(run('failure', identity=11)),
+            response({'jobs': []})])
+        self.assertEqual(code, 1)
+        self.assertIn('11\tbuild\tpush\tfailure', out)
+
+    def test_unfetchable_seen_run_remains_unresolved_until_timeout(self):
+        code, out, err, clock = self.wait([
+            response({'workflow_runs': [run(None, 'queued', 11)]}),
+            response({'workflow_runs': [run()]}), {'code': 1, 'err': 'HTTP 404: run missing'},
+            response({'workflow_runs': [run()]}), {'code': 1, 'err': 'HTTP 404: run missing'}],
+            '--timeout', '300')
+        self.assertEqual(code, 3)
+        self.assertEqual(out, '')
+        self.assertIn('HTTP 404', err)
+        self.assertEqual(clock.now, 300)
+        self.assertEqual(sum(c[1] == 'repos/org/repo/actions/runs/11' for c in self.calls()), 2)
 
     def test_usage_and_help(self):
         for file in ('ci-wait', 'ci-failures'):
@@ -290,6 +321,42 @@ class CITests(unittest.TestCase):
         self.assertIn('expected ready, got false', out)
         self.assertIn('final context', out)
         self.assertEqual(sum(line.startswith('    ') for line in out.splitlines()), 10)
+
+    def test_broad_error_noise_does_not_hide_explicit_failure(self):
+        log = '\n'.join('test\tunit\tError: routine {}'.format(i) for i in range(80))
+        log += '\ntest\tunit\t--- FAIL: TestActualFailure\ntest\tunit\tend of failed step'
+        code, out, _ = self.failures([{'out': log}], '--tail', '1')
+        self.assertEqual(code, 0)
+        self.assertIn('--- FAIL: TestActualFailure', out)
+        self.assertIn('end of failed step', out)
+        self.assertEqual(sum(line.startswith('    ') for line in out.splitlines()), 80)
+
+    def test_cap_spreads_across_steps_and_reserves_each_tail(self):
+        entries = [('first', '--- FAIL: early {}'.format(i)) for i in range(80)]
+        entries += [('first', 'first context 1'), ('first', 'first context 2')]
+        entries += [('second', '--- FAIL: later failure'), ('second', 'second context 1'),
+                    ('second', 'second context 2')]
+        log = '\n'.join('test\t{}\t{}'.format(step, line) for step, line in entries)
+        code, out, _ = self.failures([{'out': log}], '--tail', '2', '--max-lines', '6')
+        self.assertEqual(code, 0)
+        for text in ('--- FAIL: early 0', '--- FAIL: later failure', 'first context 1',
+                     'first context 2', 'second context 1', 'second context 2'):
+            self.assertIn(text, out)
+        self.assertEqual(sum(line.startswith('    ') for line in out.splitlines()), 6)
+
+    def test_linter_signal_ranks_above_broad_errors(self):
+        log = '\n'.join('test\tlint\tError routine {}'.format(i) for i in range(80))
+        log += '\ntest\tlint\tx.go:12: bad code (staticcheck)'
+        _, out, _ = self.failures([{'out': log}], '--tail', '0', '--max-lines', '1')
+        self.assertIn('bad code (staticcheck)', out)
+        self.assertNotIn('Error routine', out)
+
+    def test_parenthesized_video_dimensions_are_not_linter_markers(self):
+        log = '\n'.join('test\tunit\tfirst decoded frame (320x240)' for _ in range(80))
+        log += '\ntest\tunit\t--- FAIL: TestActualFailure'
+        _, out, _ = self.failures([{'out': log}], '--tail', '0', '--max-lines', '1')
+        self.assertIn('--- FAIL: TestActualFailure', out)
+        self.assertNotIn('first decoded frame', out)
 
     def test_empty_log_fetches_job_conclusions(self):
         code, out, _ = self.failures([{'out': ''}, response({'jobs': [

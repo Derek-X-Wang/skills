@@ -11,8 +11,9 @@ from ci_common import GhError, gh, pages, repository
 DEFAULT_PATTERNS = [r'--- FAIL', r'^FAIL\s', r'panic:', r'Error Trace:', r'Error:',
                     r'DATA RACE', r'\.go:\d+:', r'\([\w-]+\)\s*$', r'##\[error\]',
                     r'Traceback', r'Error', r'not ok']
-PRIORITY_PATTERNS = [r'--- FAIL', r'^FAIL\s', r'panic:', r'Error Trace:', r'Error:',
-                     r'DATA RACE', r'##\[error\]', r'Traceback', r'not ok', r'\b\w*Error\b']
+PRIORITY_PATTERNS = [r'--- FAIL', r'^FAIL\s', r'panic:', r'Error Trace:', r'DATA RACE',
+                     r'##\[error\]', r'Traceback', r'not ok',
+                     r'\.go:\d+:.*\([A-Za-z][\w-]*\)\s*$']
 TIMESTAMP = re.compile(r'^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(?:\.\d+)?(?:Z|[+-]\d\d:\d\d)\s*')
 
 
@@ -35,27 +36,48 @@ def render(log, job_filter, patterns, max_lines, tail, priority_patterns=None):
         if job_filter and job != job_filter:
             continue
         print('Job: {}'.format(job))
-        strong, context, matches = [], [], []
+        candidates, explicit, tails = {}, {}, {}
         for step, lines in steps.items():
-            for i, line in enumerate(lines):
-                key = (step, i)
-                if any(p.search(line) for p in priority_patterns):
-                    strong.append(key)
-                if any(p.search(line) for p in patterns):
-                    matches.append(key)
-            if tail:
-                context.extend((step, i) for i in range(max(0, len(lines) - tail), len(lines)))
-        # Broad signals such as .go line numbers can be noisy. Keep explicit failures
-        # and step tails before filling spare capacity with those weaker signals.
-        candidates = list(dict.fromkeys(strong + context + matches))
-        selected = set(candidates[:max_lines])
+            explicit[step] = [i for i, line in enumerate(lines)
+                              if any(p.search(line) for p in priority_patterns)]
+            matches = [i for i, line in enumerate(lines) if any(p.search(line) for p in patterns)]
+            tails[step] = list(range(max(0, len(lines) - tail), len(lines))) if tail else []
+            candidates[step] = list(dict.fromkeys(explicit[step] + tails[step] + matches))
+        # Share the job cap across steps, returning unused shares to the other steps.
+        quotas = dict.fromkeys(steps, 0)
+        remaining = max_lines
+        while remaining:
+            allocated = False
+            for step in steps:
+                if quotas[step] < len(candidates[step]):
+                    quotas[step] += 1
+                    remaining -= 1
+                    allocated = True
+                    if not remaining:
+                        break
+            if not allocated:
+                break
+        selected = set()
+        for step, quota in quotas.items():
+            # Keep at least one explicit marker and reserve the rest of the tail
+            # before filling space with more markers and broad Error/go matches.
+            reserve = min(len(tails[step]), max(0, quota - bool(explicit[step])))
+            context = tails[step][-reserve:] if reserve else []
+            markers = [i for i in explicit[step] if i not in context]
+            chosen = list(dict.fromkeys(markers[:quota - reserve] + context))
+            for i in candidates[step]:
+                if len(chosen) >= quota:
+                    break
+                if i not in chosen:
+                    chosen.append(i)
+            selected.update((step, i) for i in chosen)
         for step, lines in steps.items():
             indices = [i for i in range(len(lines)) if (step, i) in selected]
             if indices:
                 print('  Step: {}'.format(step))
                 for i in indices:
                     print('    ' + lines[i])
-        omitted = len(candidates) - len(selected)
+        omitted = sum(len(values) for values in candidates.values()) - len(selected)
         if omitted:
             print('  [{} selected lines omitted; --max-lines {} per job]'.format(omitted, max_lines))
 
