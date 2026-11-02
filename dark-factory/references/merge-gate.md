@@ -109,4 +109,4 @@ A new push to main can cancel the previous main run (concurrency groups). If mer
 
 ## Cost of one-at-a-time
 
-With about 1 hour of main CI per merge, six PRs took about 8.5 hours. Plan for it: start long merge lines early, and keep the queue short near the end of the window. Merging PRs in pairs is not yet an agreed rule.
+With about 1 hour of main CI per merge, six PRs took about 8.5 hours. Plan for it: start long merge lines early, and keep the queue short near the end of the window. Do not merge PRs in pairs, even when they share no package (owner decision 2026-11-02): when main goes red, the cause must map to exactly one change.

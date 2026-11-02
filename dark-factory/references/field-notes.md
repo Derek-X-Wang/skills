@@ -154,11 +154,11 @@ Evidence for the lead's tracked-watcher and independent-main-verification rows: 
 
 ---
 
-## Merge status and open questions (2026-11-02)
+## Merge status and owner answers (2026-11-02)
 
-The proposals under "Still open" in the five sections above were merged into SKILL.md, merge-gate.md and plan-template.md on 2026-11-02. These questions are still open for the owner:
+The proposals under "Still open" in the five sections above were merged into SKILL.md, merge-gate.md and plan-template.md on 2026-11-02. The owner then answered the four open questions:
 
-1. With an owner who is briefly reachable, does a chat reply count as approval for spend, or only for design choices?
-2. When does a single sighting on the watch list expire, or get filed without a second sighting?
-3. Should "keep the logs needed to diagnose" be a standing follow-up for every unexplained slow-lane failure?
-4. May PRs that share no package merge in pairs, with one main run checking both, to cut the one-at-a-time cost?
+1. A chat reply from a briefly reachable owner counts as approval for everything, spend included.
+2. A single sighting on the watch list is dropped after 14 days without a repeat. A product-behavior symptom is filed on the first sighting (the lease-renewal sighting was filed as wefty #1444).
+3. When missing logs block a diagnosis, file a small issue to keep them, every time (wefty #1445).
+4. No merging in pairs: one merge at a time stays, so a red main maps to one change.

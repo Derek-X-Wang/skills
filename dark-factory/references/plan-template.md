@@ -50,7 +50,7 @@ Fill this in with the owner **before** the window opens. Every `[OWNER]` line is
 - Write to QUESTIONS.md: time, item, question, options, recommendation, what was done meanwhile.
 - Decision rule: the right option (not the most reversible) when the lead's review and an independent second-model review agree → `ASSUMED, needs owner`, carry it out, record the revert. Disagree → record both, move on. `[OWNER]`
 - Review stop rule: after about 4 non-converging review rounds, park as a draft PR and give options.
-- If the owner may be briefly reachable: does a chat reply count as approval for design choices only, or also for spend? `[OWNER]`
+- If the owner may be briefly reachable: confirm that a chat reply counts as approval, spend included (the default since 2026-11-02), and on which channel. `[OWNER]`
 
 ## 7. Loop, liveness and usage
 

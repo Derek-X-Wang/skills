@@ -33,7 +33,7 @@ Collect, at minimum:
 5. **Guardrails:** no secrets, no repo settings or permissions changes, no force-push or history rewrite, no changes to the owner's installed or live tools, label rules.
 6. **Spend.** Default $0 and no purchases. If the run may spend: a cap, who approves each paid step, and how unbilled work counts toward the cap. Billing often lags 1–2 days, so count unbilled runs at a worst-case bound; expect that bound to block later paid steps and plan free work for that time.
 7. **"Really big problem"** definition and response (see below).
-8. **Decision rule when blocked** (see below). Agree it explicitly. Also agree whether a short chat reply from a briefly reachable owner counts as approval, and for what (design choices only, or also spend).
+8. **Decision rule when blocked** (see below). Agree it explicitly. Also confirm how a short chat reply from a briefly reachable owner counts. Default (owner decision 2026-11-02): it counts as approval for everything, spend included, when it clearly comes from the owner on a channel the owner uses. Record it in `QUESTIONS.md` with the owner's words.
 9. **Usage limits** per model provider, the live source for each, and the action at each threshold.
 10. **Loop host and cadence**, what happens if the session dies (often: nobody restarts it; the report says so), and each session's permission mode. Sessions in different modes may hold each other's messages without notice.
 11. **Stops and fallbacks.** What happens when a hard budget (CI time, spend, quota) is exhausted. A recovery rule resumes only the failure class it was written for (for example a model-capacity pause), never a hard STOP. The fallback queue must hold work that is both authorized and still unfinished. A budget change is valid only when the owner makes it; never assume a future change is preapproved.
@@ -100,7 +100,9 @@ Details, commands and a watcher sketch: [references/merge-gate.md](references/me
 - **Main red from code:** open a revert PR. Never force-push.
 - **Main red from a flake or infrastructure:** rerun the failed jobs once and hold the queue. While it runs, draft the issue and the revert plan, so a second failure is handled in minutes. A second failure parks the queue.
 - **PR flake:** rerun once; file the flake and fix it as its own small PR. Reproduce a timing flake with injected delay first: the old code must fail with the CI message and the new code must pass.
-- **Filing:** an unknown cause is filed on its second sighting; a cause proven by reading the code is filed on the first. Keep single sightings on a watch list in the report.
+- **Filing:** an unknown cause is filed on its second sighting; a cause proven by reading the code is filed on the first. A symptom of product behavior (a lost lease, lost data, a wrong state) is filed on the first sighting too, even when the cause is unknown.
+- **Watch list:** keep the other single sightings on a watch list in the report. Drop an entry after 14 days without a repeat.
+- **Missing diagnostics:** when a failure cannot be explained because the artifacts lack a log, file a small issue to keep that log, every time. The next failure can then be diagnosed.
 - **Park** an item after 3 unexplained CI failures, with notes and a reproduction.
 
 ## Really big problem
