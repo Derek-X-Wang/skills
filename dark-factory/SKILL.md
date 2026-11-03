@@ -1,6 +1,6 @@
 ---
 name: dark-factory
-description: Run software work unattended while the owner is away ("lights-out" or "dark factory" mode). Covers the plan and decisions to collect before the owner leaves, a check loop that never waits for a human, the merge gate that keeps main verified, flake/red-main/load/usage/spend handling, recording and acting on decisions alone, and the hand-back report. Use whenever the owner says they will be away, offline, traveling, asleep for a long time, or asks agents to keep working on their own overnight or over a weekend; also when you are the lead or a peer agent inside such a run, even if the words "dark factory" are never used.
+description: Run software work unattended while the owner is away ("lights-out" or "dark factory" mode). Covers the plan and decisions to collect before the owner leaves, a check loop that never waits for a human, the merge gate that keeps main verified, flake/red-main/load/usage/spend handling, recording and acting on decisions alone, and the hand-back report. Use whenever the owner says they will be away, offline, traveling, or asleep, during the owner's recurring nightly window, or when asked to keep working on their own overnight or over a weekend; also when you are the lead or a peer agent inside such a run, even if the words "dark factory" are never used.
 ---
 
 # Dark Factory
@@ -135,6 +135,28 @@ Response: stop the affected work, revert through a PR, write it at the **top** o
 - Write the report by its due time ([references/report-template.md](references/report-template.md)). Lead with the outcome and the decisions the owner must make.
 - When the window ends before the owner is back: keep the same rules, finish the in-flight merge line, start no new items.
 - When the owner returns: give a short sync in their language. List each decision with a recommendation, and start with the one that unblocks the most.
+
+## Recurring nightly window
+
+Many owners want every night to be a dark factory, not only long trips. The owner sets the window once (for example 01:00–07:00 local time, while they sleep). Inside it, run as above. Outside it, work normally and ask the owner directly.
+
+- **Standing rules, agreed once.** The merge gate, guardrails, out-of-scope list, delete authority and the decision rule carry over from night to night. Do not ask them again; record any change the owner makes.
+- **Evening handoff, about 30 minutes before the window.** One short message to the owner, answered before they sleep:
+  - tonight's queue (what will run, what will merge);
+  - the decisions it may hit, each with a recommendation, for a yes or no now;
+  - anything that will be left alone tonight.
+  If the owner does not answer, run only the queue already agreed and the standing rules.
+- **Never inside a nightly window:**
+  - attended runs or anything that needs a human click;
+  - upgrades or restarts of the owner's live tools (nobody is awake to recover them);
+  - new external replies to people.
+- **Morning report, at the window's end, one screen:**
+  - what merged, with main's state;
+  - what is blocked and why;
+  - the decisions the owner must make, each with a recommendation;
+  - any incident.
+  Use the full report template only after a multi-day window.
+- **Loop host.** The check loop must outlive the evening conversation. Use a durable scheduler where the harness has one, or a session loop the owner leaves running, and say which one is in use in the handoff.
 
 ## Field notes
 
