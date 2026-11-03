@@ -141,6 +141,7 @@ Response: stop the affected work, revert through a PR, write it at the **top** o
 Many owners want every night to be a dark factory, not only long trips. The owner sets the window once (for example 01:00–07:00 local time, while they sleep). Inside it, run as above. Outside it, work normally and ask the owner directly.
 
 - **Standing rules, agreed once.** The merge gate, guardrails, out-of-scope list, delete authority and the decision rule carry over from night to night. Do not ask them again; record any change the owner makes.
+- **No open blocking question at handoff time.** Any question asked in the evening must be answered, or turned into a non-blocking item in the handoff, before the window starts. A question dialog left open at night stalls every queue behind it until morning.
 - **Evening handoff, about 30 minutes before the window.** One short message to the owner, answered before they sleep:
   - tonight's queue (what will run, what will merge);
   - the decisions it may hit, each with a recommendation, for a yes or no now;
