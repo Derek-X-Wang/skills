@@ -152,6 +152,23 @@ Evidence for the lead's tracked-watcher and independent-main-verification rows: 
 - Proposal for Phase 3: distinguish execution completion, report due time, and actual delivery. In this session the separate 09:00 report target exceeded the stated 08:00 run end; pick one authoritative deadline before departure. The scheduled-wake alternative above has not been tested by this session.
 - Question for Roles: a peer may be an independently led project on the same machine. Mark whether it belongs to the shared merge gate or only shares resource limits; these notes provide no evidence that the wefty lead's GO protocol was tested by this session.
 
+## 2026-11-02 wefty — lead of an attended acceptance run (Claude Code, Opus)
+
+**Run:** the owner was present, but the run had the same shape: the lead orchestrated, a sandboxed AI agent session (PRIMARY) acted, and the owner only clicked dialogs. About 2.5 hours on an isolated proof install. Spend $0, the memory guard never tripped, and the run was PARTIAL: it found one new blocking defect (wefty #1446).
+
+| What happened | Rule it produced |
+|---|---|
+| PRIMARY ran in a sandboxed `dontAsk` mode and the lead in another mode, so all 6 lead messages to PRIMARY were held until the owner clicked approve | Put sessions that exchange messages in the same permission mode before the run. If the session under test must differ, plan for a human to approve or paste each message, and keep those messages few |
+| The lead missed a "capture status just before the window expires" step while other work ran | Schedule every fixed-clock check as a timer when its anchor is recorded |
+| While the operator was away for 30 minutes, a Seat ended by its idle timeout, and the next step needed a fresh Seat | Know every idle and expiry clock in the system under test. Keep the next step inside them, or plan a renewal |
+| The Seat command path passed its unit tests, but failed on every real call: the agent omitted a field the helper requires. Every agent test used a fake helper that never validated (wefty #1446) | A fake on one side of a boundary must enforce the real side's validation, or one test must cross the real boundary. Attended runs catch what such fakes hide |
+| `"$A:path"` in zsh applied a history modifier and dropped the path; the copy failed as an operator error | In zsh, write `"${A}:path"` whenever a colon follows a variable |
+| A watcher was started on a remembered Computer ID, but the new Seat had landed on a fresh Computer | Read IDs from the store just before starting a watcher; never reuse a remembered ID across a state change |
+| A long command pasted into a terminal was cut short, so the shell saw an unmatched quote and ran nothing | Give an owner long commands as a short script file to run, with the exact command inside |
+| The runbook's token-interval duration read a monotonic clock in two processes and printed 0.02 s for a 6-minute interval (wefty #1449) | Never subtract monotonic readings from different processes; use wall-clock or the log's own timestamps |
+
+**Held up well:** the lead verified every claim from the store and logs (approval source, intent history, Seat events) instead of trusting tool replies; the evidence was saved before the proof install was purged; each blocked row was recorded as NOT-RUN with its cause, not as a soft pass.
+
 ---
 
 ## Merge status and owner answers (2026-11-02)

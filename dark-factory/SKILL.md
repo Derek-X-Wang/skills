@@ -61,9 +61,11 @@ These files are what a compacted or restarted session rereads to continue withou
 
 **Messages between sessions.** Reply to the sender address on the latest message, and re-list peers after a long silence; a restarted session gets a new address. Check each send's delivery result; a held message is not delivered.
 
+Before the run, put every session that must exchange messages in the same permission mode. A session in a different mode holds each incoming message until a human approves it; with the owner away, it expires undelivered and the work behind it stalls. When a session must keep a different mode (for example a sandboxed test agent whose limits are the thing under test), plan for a human to approve or paste each message, and keep those messages few.
+
 **Workers.** Give each worker an explicit output folder in its brief, and check for stray files after it finishes. Plan for workers whose sandbox cannot commit: the worker drafts the commit message in a file, and the orchestrator reviews the diff and commits on the host. Pass absolute paths to gate scripts that change directory, and count the test results: a gate that ran nothing is NOT-RUN, not a pass. Before freezing a long check, preflight its environment assumptions (working folder, paths, tools). An environment failure is not a product failure: keep the failed result, and use only an already-authorized fallback.
 
-**Timers.** To deliver something at a fixed time, use one scheduled wake. Do not keep a worker sleeping while the parent waits on it.
+**Timers.** To deliver something at a fixed time, use one scheduled wake. Do not keep a worker sleeping while the parent waits on it. Schedule every fixed-clock check (a window expiry, an idle deadline, a "capture just before X") as a timer the moment its anchor is known. Do not rely on noticing it later: other work and waits push it out of mind.
 
 **Unknown is not healthy.** A usage dashboard that refreshes only when the owner clicks will go stale. Log "unknown", take the safe mode, and read a live source instead (for example the usage field the CLI writes into its own session logs).
 
