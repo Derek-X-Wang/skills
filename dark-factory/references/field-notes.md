@@ -154,7 +154,7 @@ Evidence for the lead's tracked-watcher and independent-main-verification rows: 
 
 ## 2026-11-02 wefty — lead of an attended acceptance run (Claude Code, Opus)
 
-**Run:** the owner was present, but the run had the same shape: the lead orchestrated, a sandboxed AI agent session (PRIMARY) acted, and the owner only clicked dialogs. About 2.5 hours on an isolated proof install. Spend $0, the memory guard never tripped, and the run was PARTIAL: it found one new blocking defect (wefty #1446).
+**Run:** the owner was present, but the runs had the same shape: the lead orchestrated, an AI agent session (PRIMARY) acted, and the owner only clicked dialogs. Two attended runs on an isolated proof install (about 2.5 hours, then about 1 hour). Spend $0, the memory guard never tripped. Both were PARTIAL: the first found wefty #1446 (fixed the same evening); the second found that the sleep fix was only half built (wefty #1333 reopened).
 
 | What happened | Rule it produced |
 |---|---|
@@ -166,6 +166,9 @@ Evidence for the lead's tracked-watcher and independent-main-verification rows: 
 | A watcher was started on a remembered Computer ID, but the new Seat had landed on a fresh Computer | Read IDs from the store just before starting a watcher; never reuse a remembered ID across a state change |
 | A long command pasted into a terminal was cut short, so the shell saw an unmatched quote and ran nothing | Give an owner long commands as a short script file to run, with the exact command inside |
 | The runbook's token-interval duration read a monotonic clock in two processes and printed 0.02 s for a 6-minute interval (wefty #1449) | Never subtract monotonic readings from different processes; use wall-clock or the log's own timestamps |
+| To stop messages being held, PRIMARY was restarted in bypass mode with the sandbox still configured. A `curl https://example.com` from PRIMARY then exited 0: the sandbox no longer blocked internet | Matching permission modes and a network-sandboxed agent may not be possible together in one harness. Re-prove the sandbox after every mode change, and record which rows lose sandbox evidence |
+| The proof removal failed with "directory not empty": the memory-guard watcher was still running and wrote a result file into the root while it was being purged | Stop every watcher that writes into a root before purging that root; then verify the root is gone |
+| A 31 s sleep was followed by a 10 s macOS DarkWake (Wi-Fi/Bluetooth). In that first second, the node agent's own safety watchdog ended the Computer, although L1 had just been fixed to credit sleep (wefty #1333 reopened) | A fix to one side of a lease (the server) is not a fix until the other side (the client's self-fencing watchdog) agrees. Test sleep with real hardware: short sleeps and dark wakes behave differently from a clean long sleep |
 
 **Held up well:** the lead verified every claim from the store and logs (approval source, intent history, Seat events) instead of trusting tool replies; the evidence was saved before the proof install was purged; each blocked row was recorded as NOT-RUN with its cause, not as a soft pass.
 
