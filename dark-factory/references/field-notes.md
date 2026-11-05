@@ -183,3 +183,14 @@ The proposals under "Still open" in the five sections above were merged into SKI
 2. A single sighting on the watch list is dropped after 14 days without a repeat. A product-behavior symptom is filed on the first sighting (the lease-renewal sighting was filed as wefty #1444).
 3. When missing logs block a diagnosis, file a small issue to keep them, every time (wefty #1445).
 4. No merging in pairs: one merge at a time stays, so a red main maps to one change.
+
+## 2026-11-03..2026-11-05 wefty — lead (Claude Code / Opus)
+
+**Run:** two nights plus the day between; lead plus two peer sessions; 12 PRs merged one at a time. A package mirror (snapshot.debian.org) was degraded for about 20 hours.
+
+- **Wrong probe, wasted reruns.** The lead's health poller first fetched the mirror's index file, which a CDN served fine while package files returned 503. Next it fetched real packages from the owner's Mac, which worked while CI runners still got 503. Each false "healthy" cost a 35-minute CI rerun. Probe the exact resource from the consumer's network.
+- **Gate deadlock.** "Next merge only after main is fully green" could not be met while the mirror was down, and the fix (a CI package cache) was itself a merge. The owner granted two one-time exceptions at night. Decide in advance how an outage repair may merge.
+- **Exception scope.** The lead upgraded the owner's install right after an exception merge, before that commit's main run finished. Status checks passed, but acceptance evidence was missing. An exception covers the merge, not the upgrade.
+- **Peer boundaries.** The lead asked a peer to run a local container; the peer's standing rule forbade it, and it refused. The boundary worked; the lead lacked the peer's constraints in its plan.
+- **Busy CI hid an idle bug.** A performance gate passed on a PR (about 850 ms) and failed on main (about 1.7 s): the CI image kept the screen server busy, so its idle sleep never showed. Gate the idle case separately.
+

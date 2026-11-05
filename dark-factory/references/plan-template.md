@@ -16,6 +16,7 @@ Fill this in with the owner **before** the window opens. Every `[OWNER]` line is
 - CI cost model (free hosted runners? paid minutes? cloud?).
 - Gates an agent must run before it says "works" (format, vet, tests with a long timeout).
 - Known sandbox limits (tests that cannot run inside a worker's sandbox, and where they run instead).
+- Peer sessions: for each, its prohibited operations (for example "no local Docker or VM"), the source of that rule, and the authorized fallback. Recheck before each dispatch and after a session is replaced.
 
 ## 3. Ordered queue
 

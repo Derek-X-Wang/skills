@@ -101,6 +101,8 @@ Details, commands and a watcher sketch: [references/merge-gate.md](references/me
 - Classify: code, flaky test, or infrastructure (network, runner disk, registry, an upstream job whose failure skipped the slow lane).
 - **Main red from code:** open a revert PR. Never force-push.
 - **Main red from a flake or infrastructure:** rerun the failed jobs once and hold the queue. While it runs, draft the issue and the revert plan, so a second failure is handled in minutes. A second failure parks the queue.
+- **External outage** (a package mirror, registry or proxy down for hours): after the queue parks, reopen only when a probe of the exact resource the consumer needs (package, version, arch) succeeds through the consumer's own network, preferably from CI itself. A probe of an index file, or from another machine, proves nothing. A good probe earns one rerun of the failed jobs, not a claim of recovery; allow at most 3 such reruns, at least 1 hour apart, then wait for the owner.
+- **Owner exceptions** cover the named merge only. Upgrading the owner's install still waits until that commit's main run is verified, unless the owner says otherwise.
 - **PR flake:** rerun once; file the flake and fix it as its own small PR. Reproduce a timing flake with injected delay first: the old code must fail with the CI message and the new code must pass.
 - **Filing:** an unknown cause is filed on its second sighting; a cause proven by reading the code is filed on the first. A symptom of product behavior (a lost lease, lost data, a wrong state) is filed on the first sighting too, even when the cause is unknown.
 - **Watch list:** keep the other single sightings on a watch list in the report. Drop an entry after 14 days without a repeat.
