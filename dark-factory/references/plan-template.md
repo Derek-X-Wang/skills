@@ -38,7 +38,7 @@ Fill this in with the owner **before** the window opens. Every `[OWNER]` line is
 - Delete/kill authority: exact paths and process owners. `[OWNER]`
 - Content: no private names, paths, logs or business text in public places. Language for public text.
 - Spend: $0, no purchases (including model credits). If the run may spend: the cap, who approves each paid step, how unbilled work counts toward the cap (billing lags 1–2 days; count a worst-case bound), and a cost forecast logged before each paid step with verified teardown after. `[OWNER]`
-- Contract changes (wire fields, error codes, public APIs): out of scope, or allowed only with the contract tests and a mixed-version upgrade check. `[OWNER]`
+- Contract changes (wire fields, error codes, public APIs): out of scope, or allowed only with the contract tests and, when a deployed release carries the old contract, a mixed-version upgrade check. `[OWNER]`
 
 ## 5. Really big problem
 

@@ -63,7 +63,7 @@ These files are what a compacted or restarted session rereads to continue withou
 
 Before the run, put every session that must exchange messages in the same permission mode. A session in a different mode holds each incoming message until a human approves it; with the owner away, it expires undelivered and the work behind it stalls. When a session must keep a different mode (for example a sandboxed test agent whose limits are the thing under test), plan for a human to approve or paste each message, and keep those messages few.
 
-**Workers.** Give each worker an explicit output folder in its brief, and check for stray files after it finishes. Plan for workers whose sandbox cannot commit: the worker drafts the commit message in a file, and the orchestrator reviews the diff and commits on the host. Pass absolute paths to gate scripts that change directory, and count the test results: a gate that ran nothing is NOT-RUN, not a pass. Before freezing a long check, preflight its environment assumptions (working folder, paths, tools). An environment failure is not a product failure: keep the failed result, and use only an already-authorized fallback.
+**Workers.** Give each worker an explicit output folder in its brief, and check for stray files after it finishes. Plan for workers whose sandbox cannot commit: the worker drafts the commit message in a file, and the orchestrator reviews the diff and commits on the host. Pass absolute paths to gate scripts that change directory, and count the test results: a gate that ran nothing is NOT-RUN, not a pass. Before freezing a long check, preflight its environment assumptions (working folder, paths, tools). An environment failure is not a product failure: keep the failed result, and use only an already-authorized fallback. Before dispatching a planned item, compare the plan's base with current main and confirm the item is not already done. Check that each acceptance gate runs the code under test: a gate that runs pinned or released binaries in its place is NOT-RUN for that change.
 
 **Timers.** To deliver something at a fixed time, use one scheduled wake. Do not keep a worker sleeping while the parent waits on it. Schedule every fixed-clock check (a window expiry, an idle deadline, a "capture just before X") as a timer the moment its anchor is known. Do not rely on noticing it later: other work and waits push it out of mind.
 
@@ -78,8 +78,9 @@ Before the run, put every session that must exchange messages in the same permis
    - **They disagree:** record both views and move to another item.
 4. The lead's own conditions on a fix go through that review too. The reviewer may replace the lead's mechanism if it keeps the lead's goal: a proof signal must imply the cause, not just happen with it.
 5. Keep the independent review even for tiny fixes. Small fixes still miss hang-up paths and upgrade order.
-6. **Stop rule:** after about 4 review rounds that do not converge, park the work as a draft PR, extract any real bug on main into its own small PR, and give the owner options with a recommendation.
-7. Prefer a fix that keeps the wire and error contract. A new code or contract change needs the contract tests and a mixed-version upgrade check, and goes to the owner.
+6. **Design escalation:** when the P1s of two consecutive review rounds sit on the same seam, stop patching and ask for a design pass. Both reviewers approve the design before more code.
+   **Stop rule:** after about 4 review rounds that do not converge, park the work as a draft PR, extract any real bug on main into its own small PR, and give the owner options with a recommendation.
+7. Prefer a fix that keeps the wire and error contract. A new code or contract change needs the contract tests and goes to the owner. Add a mixed-version upgrade check only when a deployed release carries the old contract; state that was never released needs no migration path.
 8. Before fixing a "test problem" that might be a product problem (a hang, a lost signal), get a bounded research pass first. A test-side fix can hide a real bug.
 9. Hard guardrails always win over this rule. Out-of-scope stays out.
 
@@ -118,7 +119,7 @@ Response: stop the affected work, revert through a PR, write it at the **top** o
 
 ## Shared machine
 
-- One heavy test job at a time. Set a hard load limit, and a lower limit where peers stop starting heavy work. Check load before every local test.
+- One heavy test job at a time. Set a hard load limit, and a lower limit where peers stop starting heavy work. Check load before every local test. Queue heavy jobs across workers: one runs, the others wait their turn instead of racing on load.
 - A stress or reproduction test starts small and checks load first. Scale up only after it fits.
 - Load from other projects is not yours. Do not kill it; wait.
 - Tests on the owner's machine share temp and state folders with the owner's installed product. Give every test its own root through an override; never use the product's default folders.

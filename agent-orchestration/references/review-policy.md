@@ -43,7 +43,7 @@ Start the first pass in fresh context. Give the reviewer:
 - Intended outcome or accepted specification.
 - Exact diff, base, or changed scope.
 - Applicable project instructions and accepted decisions.
-- Verification evidence.
+- Verification evidence. When the reviewer's sandbox cannot run checks (for example a read-only build cache), the orchestrator runs vet, lint and targeted tests on the reviewed SHA and supplies the commands, exit codes and log paths. The reviewer labels supplied evidence separately from checks it ran.
 - Requested review depth and return format.
 
 Do not include the implementer's confidence, conclusions, chat, or self-review before the first pass. A targeted re-review may include the prior findings and fixes. If no route can provide fresh context, report the limitation and do not claim the selected budget was satisfied without an authorized waiver.

@@ -23,6 +23,22 @@ Write what you saw, not what you expect. If a lesson already exists below, add y
 
 ---
 
+## 2026-11-04..2026-11-05 open-source media server — lead (Claude Code, Opus)
+
+**Run:** two nightly windows plus the day between. One lead, Opus workers, Codex and Opus reviewers. 7 PRs merged one at a time on green CI, spend $0, no really big problem.
+
+| What happened | Rule it produced |
+|---|---|
+| A contract change took 6 patch review rounds. Each round fixed one path, and the next found another on the same seam (an in-memory lock ordering against a store write). A redesign to one store compare-and-set fixed it | When two consecutive rounds put their P1s on the same seam, stop patching and ask for a design pass |
+| Reviewers raised migration and mixed-version P1s for 4 design rounds on state that was never released. The owner then ruled: nobody uses the system yet | Mixed-version checks only when a deployed release carries the old contract |
+| A plan written against an older main sent a worker to a slice that had already merged | Compare the plan's base with current main before dispatching an item |
+| Three green rehearsals "accepted" a caller change, but the rehearsal always ran the pinned release's caller, so the new code never ran | Check that each acceptance gate runs the code under test |
+| A floating `*-latest` CI runner label moved to a new OS image overnight and broke three workflows | Pin versioned runner labels and add a mechanical check |
+| Read-only reviewers reported "vet blocked: build cache not writable" in about 8 reviews | The orchestrator runs vet, lint and targeted tests on the reviewed SHA and hands the output to the reviewer |
+
+**Held up well:** one merge at a time with main CI between; merge pinned to the head SHA; owner decisions in one ordered list with recommendations.
+**Still open:** load from other projects (peaks above 20) kept workers waiting for hours; a cross-project queue for heavy jobs is not proven yet.
+
 ## 2026-10-30..2026-11-02 wefty — lead (Claude Code, Opus)
 
 **Run:** about 69 hours (Fri noon → Mon 08:00, with a daylight-saving change). One lead session, two peer Claude sessions, Codex workers. 52 PRs merged one at a time on green CI, spend $0, no really big problem. The session ran the whole window on an in-session cron without a restart.
