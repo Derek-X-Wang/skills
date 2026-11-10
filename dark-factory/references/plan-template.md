@@ -29,9 +29,9 @@ Use this private planning checklist for a factory or unattended window. Reuse ex
 ## 4. Guardrails
 
 - Per-workflow allowed operations: local reads/edits/tests, commit, push, PR publication, merge, replies, release and deployment listed separately. Personal ordinary code may merge after project gates and required risk review under run authority. Bite stays private-only except isolated own-feedback local fixes/tests. `[OWNER]`
-- Selected project integration gate; use [strict merge gate](merge-gate.md) when applicable. Preserve stronger repository requirements and the shared [R0/R1/R2 policy](orchestration/review-policy.md).
+- Selected project integration gate; use [strict merge gate](merge-gate.md) when applicable, with its batch size, solo-only items, required workflow names, batch coverage check result, main-only jobs, and whether temporary `batch/*` branches may be deleted. `[OWNER]` Preserve stronger repository requirements and the shared [R0/R1/R2 policy](orchestration/review-policy.md).
 - Red main → revert PR. Flake → one rerun. Three unexplained failures → park.
-- No force-push, no history rewrite, no `--no-verify`, no branch deletion except own merged branches.
+- No force-push, no history rewrite, no `--no-verify`, no branch deletion except own merged branches and, when listed above, the run's own temporary `batch/*` branches.
 - No settings, branch protection, secrets or permissions changes. No manual workflow dispatch unless listed. `[OWNER]`
 - Labels: which ones agents may add or never add.
 - The owner's installed or live tools: hands off (no upgrade, setup, removal, service-manager changes).

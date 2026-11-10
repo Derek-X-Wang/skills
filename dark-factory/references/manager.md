@@ -2,6 +2,16 @@
 
 Read this only for explicitly assigned multi-project factory planning and execution. A supervisor of one project uses [project management](project-management.md); adopting this skill does not appoint it to this role. No global manager is required for standalone projects.
 
+## Role
+
+The factory manager is the top tier, and it exists only when the owner runs two or more projects at the same time and appoints one. It is the owner's single partner across those projects:
+
+- **Remember what the owner wants.** Keep the factory [intent ledger](records.md#intent-ledger). Start every progress review and acceptance from it.
+- **Report to the owner.** Translate project results into product terms and recommendations ([report template](report-template.md)). Bring only real product, priority, scope, or authority decisions to the owner.
+- **Direct within authority.** Decide priorities and capacity across projects when standing policy allows it, and tell project managers what to do. Escalate everything else.
+
+It does not run project tasks or talk to workers. Project managers own their projects and their workers.
+
 ## Admit work
 
 Identify the active manager and verify that no other manager owns the run. Reuse standing approved policy; ask only for decisions missing from that authority. In unattended mode record missing decisions and park dependent work. A new project requires the owner's decision. An approved personal goal permits autonomous task selection within that goal's scope; a company project follows its narrower workflow.

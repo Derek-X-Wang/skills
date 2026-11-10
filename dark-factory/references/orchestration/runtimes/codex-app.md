@@ -1,6 +1,6 @@
 # Codex harness in the app, CLI, or IDE
 
-Treat Codex as a harness that can also expose a native control plane for subagents. The session tool inventory is the source of truth. Route selection and lifecycle checks below belong to the orchestrator. Assigned workers follow [worker intake](../../orchestration.md#worker-intake), reuse the supplied route, and check task checkout/tools/access without repeating host, model, effort, or quota investigation.
+Treat Codex as a harness that can also expose a native control plane for subagents. The session tool inventory is the source of truth. Route selection and lifecycle checks below belong to the orchestrator. Assigned workers follow [worker mode](../../worker.md), reuse the supplied route, and check task checkout/tools/access without repeating host, model, effort, or quota investigation.
 
 ## Routing
 

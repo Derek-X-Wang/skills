@@ -14,9 +14,11 @@ These are readable record formats, not configuration consumed by an implemented 
     project.json                     # identity, storage binding, authoritative refs
     policy.json                      # this project's existing approved policy
     state.json                       # this project's checkpoint
+    INTENT.md                        # what the owner wants (intent ledger)
     hourly.log
     QUESTIONS.md
   factories/<factory-id>/             # only for an explicitly assigned factory
+    INTENT.md                        # cross-project intent and priorities
     policy.json
     state.json                       # index/allocation; not copied project status
 ```
@@ -50,6 +52,18 @@ A newly initialized project uses the canonical layout directly. A disabled/uncon
 - [state.json](../assets/templates/state.json): run, manager epoch, project/task ownership, allocations, checkpoints, reviewed/tested heads, intake ledger, prior actions, replay constraints, resources and cleanup status, unconsumed per-pool commitments, and pacing decisions/reasons/evidence/reevaluation conditions. The epoch is a record of ownership, not an implemented lock or automatic fencing system.
 
 Use stable IDs to join these files. Record absence distinctly from zero. `enabled:false` or `status:unconfigured` admits no work. Ignore disabled sprint/redemption entries; their example pool IDs and null values grant nothing. A selected-reset record, when used, names a pool ID, one absolute expected reset time/timezone, and the source/condition that confirms that occurrence. Nullable identity, path, authority, or timing fields require real configuration or live evidence before the corresponding operation. Anonymous example IDs never prove a target exists. The templates illustrate one entitlement/pool, route, project, and task; add records for actual authorized capacity, not imaginary integrations.
+
+## Intent ledger
+
+`INTENT.md` is the memory of what the owner wants. The session that faces the owner keeps it: the factory manager when one is assigned, otherwise the project manager. It is plain Markdown, written in the owner's terms:
+
+- **Goals:** what success looks like for users, and why it matters to the owner.
+- **Priorities and taste:** what to do first, what quality bar to keep, and what to avoid.
+- **Acceptance:** how the owner will judge "done". Progress reviews and acceptance start from this list.
+- **Decisions:** dated owner answers, each with the reason and what it changed. Mark a replaced decision as superseded; do not delete it.
+- **Open questions:** what still needs the owner.
+
+Read it before every owner conversation, report, and new admission. Update it in the same turn as an owner decision. It records intent, not authority: grants of authority stay in `policy.json`, and a line in `INTENT.md` never grants an operation. A restarted or replacement manager rebuilds its understanding of the owner from this file, not from memory of a conversation.
 
 ## Checkpoint before handoff or pause
 

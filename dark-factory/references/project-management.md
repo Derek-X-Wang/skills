@@ -6,7 +6,9 @@ Use for a session already supervising one project or explicitly assigned that ro
 
 Identify the named project, current execution owner, approved goal, standing authority, workers, and current canonical record. A known owner continues as owner; an ordinary worker stays a worker. If another session owns this same project, reconcile ownership before changing shared records or overlapping work. Follow [orchestration](orchestration.md) for project-local delegation/review and [continuation](continuation.md) for an actual owner replacement.
 
-The standalone topology is human ↔ project owner ↔ this project's workers/reviewers. Under an explicitly assigned factory, the project owner reports to that factory manager instead. Peer project supervisors do not acquire authority over each other's queues, sessions, load, or quota merely because they share a machine.
+The standalone topology is human ↔ project owner ↔ this project's workers/reviewers. Under an explicitly assigned factory, the project owner reports to that factory manager instead. The project manager directs several workers at once when the work is separable ([orchestration](orchestration.md)). It starts each worker in [worker mode](worker.md).
+
+A standalone project manager also does the owner-facing job: it keeps the project's [intent ledger](records.md#intent-ledger), starts progress reviews and acceptance from it, and reports with the [report template](report-template.md). Under a factory, the factory manager does this; the project manager keeps its project record up to date and reports through the factory manager. Peer project supervisors do not acquire authority over each other's queues, sessions, load, or quota merely because they share a machine.
 
 ## Apply the relevant rules
 

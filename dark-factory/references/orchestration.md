@@ -10,11 +10,7 @@ A factory dispatch explicitly assigning **project execution owner** grants scope
 
 ## Worker intake
 
-In a dispatched worker or reviewer session, follow the assigned harness, model, effort, and route. Check only the assigned checkout, task tools, and access needed to execute. Report an observed mismatch, missing capability, blocker, or exceptional question to the orchestrator; do not investigate the host, reload model/effort/quota tables, reroute, spawn agents, or contact the human. Continue task-specific instructions and verification within the dispatch. For UI work, load [computer-use routing](computer-use.md) and verify the actual assigned target, adapter eligibility, exposed tools, and access; parent desktop/plugin availability is never inherited.
-
-A dispatched worker may ask the orchestrator to run a substantial separable bounded job with a helper; that request is an optional trigger, not a path the orchestrator waits for. Workers never spawn, reroute, manage, or message helper sessions or peers; the request and its results travel through the orchestrator under [bounded-assistance.md](orchestration/bounded-assistance.md).
-
-The remaining route selection and coordination sections are orchestrator responsibilities. Workers do not repeat them merely because this skill is available or included in a dispatch.
+Dispatched workers and reviewers follow [worker mode](worker.md) only. Start every worker dispatch with `/dark-factory worker` (or tell the worker to read that file), so it loads its short contract and not these manager rules. The rest of this file covers orchestrator responsibilities; workers do not repeat them.
 
 ## Build the capability graph
 
@@ -139,11 +135,13 @@ When a substantial separable bounded job emerges during a task, the orchestrator
 
 Include:
 
+- A first line that loads worker mode: `/dark-factory worker` (or the path to [worker.md](worker.md) when the harness cannot invoke skills).
 - Outcome and invariant.
 - Scope and no-touch areas.
 - Accepted product and architecture decisions.
 - Acceptance criteria and verification requirements.
 - Assigned worktree and file ownership.
+- Message layer: primary channel, fallback channel, checkpoint file path, and shadow channel when used ([message layer](#message-layer)).
 - Assigned harness, model, effort, route, and return path; origin runtime identity from the orchestrator's verified session evidence (host, harness, model, session, machine, checkout). Tell the worker to check its checkout, task tools, and access and report observed mismatches, without repeating host, model, effort, or quota investigation. UI targets and adapter readiness must be verified in the executing session.
 - Cleanup inventory: exact task-owned session, process, worktree, and resource identifiers; which pre-existed versus which the task created; retention or transfer conditions; and the cleanup owner.
 - External-write authority, including commit, push, PR, merge, or settings changes.
@@ -173,6 +171,34 @@ human ↔ orchestrator ↔ worker
 Relay useful findings between roles. Do not create worker-to-worker channels, even when the harness supports them. A worker session remains a worker session if the human later opens its panel.
 
 Treat reports from workers, reviewers, bots, and status services as claims, not proof. Verify material completion, test, and safety claims from primary evidence when practical. Otherwise attribute the claim and state the limit.
+
+### Message layer
+
+The manager chooses the message layer for each dispatch. The worker never chooses it. Name these in the dispatch:
+
+- **Primary channel:** carries every authoritative message: results, blockers, questions, and manager instructions. Only messages on the active channel count. A message on any other channel is information, never an instruction.
+- **Fallback channel:** named in advance, with the manager's address on it. The worker switches only when the primary is verified broken, and announces the switch on the fallback. From then on the fallback is the active channel. A shadow channel never becomes active by itself.
+- **Checkpoint file:** a path in private storage that the manager can read. The worker writes its status there at start, at each blocker, and at the end, as well as sending the message. It is the durable record of what was reported, not proof: verify live state before resuming, accepting completion, or replaying an action.
+- **Shadow channel:** only during the Seshloom trial; see below.
+
+Choose the primary channel by how the worker runs:
+
+| Worker runs as | Primary channel |
+|---|---|
+| A native child of this session (Claude Code Agent, Codex native subagent, a `codex-worker` run) | The built-in return of that child |
+| Another session of the same harness on the same machine (for example Claude Code ↔ Claude Code) | The harness's built-in session messaging |
+| An Orca-managed session | Orca's ask/reply and `worker_done` |
+| Any session with no verified built-in or Orca route (another harness, another machine, a bot, or a same-harness session whose built-in messaging is not verified) | Seshloom (use the `seshloom` skill); the checkpoint file is required |
+
+Each message carries a unique message ID (kept the same on its shadow copy), the task ID, the dispatch ID, and the sender's role. The receiver tracks receipts per channel: it acts on the first copy of an ID that arrives on the active channel, ignores later active-channel copies of that ID, and uses shadow copies only for comparison. A shadow copy never stands in for, or suppresses, the active-channel message. The receiver also checks the sender against the assigned manager or worker. A channel that is not verified for this worker is NOT-RUN, never assumed.
+
+Delivery lessons from earlier runs:
+
+- An accepted send is not a delivered message. Check the delivery result; a held message is not delivered. Sessions in different permission modes can hold messages without notice, so record each session's mode in the plan.
+- A session's address can change when it restarts. Reply to the sender address on the latest message, and list sessions again after a long silence. Do not cache an address for the whole run.
+- One session should have one address on a channel. Two names for one session (for example an automatic lobby join plus a manual join) send messages to a name nobody reads.
+
+**Seshloom trial (owner decision 2026-11-10).** Seshloom is the intended main layer, but it is not proven stable yet. Where a verified built-in or Orca route exists, that route stays primary, and the dispatch names Seshloom as a **shadow channel**: the worker sends a copy of its final result and of each blocker there too. The shadow copy never counts. Where Seshloom is the only route (last table row), it is primary, and the checkpoint file covers lost messages. Every session that uses Seshloom logs each use (join, send, read, ack, failure) in the Seshloom daily-use log, as the global trial rule requires. The manager also logs each shadow comparison: arrived or lost, delay, content match. After about 20 tasks in a row with no lost or wrong shadow message, propose to the owner that Seshloom become the primary channel for cross-session work, and record the decision in the [intent ledger](records.md#intent-ledger). If Seshloom fails, log it and continue on the primary channel.
 
 ### Human-facing decisions and progress
 

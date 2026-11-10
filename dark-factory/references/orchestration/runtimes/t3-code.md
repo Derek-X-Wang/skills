@@ -4,7 +4,7 @@ Treat T3 Code as a host that may also expose control-plane routes. It can host s
 
 ## Choose the observed route
 
-The orchestrator reads injected runtime metadata first, then inspects the tool inventory and CLI help only as needed for route selection. Assigned workers follow [worker intake](../../orchestration.md#worker-intake) and do not repeat host, model, effort, or quota investigation. UI workers still verify their actual assigned adapter, tools/access, and target.
+The orchestrator reads injected runtime metadata first, then inspects the tool inventory and CLI help only as needed for route selection. Assigned workers follow [worker mode](../../worker.md) and do not repeat host, model, effort, or quota investigation. UI workers still verify their actual assigned adapter, tools/access, and target.
 
 | Observed surface | Route |
 | --- | --- |

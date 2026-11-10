@@ -198,7 +198,7 @@ The proposals under "Still open" in the five sections above were merged into SKI
 1. A chat reply from a briefly reachable owner counts as approval for everything, spend included.
 2. A single sighting on the watch list is dropped after 14 days without a repeat. A product-behavior symptom is filed on the first sighting (the lease-renewal sighting was filed as wefty #1444).
 3. When missing logs block a diagnosis, file a small issue to keep them, every time (wefty #1445).
-4. No merging in pairs: one merge at a time stays, so a red main maps to one change.
+4. No merging in pairs: one merge at a time stays, so a red main maps to one change. *Superseded 2026-11-10:* CI waits slowed every project too much. The owner chose batch testing with bisection on red, which maps a red result to one failing PR, or to a small set that fails only together ([merge-gate.md](merge-gate.md)).
 
 ## 2026-11-03..2026-11-05 wefty — lead (Claude Code / Opus)
 
