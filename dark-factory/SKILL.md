@@ -1,6 +1,6 @@
 ---
 name: dark-factory
-description: Coordinate authorized software work across agents, harnesses, and machines, attended or unattended. Use for single-project supervision, explicitly assigned multi-project factory planning, manual resume, task delegation and review, worker sessions (`/dark-factory worker`), live UI routing, observed skill defects, personal approved-goal execution, or an explicitly requested Bite PR sweep. Select only the mode needed; a routing request does not start a factory or schedule.
+description: Coordinate authorized software work across agents, harnesses, and machines, attended or unattended. Use for single-project supervision, explicitly assigned multi-project factory planning, manual resume, task delegation and review, worker sessions (`/dark-factory worker`), trying or promoting new or experimental tools and methods, live UI routing, observed skill defects, personal approved-goal execution, or an explicitly requested Bite PR sweep. Select only the mode needed; a routing request does not start a factory or schedule.
 ---
 
 # Dark Factory

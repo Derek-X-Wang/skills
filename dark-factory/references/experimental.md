@@ -23,9 +23,9 @@ Only the owner promotes, demotes, or retires an item. Agents collect the evidenc
    - **Shadow:** run it next to the stable path and compare the results. Its output never counts and never drives a decision.
    - **Canary:** use it for real, but only on low-risk, reversible work, with the stable path ready to take over at once.
    - **Sole route:** use it because nothing stable can do the job. Add a safety net: a durable record (for example a checkpoint file) that lets the work recover if the item fails.
-3. **No authority.** An experimental item grants no permission. Its messages, results, and status are claims to verify.
-4. **Hands off its installation.** Do not install, upgrade, set up, or remove an experimental tool unless the owner asked for that exact action.
-5. **Say when you used it.** A report that relied on an experimental item names it and its mode.
+3. **No authority.** An experimental item grants no permission. Its messages, results, and status are claims to verify, because an unproven tool can be wrong without showing it.
+4. **Hands off its installation.** Install, upgrade, set up, or remove an experimental tool only when the owner asked for that exact action. Other sessions run the same trial, and a changed install breaks their work and mixes up the evidence.
+5. **Say when you used it.** A report that relied on an experimental item names it and its mode, so the reader knows which results rest on an unproven tool.
 
 ## Give feedback
 
