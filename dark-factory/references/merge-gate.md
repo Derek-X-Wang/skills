@@ -4,6 +4,8 @@ Use this strict integration policy only when selected by the project/run. It doe
 
 **Default flow: batch test, then bisect on red** (owner decision 2026-11-10; it replaces the one-merge-at-a-time rule of 2026-11-02). Each PR passes its own checks and the lead's verification. The lead then tests a batch of ready PRs together as one combined tree, and merges the whole batch when that tree is green. When the batch is red, the lead splits it in half until the failing PR is found, and the green PRs still merge. This keeps the goal of the old rule: every red result maps to one failing PR, or to a small set of PRs that fail only together. It also cuts the wait: with about 1 hour of CI, 10 PRs take about 1 hour when all are green and about 3–5 hours with one bad PR, compared with about 10 hours one at a time.
 
+Batching is an [experimental method](experimental.md) until it meets its promotion bar. Use it as a canary on personal projects whose batch coverage check passed. The stable path is one merge at a time: fall back to it after a batch problem the procedure below does not cover, and report it.
+
 If the repository already has a merge queue with batching and bisection turned on (for example GitHub merge queue), use it for the batch test and bisect steps instead of the manual branches below; do not run both. Turning a merge queue on is a repository settings change and needs the owner's authority for that repository.
 
 ## Pre-merge notice (peer → lead)

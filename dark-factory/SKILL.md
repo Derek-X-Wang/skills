@@ -27,6 +27,7 @@ Messages go one step at a time: owner ↔ (factory manager) ↔ project manager 
 - **Local UI routing:** before live browser, app, or desktop work, read [computer use](references/computer-use.md). It grants no external-write authority and creates no session.
 - **Manual resume:** before a new manager continues a previous run, read [continuation](references/continuation.md) and reconcile live state.
 - **Unattended window:** when the owner is away or in the nightly window, also read [unattended operation](references/unattended.md). Use only standing authority; park work that needs new authority and continue independent work.
+- **Experimental items:** before using anything in the experimental registry (for example Seshloom, wefty exec, batch CI), or when the owner introduces new software or a new method, read [experimental](references/experimental.md).
 - **Skill improvement:** when a skill defect interferes with work, read [continuous improvement](references/continuous-improvement.md).
 - **Evolution planning:** when planning new capability or broader authority, read the [roadmap](references/roadmap.md).
 
