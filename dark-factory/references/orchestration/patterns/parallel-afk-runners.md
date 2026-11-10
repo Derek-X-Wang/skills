@@ -1,6 +1,6 @@
 # Parallel AFK runners
 
-Use this pattern only when several decision-complete queue items are genuinely independent. Default to the serial [AFK runner](afk-runner.md).
+Use this pattern when several decision-complete queue items are genuinely independent. Factory projects are parallel by default when capacity permits; coupled work inside one project uses the serial [AFK runner](afk-runner.md). The independence gate below still governs parallel edits.
 
 ## Independence gate
 

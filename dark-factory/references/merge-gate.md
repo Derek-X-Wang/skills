@@ -1,6 +1,6 @@
 # Merge gate
 
-The lead is the only gate. Peers merge their own PRs, but only after the lead's GO.
+Use this strict integration policy only when selected by the project/run. It does not authorize merges or apply to Bite private review/local-fix processing. The project execution owner (lead) is the only gate. Peers merge their own PRs, but only after the lead's GO.
 
 ## Pre-merge notice (peer → lead)
 
@@ -105,7 +105,7 @@ A new push to main can cancel the previous main run (concurrency groups). If mer
 - Same-package changes on main since the CI base, or overlapping files with interacting hunks → fresh CI (`gh pr update-branch`, a merge commit, never a force-push).
 - Only BEHIND, merge-tree clean, overlap reviewed as independent → no fresh CI.
 - Name exceptions before the run starts (for example a toolchain bump).
-- Refresh a branch only when it is CONFLICTING or merge-tree is not clean, and only with a merge commit. A rebase of a pushed PR needs a force-push, so refuse it even when a peer suggests it.
+- Refresh a branch when the fresh-CI condition above requires it or when it is CONFLICTING/merge-tree is not clean, and only with a merge commit. A rebase of a pushed PR needs a force-push, so refuse it even when a peer suggests it.
 
 ## Cost of one-at-a-time
 

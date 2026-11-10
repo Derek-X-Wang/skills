@@ -1,12 +1,12 @@
 # Unattended-run plan template
 
-Fill this in with the owner **before** the window opens. Every `[OWNER]` line is a question the owner answers now, because nobody can ask later. Keep the plan in a private folder; it may name private projects.
+Use this private planning checklist for a factory or unattended window. Reuse existing approved policy; `[OWNER]` marks only decisions still missing from that authority. Keep real configuration and operational evidence outside this public repository under [records](records.md). A one-shot Bite pass does not need a recurring-loop plan.
 
 ## 1. Window and goal
 
 - Window: `<start, zone>` → `<end, zone>`. Daylight-saving change inside it? `<yes/no, date>`
 - Goal (one or two lines): what the owner should find when they return.
-- Higher-priority work that shares the same quotas or machine, and the split. `[OWNER]`
+- Existing project owner and approved project goal/workflow; for an explicitly assigned multi-project run, also its global manager, other execution owners, priority overrides and authorized shared allocations. Preserve known assignments without asking again. Independent projects are parallel only within an actual multi-project assignment and verified capacity; coupled work stays serialized.
 
 ## 2. Current state (read-only inventory)
 
@@ -28,8 +28,8 @@ Fill this in with the owner **before** the window opens. Every `[OWNER]` line is
 
 ## 4. Guardrails
 
-- Merge authority: which PR kinds self-merge, which wait. `[OWNER]`
-- One merge at a time; next merge after main finishes all workflows.
+- Per-workflow allowed operations: local reads/edits/tests, commit, push, PR publication, merge, replies, release and deployment listed separately. Personal ordinary code may merge after project gates and required risk review under run authority. Bite stays private-only except isolated own-feedback local fixes/tests. `[OWNER]`
+- Selected project integration gate; use [strict merge gate](merge-gate.md) when applicable. Preserve stronger repository requirements and the shared [R0/R1/R2 policy](orchestration/review-policy.md).
 - Red main → revert PR. Flake → one rerun. Three unexplained failures → park.
 - No force-push, no history rewrite, no `--no-verify`, no branch deletion except own merged branches.
 - No settings, branch protection, secrets or permissions changes. No manual workflow dispatch unless listed. `[OWNER]`
@@ -49,20 +49,20 @@ Fill this in with the owner **before** the window opens. Every `[OWNER]` line is
 ## 6. When blocked
 
 - Write to QUESTIONS.md: time, item, question, options, recommendation, what was done meanwhile.
-- Decision rule: the right option (not the most reversible) when the lead's review and an independent second-model review agree → `ASSUMED, needs owner`, carry it out, record the revert. Disagree → record both, move on. `[OWNER]`
-- Review stop rule: after about 4 non-converging review rounds, park as a draft PR and give options.
-- If the owner may be briefly reachable: confirm that a chat reply counts as approval, spend included (the default since 2026-11-02), and on which channel. `[OWNER]`
+- Resolve implementation decisions within granted scope; record material assumptions/revert paths. Apply R0/R1/R2 by risk. New authority or scope cannot come from reviewer agreement: park it and continue independent authorized work. `[OWNER]`
+- Review/takeover stop rule: two substantive failed fixes on the same material issue trigger bounded replanning/takeover. Preserve budgets and review requirements; publish a draft PR only when authorized.
+- Authorized owner-instruction channel and verification; amendments apply only to their exact target/scope. A short ambiguous reply does not expand spend or publishing authority. `[OWNER]`
 
 ## 7. Loop, liveness and usage
 
-- Loop host (in-session cron, OS scheduler, outside nudge) and cadence. `[OWNER]`
-- If the lead session dies: restart command, or "not restarted; report it". `[OWNER]`
-- Every session in the run: name, role, permission mode, and whether it is under the shared merge gate or only shares resource limits. A mode mismatch can hold peer messages without notice. `[OWNER]`
+- One-shot or separately authorized recurrence; supported loop/timer host and cadence only if recurrence is enabled. No automatic schedule creation. `[OWNER]`
+- Stage B manual same-machine manager continuation: private checkpoint location, old manager/writer fencing, live reconciliation and new ownership evidence. Automatic manager recovery remains deferred.
+- Every session: name, role, permission mode, return/delivery route and actual approval behavior; distinguish project integration ownership from shared resource policy. Verify delivery in the current harness. `[OWNER]`
 - Hard stops (CI time, spend, quota): the response when one is exhausted, which failure classes a recovery rule may resume, and a fallback queue of authorized, unfinished work. `[OWNER]`
 - Machine stays awake? Load limits (hard limit, peer stop limit, heavy-test limit).
 - Test isolation on the owner's machine: every test gets its own temp and state root; throwaway services on non-default ports.
 - Performance measurements: merge-free window per sample, and the "contended = not counted" rule.
-- Usage per provider: live source, refresh behavior, thresholds and actions:
+- Usage per entitlement/pool: configured supported adapter, timestamped source/expiry, all applicable windows and interactive reserves. Sprint exceptions name pools and absolute expiry/specific reset; reset-credit redemption is owner-directed or individually preauthorized under [capacity policy](capacity-and-fleet.md).
   - e.g. lead model ≥ X% of weekly → lead only orchestrates; worker model < Y% left → start no new item; 0% → pause coding.
   - Data missing or older than N hours → "unknown" → safe mode.
 - Log line format (time with zone, liveness, item, usage with data age, mode, action).

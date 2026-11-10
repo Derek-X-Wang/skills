@@ -10,7 +10,7 @@ An installed `orca` CLI or an inherited handle alone is a discovery hint or loca
 
 ## Operational handoff
 
-- For live browser, native-app, webview, or desktop UI work, load `computer-use-routing` before selecting the local control adapter.
+- For live browser, native-app, webview, or desktop UI work, load [computer-use routing](../../computer-use.md) before selecting the local control adapter.
 - Load `orchestration` before Orca task, structured dispatch, mailbox, wait, ask/reply, decision-gate, or worker-lifecycle actions.
 - Load `orca-cli` before Orca account or quota inspection and before worktree, terminal, terminal-level prompt delivery, repository, artifact, skill-sharing, or browser-host actions.
 
@@ -19,7 +19,7 @@ This reference owns Orca coordination capability mapping and orchestration invar
 ## Routing
 
 - Use Orca orchestration for work in another Orca terminal or worktree.
-- When current subscription usage can change the worker route, read it through Orca's version-matched public account surface whenever the current machine can reach its local Orca CLI and runtime. Use this surface even when another harness or host UI contains the session. Treat missing, stale, or failed provider data as unverified. Do not read credential storage.
+- When Orca is the configured quota adapter, read its version-matched public account surface even when another harness or host UI contains the session. Other supported authorized adapters follow [capacity policy](../../capacity-and-fleet.md). Treat missing, stale, or failed provider data as unverified. Do not read credential storage.
 
 For a supervised run, prefer an explicit task lifecycle that keeps worker messages visible: create the task, dispatch to the verified terminal, wait on the live coordinator mailbox, and inspect task state. Use this only when the live guide or observed route proves support for the selected harness. An agent identifier or successful terminal launch does not prove prompt delivery or completion reporting. Before declaring a timeout, inspect the inbox and task list because a completion message can land on a newer live handle.
 

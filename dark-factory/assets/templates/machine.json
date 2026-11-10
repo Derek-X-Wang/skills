@@ -1,0 +1,12 @@
+{
+  "format_version": 1,
+  "enabled": false,
+  "status": "unconfigured",
+  "os_repo_root": null,
+  "os_repository_identity": null,
+  "fleet_registry_ref": null,
+  "fleet_observations_ref": null,
+  "machine_id": null,
+  "identity_evidence_ref": null,
+  "local_resources_ref": null
+}

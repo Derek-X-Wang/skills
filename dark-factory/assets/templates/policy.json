@@ -1,0 +1,134 @@
+{
+  "format_version": 1,
+  "enabled": false,
+  "status": "unconfigured",
+  "private_storage_root": "~/.local/share/dark-factory",
+  "owner_authority_ref": null,
+  "objective": "Useful verified delivery; unused quota is acceptable",
+  "manager": {
+    "continuation_stage": "B",
+    "resume": "manual_same_machine",
+    "autonomous_recovery": false,
+    "role": "project_owner",
+    "project_id": null,
+    "factory_ref": null
+  },
+  "project_parallelism": {
+    "independent_projects": "parallel_when_capacity_verified",
+    "priority_overrides": []
+  },
+  "projects": [
+    {
+      "id": "example-project",
+      "enabled": false,
+      "workflow": "personal",
+      "approved_goal": null,
+      "scope": [],
+      "out_of_scope": [],
+      "priority": null,
+      "authority_ref": null,
+      "allowed_operations": [],
+      "required_checks": [],
+      "review_policy": "R0_R1_R2",
+      "merge_policy": null,
+      "deploy_authorized": false,
+      "private_record_ref": null
+    }
+  ],
+  "entitlements": [
+    {
+      "id": "example-entitlement",
+      "pools": [
+        {
+          "id": "example-short",
+          "reserve": {
+            "unit": "percent_remaining",
+            "normal": null
+          },
+          "provisional_call": {
+            "enabled": false,
+            "max_calls": 0,
+            "authority_ref": null
+          }
+        },
+        {
+          "id": "example-weekly",
+          "reserve": {
+            "unit": "percent_remaining",
+            "normal": null
+          },
+          "provisional_call": {
+            "enabled": false,
+            "max_calls": 0,
+            "authority_ref": null
+          }
+        }
+      ]
+    }
+  ],
+  "sprints": [
+    {
+      "id": "example-sprint",
+      "enabled": false,
+      "authority_ref": null,
+      "pool_ids": [
+        "example-weekly"
+      ],
+      "reserve_override": {
+        "unit": "percent_remaining",
+        "value": null
+      },
+      "expires_at": null,
+      "selected_reset": null,
+      "stop_on_earlier_condition": true
+    }
+  ],
+  "reset_redemptions": [
+    {
+      "id": "example-redemption",
+      "enabled": false,
+      "entitlement_id": "example-entitlement",
+      "credit_action_ref": null,
+      "authority_ref": null,
+      "conditions": [],
+      "max_count": 1,
+      "expires_at": null,
+      "consumed_count": 0,
+      "supported_adapter_ref": null
+    }
+  ],
+  "paid_spend": {
+    "currency": "USD",
+    "cap": 0,
+    "authority_ref": null
+  },
+  "intake": {
+    "bite": {
+      "enabled": false,
+      "mode": "one_shot",
+      "repository_scope": [],
+      "authenticated_user_id": null,
+      "authority_ref": null
+    }
+  },
+  "recurrence": {
+    "enabled": false,
+    "trigger": null,
+    "authority_ref": null
+  },
+  "pacing": {
+    "enabled": false,
+    "mode": "reset_aware",
+    "max_active_tasks": null,
+    "max_new_admissions_per_decision": null,
+    "cost_estimate_source_ref": null,
+    "reevaluate_on": [
+      "material_consumption",
+      "task_completion_or_cost_change",
+      "quota_or_reset_change",
+      "readiness_change",
+      "sprint_expiry",
+      "manual_resume"
+    ]
+  }
+}

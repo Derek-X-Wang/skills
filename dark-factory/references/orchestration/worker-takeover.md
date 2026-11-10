@@ -18,7 +18,7 @@ Default replacement worker: Codex GPT-6 Astra. Choose high when fresh context or
 
 - Honor an explicitly requested effort; otherwise select high or xhigh under the criteria above. No silent model substitution or effort change after selection. If the selected Astra route or effort is unavailable, report the bounded inability and preserve the work.
 - Do not add an automatic high-to-xhigh retry ladder. A high-effort takeover that reaches the no-progress threshold follows the stop-and-replan rule below; changing effort does not reset attempts or consumed budget.
-- Fable replaces Astra only when the user explicitly selects or authorizes it for this takeover. There is no automatic Fable fallback and no automatic redemption of reset credits.
+- Fable replaces Astra only when the user explicitly selects or authorizes it for this takeover. There is no automatic Fable fallback. Reset-credit use requires owner direction or a separately recorded individual preauthorization under [capacity policy](../capacity-and-fleet.md); takeover itself grants neither.
 - Any other replacement is allowed only within existing dispatch authority and must be disclosed as a deviation from the default. Do not repeatedly retry a route that already failed.
 
 ## Establish exclusivity before mutation
@@ -48,7 +48,7 @@ Extend the decision-complete dispatch contract with:
 | Budget | Remaining task budget and stop conditions |
 | Return | Acceptance criteria and the stop and return contract |
 
-Treat the previous worker's claims as claims; verify material evidence from primary sources. Transfer only relevant, redacted context — never a full chat history. Carry prior attempts and consumed budget across sessions; restarting the task does not reset them. For UI work, continue under `computer-use-routing`, and never replay an uncertain non-idempotent mutation.
+Treat the previous worker's claims as claims; verify material evidence from primary sources. Transfer only relevant, redacted context — never a full chat history. Carry prior attempts and consumed budget across sessions; restarting the task does not reset them. For UI work, continue under [computer-use routing](../computer-use.md), and never replay an uncertain non-idempotent mutation.
 
 ## Replace cleanly, then stop cycling
 

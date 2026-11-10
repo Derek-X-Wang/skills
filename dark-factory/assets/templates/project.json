@@ -1,0 +1,23 @@
+{
+  "format_version": 1,
+  "enabled": false,
+  "status": "unconfigured",
+  "project_id": null,
+  "repository_identity": null,
+  "identity_evidence_ref": null,
+  "identity_aliases": [],
+  "role": "project_owner",
+  "owner_session_ref": null,
+  "factory_ref": null,
+  "private_storage_root": "~/.local/share/dark-factory",
+  "storage_override_authority_ref": null,
+  "policy_ref": null,
+  "authoritative_state_ref": null,
+  "fleet_ref": null,
+  "observations_ref": null,
+  "event_log_ref": null,
+  "questions_ref": null,
+  "migration_status": "not_started",
+  "legacy_state_ref": null,
+  "migration_evidence_refs": []
+}

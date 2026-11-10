@@ -21,7 +21,7 @@ orchestrator assigns item
           ↓
 worker implements and verifies
           ↓
-orchestrator obtains independent review
+orchestrator applies selected R0/R1/R2 review
           ↓
 worker handles accepted rework
           ↓

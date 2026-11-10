@@ -12,7 +12,7 @@ Treat a model without a current [model profile](../model-profiles.md) as unteste
 
 ## Operational handoff
 
-For live browser, native-app, webview, or desktop UI work, load `computer-use-routing` before selecting the local control adapter.
+For live browser, native-app, webview, or desktop UI work, load [computer-use routing](../../computer-use.md) before selecting the local control adapter.
 
 | Chosen action | Operational source |
 | --- | --- |

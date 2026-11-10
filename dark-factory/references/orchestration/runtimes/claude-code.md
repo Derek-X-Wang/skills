@@ -11,7 +11,7 @@ Treat Claude Code as a harness that can also expose a native control plane for s
 
 ## Operational handoff
 
-For live browser, native-app, webview, or desktop UI work, load `computer-use-routing` before selecting the local control adapter.
+For live browser, native-app, webview, or desktop UI work, load [computer-use routing](../../computer-use.md) before selecting the local control adapter.
 
 | Chosen action | Operational source |
 | --- | --- |

@@ -1,0 +1,82 @@
+{
+  "format_version": 1,
+  "enabled": false,
+  "status": "unconfigured",
+  "quota": [
+    {
+      "entitlement_id": "example-entitlement",
+      "adapter_id": null,
+      "status": "unknown",
+      "source_ref": null,
+      "observed_at": null,
+      "limits": [
+        {
+          "pool_id": "example-short",
+          "status": "unknown",
+          "unit": "percent_remaining",
+          "remaining": null,
+          "reset_at": null,
+          "measured_at": null,
+          "expires_at": null,
+          "source_ref": null
+        },
+        {
+          "pool_id": "example-weekly",
+          "status": "unknown",
+          "unit": "percent_remaining",
+          "remaining": null,
+          "reset_at": null,
+          "measured_at": null,
+          "expires_at": null,
+          "source_ref": null
+        }
+      ]
+    }
+  ],
+  "readiness": [
+    {
+      "route_id": "example-route",
+      "status": "unknown",
+      "observed_at": null,
+      "expires_at": null,
+      "source_ref": null,
+      "session_id": null,
+      "machine_identity_ref": null,
+      "checkout_ref": null,
+      "tools_verified": false,
+      "target_state_verified": false,
+      "return_path_verified": false,
+      "lifecycle_verified": false
+    }
+  ],
+  "consumption": [
+    {
+      "entitlement_id": "example-entitlement",
+      "pool_id": "example-short",
+      "status": "unknown",
+      "unit": "percent_remaining",
+      "rate_per_hour": null,
+      "sample_started_at": null,
+      "sample_ended_at": null,
+      "observed_at": null,
+      "expires_at": null,
+      "baseline_ref": null,
+      "source_ref": null
+    },
+    {
+      "entitlement_id": "example-entitlement",
+      "pool_id": "example-weekly",
+      "status": "unknown",
+      "unit": "percent_remaining",
+      "rate_per_hour": null,
+      "sample_started_at": null,
+      "sample_ended_at": null,
+      "observed_at": null,
+      "expires_at": null,
+      "baseline_ref": null,
+      "source_ref": null
+    }
+  ],
+  "record_owner": "shared_os_fleet",
+  "machine_availability": []
+}

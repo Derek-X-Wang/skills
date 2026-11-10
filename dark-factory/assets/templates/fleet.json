@@ -1,0 +1,58 @@
+{
+  "format_version": 1,
+  "enabled": false,
+  "status": "unconfigured",
+  "machines": [
+    {
+      "id": "example-machine",
+      "enabled": false,
+      "identity_evidence_ref": null,
+      "capabilities": [],
+      "resource_limits": {},
+      "disclosure_boundary": null
+    }
+  ],
+  "entitlements": [
+    {
+      "id": "example-entitlement",
+      "provider_id": "example-provider",
+      "gateway_id": null,
+      "quota_adapter": {
+        "kind": null,
+        "operational_source": null,
+        "authority_ref": null
+      },
+      "applicable_pool_ids": [
+        "example-short",
+        "example-weekly"
+      ]
+    }
+  ],
+  "routes": [
+    {
+      "id": "example-route",
+      "enabled": false,
+      "machine_id": "example-machine",
+      "entitlement_id": "example-entitlement",
+      "provider_id": "example-provider",
+      "gateway_id": null,
+      "model": null,
+      "effort": null,
+      "harness": null,
+      "host": null,
+      "control_plane": null,
+      "operational_source": null,
+      "supported_lifecycle": [],
+      "state_affinity": {
+        "kind": "none",
+        "target_ref": null,
+        "owner_ref": null,
+        "retained": false
+      },
+      "permitted_data_classes": [],
+      "return_path": null
+    }
+  ],
+  "record_owner": "shared_os_fleet",
+  "observations_ref": "observations.json"
+}

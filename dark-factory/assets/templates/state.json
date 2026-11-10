@@ -1,0 +1,125 @@
+{
+  "format_version": 1,
+  "enabled": false,
+  "status": "unconfigured",
+  "run_id": null,
+  "policy_ref": null,
+  "fleet_ref": null,
+  "observations_ref": null,
+  "manager": {
+    "epoch": 0,
+    "session_id": null,
+    "machine_id": null,
+    "status": "unconfigured",
+    "authority_ref": null,
+    "previous_manager": null,
+    "fencing_evidence_ref": null,
+    "role": "project_owner",
+    "project_id": null,
+    "factory_ref": null
+  },
+  "projects": [
+    {
+      "project_id": "example-project",
+      "owner": null,
+      "allocation_ref": null,
+      "status": "unconfigured",
+      "authoritative_record_ref": null
+    }
+  ],
+  "tasks": [
+    {
+      "task_id": "example-task",
+      "project_id": "example-project",
+      "workflow": null,
+      "status": "unconfigured",
+      "owner": null,
+      "worker_ids": [],
+      "scope": [],
+      "no_touch": [],
+      "authority_ref": null,
+      "repository_id": null,
+      "checkout": null,
+      "base_sha": null,
+      "head_sha": null,
+      "dirty_patch_ref": null,
+      "untracked_artifact_refs": [],
+      "checkpoint_ref": null,
+      "next_safe_step": null,
+      "attempts": [],
+      "budget": {
+        "consumed": null,
+        "remaining": null,
+        "stop_reason": null
+      },
+      "review": {
+        "budget": null,
+        "reviewed_sha": null,
+        "evidence_refs": []
+      },
+      "checks": {
+        "tested_sha": null,
+        "evidence_refs": []
+      },
+      "prior_external_actions": [],
+      "replay_constraints": [],
+      "disclosure_constraints": [],
+      "resources": [],
+      "pool_commitments": [
+        {
+          "entitlement_id": "example-entitlement",
+          "pool_id": "example-short",
+          "unit": "percent_remaining",
+          "remaining_unconsumed": null,
+          "estimated_at": null,
+          "estimate_source_ref": null,
+          "observation_baseline_ref": null
+        },
+        {
+          "entitlement_id": "example-entitlement",
+          "pool_id": "example-weekly",
+          "unit": "percent_remaining",
+          "remaining_unconsumed": null,
+          "estimated_at": null,
+          "estimate_source_ref": null,
+          "observation_baseline_ref": null
+        }
+      ]
+    }
+  ],
+  "bite_intake_ledger": [],
+  "active_sprints": [],
+  "redemption_ledger": [],
+  "events": [],
+  "pacing_decisions": [
+    {
+      "status": "unconfigured",
+      "decided_at": null,
+      "decision": null,
+      "reason": null,
+      "per_pool_assessments": [
+        {
+          "entitlement_id": "example-entitlement",
+          "pool_id": "example-weekly",
+          "unit": "percent_remaining",
+          "remaining": null,
+          "protected_reserve": null,
+          "unconsumed_commitments": null,
+          "usable_allowance": null,
+          "verified_reset_at": null,
+          "time_remaining_hours": null,
+          "consumption_rate_per_hour": null,
+          "candidate_cost_estimate": null,
+          "observation_baseline_ref": null,
+          "estimate_source_ref": null,
+          "status": "unconfigured"
+        }
+      ],
+      "evidence_refs": [],
+      "binding_limits": [],
+      "next_reevaluation_condition": null,
+      "new_admission_limit": null,
+      "concurrency_limit": null
+    }
+  ]
+}

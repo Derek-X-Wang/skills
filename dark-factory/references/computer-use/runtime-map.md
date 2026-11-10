@@ -27,7 +27,7 @@ Tested 2026-09-07 from T3 Code-hosted Codex to native Codex Desktop (ChatGPT app
 - **NOT-RUN — computer-use and lifecycle readiness:** the acknowledgement test did not exercise native computer use, permissions, question or approval handling, failure observation, interrupt, or worker disposal. Transcript readback is result evidence, not a Desktop control API or a complete unattended return route.
 - **Verify model and effort separately:** the Desktop turn used its own Sol/high setting, not the orchestrator's preferred Astra/medium worker setting. Prefilling a prompt does not establish the requested worker configuration.
 
-Keep this external Desktop route manual-send unless fresh evidence lets `agent-orchestration` verify its full dispatch and lifecycle contract. Recheck when the installed version, supported endpoint, or exposed tools materially change; do not repeatedly probe the unchanged route or use GUI self-control, private storage edits, or undocumented IPC to bypass the missing send path. This limit concerns external dispatch, not UI work already supported inside a Desktop session.
+Keep this external Desktop route manual-send unless fresh evidence lets [task orchestration](../orchestration.md) verify its full dispatch and lifecycle contract. Recheck when the installed version, supported endpoint, or exposed tools materially change; do not repeatedly probe the unchanged route or use GUI self-control, private storage edits, or undocumented IPC to bypass the missing send path. This limit concerns external dispatch, not UI work already supported inside a Desktop session.
 
 ## Resolve common ambiguities
 

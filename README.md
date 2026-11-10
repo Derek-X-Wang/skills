@@ -18,9 +18,9 @@ npx skills add Derek-X-Wang/skills --skill convex -g
 
 | Skill | Description |
 |-------|-------------|
-| **agent-orchestration** | Harness-aware, hub-and-spoke delegation, review, and multi-agent workflow routing |
-| **dark-factory** | Unattended runs while the owner is away: plan, check loop, merge gate, decisions, hand-back report |
-| **computer-use-routing** | Runtime-aware routing across browser, DevTools, embedded-surface, and desktop control adapters |
+| **agent-orchestration** | Compatibility entry for Dark Factory task orchestration; install alongside dark-factory |
+| **dark-factory** | Shared task/UI orchestration and attended or unattended factory management, with personal and private Bite workflows |
+| **computer-use-routing** | Compatibility entry for Dark Factory local UI routing; install alongside dark-factory |
 | **kitcn** | Kitcn (formerly Better Convex) projects: cRPC, ORM, auth, and React |
 | **convex** | Vanilla Convex backend-as-a-service (queries, mutations, actions, schemas) |
 | **git-project-memory** | Git history research and decision-focused commit messages |
