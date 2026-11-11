@@ -1,6 +1,6 @@
 # Bite one-shot PR workflow
 
-Load only for an explicitly authorized Bite sweep or its admitted processing tasks. V1 is a one-shot sweep and processing pass. Recurring triggers are a later separately configured step; they do not require autonomous manager recovery. This file defines behavior, not a prebuilt GitHub integration.
+Load only for an explicitly authorized Bite sweep or its admitted processing tasks. This version runs a one-shot sweep and processing pass. Recurring triggers are a later separately configured step; they do not require autonomous manager recovery. This file defines behavior, not a prebuilt GitHub integration.
 
 ## Read-only intake
 

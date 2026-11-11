@@ -8,7 +8,7 @@ Identify the named project, current execution owner, approved goal, standing aut
 
 The standalone topology is human ↔ project owner ↔ this project's workers/reviewers. Under an explicitly assigned factory, the project owner reports to that factory manager instead. The project manager directs several workers at once when the work is separable ([orchestration](orchestration.md)). It starts each worker in [worker mode](worker.md).
 
-A standalone project manager also does the owner-facing job: it keeps the project's [intent ledger](records.md#intent-ledger), starts progress reviews and acceptance from it, and reports with the [report template](report-template.md). Under a factory, the factory manager does this; the project manager keeps its project record up to date and reports through the factory manager. Peer project supervisors do not acquire authority over each other's queues, sessions, load, or quota merely because they share a machine.
+A standalone project manager also does the owner-facing job: it keeps the project's [intent ledger](records.md#intent-ledger), starts progress reviews and acceptance from it, and reports with the [report template](report-template.md). Under a factory, the factory manager does this, after the handover in [intent ledger](records.md#intent-ledger); the project manager keeps its project record up to date and reports through the factory manager. Peer project supervisors do not acquire authority over each other's queues, sessions, load, or quota merely because they share a machine.
 
 ## Apply the relevant rules
 

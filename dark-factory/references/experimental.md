@@ -10,7 +10,7 @@ experimental ──(evidence + owner decision)──> stable
      └──(repeated failure or owner decision)──> retired / back to experimental
 ```
 
-Only the owner promotes, demotes, or retires an item. Agents collect the evidence and propose. Agents may suspend an item for the current run after a failure (see below).
+Only the owner changes an item's mode (for example shadow → canary), promotes, demotes, or retires it. Agents collect the evidence and propose. Agents may suspend an item for the current run after a failure (see below).
 
 ## Rules while an item is experimental
 
@@ -32,7 +32,7 @@ Only the owner promotes, demotes, or retires an item. Agents collect the evidenc
 Feedback is the point of the experiment. Do all three steps every time:
 
 1. **Log each use.** Add one line to the item's log. Use the format that the item's trial already defines (the owner's global instructions define the Seshloom and wefty formats), and put the experiment mode in `notes`. A new item without a format uses `date | repo | harness | mode | action | result | notes`. Escape `|` and keep it on one line. Note anything slow, confusing, or broken, and also what worked: clean runs are evidence for promotion.
-2. **File defects and gaps.** Search the item's issue tracker. Comment on a matching issue, or file a new one labeled `needs-triage`. Public trackers get only a generic symptom, a sanitized reproduction, and the expected and actual behavior. Keep private names, paths, and logs in `~/.local/share/agent-handoff/<item>/<date>-<project>.md`.
+2. **File defects and gaps.** When the item has an issue tracker, search it. Comment on a matching issue, or file a new one labeled `needs-triage`. Public trackers get only a generic symptom, a sanitized reproduction, and the expected and actual behavior. Keep private names, paths, and logs in `~/.local/share/agent-handoff/<item>/<date>-<project>.md`.
 3. **Report.** The hand-back report appendix lists each experimental item used: uses, failures, issues filed, and progress toward its promotion bar. A lesson about how to use the item well goes into this skill through [skill improvement](continuous-improvement.md).
 
 ## Promote, demote, or retire
@@ -44,9 +44,9 @@ Feedback is the point of the experiment. Do all three steps every time:
 
 ## Add a new item
 
-When the owner introduces new software or a new method as an experiment, register it before first use: the item, what it replaces or adds, the stable path, the starting mode (shadow by default), the promotion bar, where its log lives, its issue tracker, and a trial end date. Record the owner's decision in the intent ledger.
+When the owner introduces new software or a new method as an experiment, register it before first use: the item, what it replaces or adds, the stable path, the starting mode, the promotion bar, where its log lives, its issue tracker, and a trial end date. Start in shadow when the item replaces something. An item that only adds something has nothing to shadow: start it as a canary on low-risk work. The agent proposes the mode, bar, and end date; the owner confirms them. Record the owner's decision in the intent ledger when there is one, otherwise in the registry row.
 
-Register it first in the private registry, `~/.local/share/dark-factory/experimental.md`, in the same table format. The public registry below holds only sanitized rows for public tools and methods, added through authorized skill maintenance. Never put private tool names, internal trackers, or project details in it. An experimental item that is in neither registry is not used in factory work.
+Register it first in the private registry, `~/.local/share/dark-factory/experimental.md` ([records](records.md)), in the same table format. The public registry below holds only sanitized rows for public tools and methods, added through authorized skill maintenance. Never put private tool names, internal trackers, or project details in it. An experimental item that is in neither registry is not used in factory work.
 
 ## Registry
 
@@ -54,6 +54,6 @@ Register it first in the private registry, `~/.local/share/dark-factory/experime
 |---|---|---|---|---|---|---|
 | Seshloom | Message layer between sessions | Shadow where a built-in or Orca route exists; sole route elsewhere ([message layer](orchestration.md#message-layer)) | Harness built-in messaging, Orca | About 20 tasks in a row with no lost or wrong shadow message | `~/.codex/work-products/seshloom-daily-use/log.md`; github.com/Derek-X-Wang/seshloom/issues | 2026-11-26 |
 | wefty exec | Offload long checks to another machine | Canary: checks over about 5 minutes, or runs that must outlive the session | Run the command directly | Owner decision at trial end, from the exec log | `~/.codex/work-products/wefty-daily-use/exec-log.md`; github.com/Derek-X-Wang/wefty/issues | 2026-12-11 |
-| Batch CI with bisection | Merge method ([merge gate](merge-gate.md)) | Canary: personal projects whose batch coverage check passed | Merge one PR at a time | 5 completed batches whose final main tree matched the tested batch tree, with every red result attributed correctly; interrupted batches recorded and handled as the merge gate says | The run ledger and the hand-back report | 2026-12-10 |
+| Batch CI with bisection | Merge method ([merge gate](merge-gate.md)) | Canary: personal projects that pass the [eligibility check](merge-gate.md#before-the-first-batch-in-a-repository) | [One merge at a time](merge-gate.md#one-at-a-time-stable-path) | 5 completed batches whose final main tree matched the tested batch tree, with every red result attributed correctly; interrupted batches recorded and handled as the merge gate says | One line per batch in the run's `hourly.log`: `batch <N> \| repo \| members \| result \| bisect rounds \| tree matched \| notes`; the hand-back report | 2026-12-10 |
 
 The owner's global instructions may also describe a trial (for example its end date). When they differ from this registry, the owner's instructions win; report the difference so the registry can be fixed.

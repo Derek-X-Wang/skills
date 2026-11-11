@@ -4,9 +4,9 @@ Choose the interaction adapter from the observed runtime, required live state, a
 
 ## Keep ownership explicit
 
-- This skill owns live-UI classification, local adapter eligibility, state affinity, allowed fallback, and the computer-use result contract.
+- This module (computer-use routing) owns live-UI classification, local adapter eligibility, state affinity, allowed fallback, and the computer-use result contract.
 - [task orchestration](orchestration.md) owns which session executes, cross-session dispatch, external-write authority, communication topology, and the return path.
-- This skill's runtime map owns dated, selection-oriented capability observations. Injected runtime guidance and live schemas override it.
+- This module's runtime map owns dated, selection-oriented capability observations. Injected runtime guidance and live schemas override it.
 - The selected operational skill, live guide, or advertised tool schema owns commands, flags, setup, recovery, and lifecycle mechanics.
 
 Do not choose an adapter from the model name. The same model can run in different harnesses and hosts with different tools and state.

@@ -21,7 +21,7 @@ Collect, at minimum:
 5. **Guardrails:** no secrets, no repo settings or permissions changes, no force-push or history rewrite, no changes to the owner's installed or live tools, label rules.
 6. **Spend.** Default $0 and no purchases. If the run may spend: a cap, who approves each paid step, and how unbilled work counts toward the cap. Billing often lags 1–2 days, so count unbilled runs at a worst-case bound; expect that bound to block later paid steps and plan free work for that time.
 7. **"Really big problem"** definition and response (see below).
-8. **Decision rule when blocked** (see below). Agree it explicitly. Also confirm how a short chat reply from a briefly reachable owner counts. Only a verified owner instruction changes authority, for its exact stated scope. Record the owner's words and target in `QUESTIONS.md`; an ambiguous short reply grants no additional spend, publication, or scope.
+8. **Decision rule when blocked** (see below). Agree it explicitly. Also confirm how a short chat reply from a briefly reachable owner counts. Only a verified owner instruction changes authority, for its exact stated scope. A clear chat reply is valid approval for any kind of action, spend included, but only for what it clearly answers (owner decision 2026-11-11). Record the owner's words and target in `QUESTIONS.md`; an ambiguous short reply grants no additional spend, publication, or scope.
 9. **Usage limits** per entitlement/pool, supported source, interactive reserve, sprint/reset conditions, and action at each threshold; follow [capacity policy](capacity-and-fleet.md).
 10. **Loop host and cadence**, only when a recurring run is separately authorized; Stage B manager restart is manual under [continuation](continuation.md). Verify message delivery and approval behavior in the actual harness.
 11. **Stops and fallbacks.** What happens when a hard budget (CI time, spend, quota) is exhausted. A recovery rule resumes only the failure class it was written for (for example a model-capacity pause), never a hard STOP. The fallback queue must hold work that is both authorized and still unfinished. A budget change is valid only when the owner makes it; never assume a future change is preapproved.
@@ -42,7 +42,7 @@ When the owner says they are leaving, stop using any tool that waits for a human
 
 **Private records** in the configured private run folder, outside the public skill checkout. [records](records.md) owns the canonical JSON checkpoint and its relation to existing files. Retain these useful supporting records when used:
 - `STATE.md` — an optional legacy view or checkpoint reference: main SHA/CI, merge line, owners and watcher IDs. Declare its relation to canonical JSON so there are no competing status sources.
-- `hourly.log` — one line per event, written right after it happens: each merge, push, notice, GO, rerun and check.
+- `hourly.log` — one line per event, written right after it happens: each merge, push, notice, READY, MERGE instruction, batch result, rerun and check.
 - `QUESTIONS.md` — each decision, with options, recommendation, what was done meanwhile, and how to revert.
 
 Read these records during [manual continuation](continuation.md), then reconcile live state and fence old writers before resuming. A saved record is not proof of liveness or safe replay. Workers checkpoint changes in private storage their project owner can read as well as sending a message; messages may be held or stale.
@@ -75,10 +75,10 @@ Keep open decisions as a short ordered list, each with options and a recommendat
 
 When the project/run selects the strict integration policy, use [merge-gate.md](merge-gate.md). The bullets below apply to that policy, not to Bite private findings/local fixes. Commands and watcher sketches are examples, not installed helpers. External fixes, filings, reruns and merges throughout this reference require the relevant project/run authority; otherwise prepare private evidence/drafts and park the action.
 
-- **Batch test, bisect on red.** Ready PRs are tested together as one combined tree on current main and merged together when it is green. A red batch is split in half until the failing PR, or the smallest set of PRs that fail only together, is found; the other PRs still merge. The next batch merges only after main has finished **all** workflows for the previous batch, slow lanes included.
-- **Notice → READY → batch → MERGE → IS IN.** The peer sends a pre-merge notice with full SHAs and evidence. The lead verifies every claim itself and admits the PR to the next batch; READY is not a merge authorization. After the batch is green, the lead sends one MERGE instruction naming the executor, heads, and order, and members merge pinned to their tested heads while main is checked before each merge. The lead verifies ancestry and that main's tree matches the tested batch tree, then starts the main watcher.
+- **Batch test, bisect on red** is the default in repositories that pass the merge gate's eligibility check; other repositories merge one at a time. Follow [merge-gate.md](merge-gate.md) for both; it is the only source for the steps.
+- **Notice → READY → batch → MERGE → IS IN.** READY admits a PR to a batch; only a MERGE instruction plus existing merge authority lets anyone merge.
 - **The notice covers more than file overlap:** same-package changes on main since the CI base (with a local vet/build/test of the trial merge when there are any), and a simulation of the whole remaining queue in order. Reorder so conflict fixes and their fresh CI run while clean PRs merge.
-- **Fresh CI.** A PR that is only BEHIND may merge without new CI when a trial merge is clean and the overlap since the CI base is reviewed. Name exceptions in advance (for example: after a toolchain bump, if main goes red for a reason linked to the bump, every remaining PR gets fresh CI). Refresh a branch only with a merge commit, never a rebase that needs a force-push. Refuse a peer's suggestion that breaks a guardrail.
+- **Fresh CI.** A PR that is only BEHIND needs no separate rerun of its own CI when a trial merge is clean and the overlap since the CI base is reviewed; the batch test on current main is still required. Name exceptions in advance (for example: after a toolchain bump, if main goes red for a reason linked to the bump, every remaining PR gets fresh CI). Refresh a branch only with a merge commit, never a rebase that needs a force-push. Refuse a peer's suggestion that breaks a guardrail.
 - **Performance samples** need a merge-free window per sample, agreed with the lead before measuring, and a "contended = not counted" rule set in advance.
 
 ## Red main, flakes, and parking
@@ -146,7 +146,7 @@ Many owners want every night to be a dark factory, not only long trips. The owne
   - the decisions the owner must make, each with a recommendation;
   - any incident.
   Use the full report template only after a multi-day window.
-- **Loop host.** The check loop must outlive the evening conversation. Use an already authorized supported timer or a session loop the owner leaves running, and name the verified host and its limits. V1 starts no recurring trigger from a one-shot request; manager recovery remains manual.
+- **Loop host.** The check loop must outlive the evening conversation. Use an already authorized supported timer or a session loop the owner leaves running, and name the verified host and its limits. A one-shot request starts no recurring trigger; manager recovery remains manual.
 
 ## Field notes
 

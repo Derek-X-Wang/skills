@@ -9,6 +9,7 @@ These are readable record formats, not configuration consumed by an implemented 
 ```text
 ~/.local/share/dark-factory/
   machine.json                       # this machine's OS Fleet connection only
+  experimental.md                    # private registry of experimental items
   machines/<machine-id>/resources.json # optional local data/checkouts, not Fleet
   projects/<project-id>/
     project.json                     # identity, storage binding, authoritative refs
@@ -64,6 +65,10 @@ Use stable IDs to join these files. Record absence distinctly from zero. `enable
 - **Open questions:** what still needs the owner.
 
 Read it before every owner conversation, report, and new admission. Update it in the same turn as an owner decision. It records intent, not authority: grants of authority stay in `policy.json`, and a line in `INTENT.md` never grants an operation. A restarted or replacement manager rebuilds its understanding of the owner from this file, not from memory of a conversation.
+
+When a project has no `INTENT.md` yet, start one from sourced owner decisions and the approved goal in `policy.json`. Mark anything you inferred as unconfirmed, and confirm it in the next owner conversation.
+
+When the owner appoints a factory manager, the project manager hands over its open owner questions and pending decisions. From then on, the factory manager is the only writer of the factory's and each project's `INTENT.md`; the project files stay where they are. The project manager keeps reading its file before admissions and sends owner-relevant facts to the factory manager.
 
 ## Checkpoint before handoff or pause
 

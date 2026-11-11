@@ -4,14 +4,15 @@ Use this strict integration policy only when selected by the project/run. It doe
 
 **Default flow: batch test, then bisect on red** (owner decision 2026-11-10; it replaces the one-merge-at-a-time rule of 2026-11-02). Each PR passes its own checks and the lead's verification. The lead then tests a batch of ready PRs together as one combined tree, and merges the whole batch when that tree is green. When the batch is red, the lead splits it in half until the failing PR is found, and the green PRs still merge. This keeps the goal of the old rule: every red result maps to one failing PR, or to a small set of PRs that fail only together. It also cuts the wait: with about 1 hour of CI, 10 PRs take about 1 hour when all are green and about 3–5 hours with one bad PR, compared with about 10 hours one at a time.
 
-Batching is an [experimental method](experimental.md) until it meets its promotion bar. Use it as a canary on personal projects whose batch coverage check passed. The stable path is one merge at a time: fall back to it after a batch problem the procedure below does not cover, and report it.
+Batching is an [experimental method](experimental.md) until it meets its promotion bar. Use it as a canary on personal projects whose batch coverage check passed. The stable path is [one merge at a time](#one-at-a-time-stable-path): use it for repositories that are not eligible, and fall back to it after a batch problem the procedure below does not cover, and report it.
 
-If the repository already has a merge queue with batching and bisection turned on (for example GitHub merge queue), use it for the batch test and bisect steps instead of the manual branches below; do not run both. Turning a merge queue on is a repository settings change and needs the owner's authority for that repository.
+If the repository already has a merge queue with batching and bisection turned on (for example GitHub merge queue), use it for the batch test and bisect steps instead of the manual branches below; do not run both. With a queue, `gh pr merge` only adds the PR to the queue: skip the manual merge loop, wait until the queue merges or removes each PR. Then confirm each PR is `MERGED`, run `git fetch -q origin main`, and check that main contains its recorded merge commit (`gh pr view "$PR" --json state,mergeCommit`, then `git merge-base --is-ancestor <mergeCommit> origin/main`). Check the original head's ancestry only when the queue uses merge commits; squash and rebase create new commits. Turning a merge queue on is a repository settings change and needs the owner's authority for that repository.
 
-## Pre-merge notice (peer → lead)
+## Pre-merge notice (worker → lead)
 
 ```text
 PRE-MERGE NOTICE #<PR> (<issue>: <one-line title>)
+- Repository and base branch: <owner/repo>, main
 - Main: <full SHA>
 - Head: <full SHA>
 - GitHub: CLEAN, <n> pass, <n> skipping, 0 fail, 0 pending
@@ -30,12 +31,12 @@ Record the CI base SHA in the run log when PR CI finishes. GitHub does not show 
 
 A merge state of `UNKNOWN` means GitHub is recomputing after main moved. Poll until it is `CLEAN`; never report `UNKNOWN` as clean.
 
-## Lead verification (do every step yourself; never copy the peer's claims)
+## Lead verification (do every step yourself; never copy the worker's claims)
 
 ```bash
 git fetch -q origin main "pull/$PR/head:refs/remotes/pr/$PR"
 git rev-parse origin/main "refs/remotes/pr/$PR"            # both match the notice
-gh pr view "$PR" --json state,mergeStateStatus,mergeable,headRefOid
+gh pr view "$PR" --json state,baseRefName,mergeStateStatus,mergeable,headRefOid   # base is main
 gh pr checks "$PR" --json bucket --jq 'group_by(.bucket)|map("\(.[0].bucket)=\(length)")|join(" ")'
 git merge-tree --write-tree origin/main "$HEAD_FULL_SHA" >/dev/null && echo CLEAN   # full SHA; a short SHA can fail to resolve
 B=$(git merge-base origin/main "$HEAD_FULL_SHA")
@@ -63,13 +64,13 @@ Reply `READY #<PR>` (admitted to the next batch) with the facts you checked, or 
 
 ## Before the first batch in a repository
 
-Batching is safe only when the batch run checks what main would check. Once per repository (and again after a workflow change), compare the workflow triggers and record the result in the plan:
+Batching is safe only when the batch run checks what main would check, and when the short-lived main heads inside a batch cannot ship. Once per repository (and again after a workflow or branch-rule change), check these and record the result in the plan. A repository that fails any of them is not eligible for manual batches; use a merge queue or one merge at a time:
 
 - The required workflows run on the batch PR event, and do not skip jobs for draft PRs or for that branch name.
 - The PR run checks out a tree equal to the batch tree. On `pull_request`, GitHub tests a synthetic merge of the head into the base; that equals the batch tree only while main is still the batch's base.
-- List jobs that run only on main (for example on `push` to main or on a schedule). They are not covered by the batch run; the main watcher covers them after the merge.
-
-If required coverage cannot be matched, use a supported merge queue, or keep one merge at a time for that repository.
+- List jobs that run only on main (for example on `push` to main or on a schedule). They are not covered by the batch run; the main watcher covers them after the merge. A main-only job with path filters judges only the last push, so it can skip files that an earlier member changed. Such a job must run on the final head regardless of paths (for example a manual run the lead starts on that head).
+- No workflow deploys or releases on `push` to main unless a person or a tag gates it. Each member merge is a separate push, and the main heads between them were never tested alone.
+- Branch rules allow merge commits and do not require branches to be up to date before merging. With that rule on, every member after the first is behind main and GitHub refuses it.
 
 The lead is the only integrator during a batch. If people or tools outside this gate can merge to main at the same time, use a supported merge queue instead of manual batches.
 
@@ -85,6 +86,7 @@ git fetch -q origin main
 BASE=$(git rev-parse origin/main)                    # record: the batch base
 git switch -c "batch/$N" "$BASE"
 for sha in $BATCH_FULL_SHAS; do                      # in queue order
+  ! git merge-base --is-ancestor "$sha" HEAD || { echo "ALREADY IN MAIN OR AN EARLIER MEMBER: $sha"; exit 1; }
   git merge --no-ff --no-edit "$sha" || { git merge --abort; echo "CONFLICT at $sha: drop it and rebuild"; exit 1; }
 done
 for sha in $BATCH_FULL_SHAS; do git merge-base --is-ancestor "$sha" HEAD; done
@@ -98,29 +100,38 @@ Record the batch base, the batch tree, and each member's head SHA. The batch PR 
 
 **Green:** every required workflow finished with success on the batch head, and main is still the batch base. Merge the members (see below). If main moved, rebuild on the new main and test again.
 
-**Red:** read the log first, as for any failure ([unattended](unattended.md#red-main-flakes-and-parking)). A flake or infrastructure failure gets one rerun of the failed jobs. For a code failure, bisect. Build every subset from the same batch base:
+**Red:** read the log first, as for any failure ([unattended](unattended.md#red-main-flakes-and-parking)). A flake or infrastructure failure gets one rerun of the failed jobs. For a code failure, bisect. Build every subset from the same batch base, each on its own branch `batch/$N-<k>` (k counts up, so parallel subsets never share a name). A subset counts as red only when the same job or test fails as in the batch.
 
 1. If the log clearly points to one member, test that member alone and the batch without it, in parallel.
 2. Otherwise split the batch into two halves in queue order and test both halves, in parallel when runners allow. Repeat on a red half until one PR is left.
-3. If both halves are green, the failure needs members from both halves. Keep half A whole and bisect half B to the smallest part that still fails with A. Then keep that part of B and bisect A the same way. The result is the smallest failing set, which can have more than two PRs.
+3. If both parts of any split are green, rerun the set they came from once. If it is green now, the failure did not reproduce: record it as a flake. If it is red again, the failure needs members from both parts. Keep part A whole and bisect part B to the smallest part that still fails with A. Then keep that part of B and bisect A the same way. The result is the smallest failing set, which can have more than two PRs. If no smaller part fails with A, park the whole set as unresolved (below).
 4. Send the failing PR, or every PR of the failing set, back to its worker with the log. Mark a failing set as coupled: after the fix, its members go in one batch together. The other members form a new batch on current main.
 
 If bisecting takes more than about 2·log2(n) rounds, stop. Park the members still under suspicion together as one unresolved set, with the logs, and send it back. Do not clear any of them because it passes alone: only a green run of the whole set clears it. Merge the members already proven innocent as a new batch.
 
-## Merge (lead, or the peer the lead names)
+## Merge (lead, or the worker the lead names)
 
-`READY` does not authorize a merge. The lead sends one instruction per green batch: `MERGE batch <N>: #a@<head>, #b@<head>, … in this order, base <BASE>`. Only the named executor merges, and only those heads in that order.
+`READY` does not authorize a merge. The lead sends one instruction per green batch: `MERGE batch <N>: #a@<head>, #b@<head>, … in this order, base <BASE>`. Only the named executor merges, and only those heads in that order. The executor also needs merge authority from its dispatch or the run's policy; the instruction only releases it for this batch.
 
-Before each merge, check that main is exactly where it should be: the batch base before the first merge, and the previous member's merge commit after that. Then merge pinned to the tested head:
+**Preflight** every member right before the first merge: the PR is open, its base is `main` in this repository, its head is still the tested head, it is not `CONFLICTING` (recheck while mergeability is `UNKNOWN`), and its required reviews are approved. If any member fails, merge none of them; rebuild the batch without it.
+
+```bash
+gh pr view "$PR" --json state,baseRefName,headRefOid,mergeable,reviewDecision
+```
+
+Start with `EXPECTED_MAIN=$BASE`. For each member in order, check main, merge pinned to the tested head, then check that the new main tip is exactly this member's merge commit (first parent the old main, second parent the tested head):
 
 ```bash
 [ "$(git ls-remote origin refs/heads/main | cut -f1)" = "$EXPECTED_MAIN" ] || { echo "MAIN MOVED: stop"; exit 1; }
 gh pr merge "$PR" --merge --match-head-commit "$HEAD_FULL_SHA" \
   --subject "merge #$PR: <title>" --body "<title>"
-EXPECTED_MAIN=$(git ls-remote origin refs/heads/main | cut -f1)    # this member's merge commit
+git fetch -q origin main
+NEW_MAIN=$(git rev-parse origin/main)
+[ "$(git rev-parse "$NEW_MAIN^1") $(git rev-parse "$NEW_MAIN^2")" = "$EXPECTED_MAIN $HEAD_FULL_SHA" ] || { echo "UNEXPECTED MAIN: stop"; exit 1; }
+EXPECTED_MAIN=$NEW_MAIN
 ```
 
-`--match-head-commit` refuses the merge if anyone pushed to the PR after the test. It does not pin main. If a merge is refused or main moved, stop. The main tip is now an untested combination: run the main watcher on it and rebuild the remaining members as a new batch.
+`--match-head-commit` refuses the merge if anyone pushed to the PR after the test. It does not pin main; the checks around it do. On any stop (a refused merge, main moved, an unexpected main, or an IS IN failure below): merge nothing more, hold the queue, run the main watcher on the current main tip, which is now an untested combination, and rebuild the remaining members as a new batch on it. Record the stop for the next report.
 
 ## IS IN, then lead verification
 
@@ -130,7 +141,27 @@ for sha in $BATCH_FULL_SHAS; do git merge-base --is-ancestor "$sha" origin/main 
 [ "$(git rev-parse 'origin/main^{tree}')" = "$BATCH_TREE" ] && echo TREE-MATCHES-TESTED
 ```
 
+A `MISSING` line or a tree that does not match is a stop (above).
+
 A tree that matches the tested batch tree means main holds exactly the code that passed. The intermediate main commits inside the batch are verified only as part of the batch; that is the accepted tradeoff of batching. Start the main watcher on the new main head. It also covers the main-only jobs. The next batch may be built and tested on that head while the watcher runs, but it merges only after the watcher says DONE.
+
+## One at a time (stable path)
+
+Merge one PR, then wait for the main watcher's `DONE` before the next. Repositories that are not eligible for batches do not need the batch-only checks above, but each PR still needs a green test on current main:
+
+- **Test.** The PR's own CI counts when it ran on the current main tip. Otherwise refresh the PR branch with a merge commit (`gh pr update-branch`) and wait for its own CI on the new head; a branch rule that requires up-to-date branches needs this anyway. Without that rule, a `batch/$N` branch for the one PR also works.
+- **Merge** with the method the repository allows, pinned with `--match-head-commit`, after the preflight and the main check above. With `--merge`, use the parent check above. With `--squash` or `--rebase`, check instead that the new main tip is the PR's recorded merge commit, that the old main is its ancestor with only plain (single-parent) commits between them, and that its tree equals the tested tree (the tree of the PR head on current main). For squash, also check that the tip's parent is exactly the old main. For rebase, GitHub drops empty commits, so the start of the replay cannot be pinned by count; an empty foreign commit in between is accepted there, because the tree check still proves main holds exactly the tested code:
+
+  ```bash
+  # METHOD is squash or rebase; TESTED_TREE is the tree that passed the test
+  git fetch -q origin main; NEW_MAIN=$(git rev-parse origin/main)
+  [ "$(gh pr view "$PR" --json mergeCommit --jq .mergeCommit.oid)" = "$NEW_MAIN" ] &&
+  git merge-base --is-ancestor "$EXPECTED_MAIN" "$NEW_MAIN" &&
+  { [ "$METHOD" != squash ] || [ "$(git rev-parse "$NEW_MAIN^")" = "$EXPECTED_MAIN" ]; } &&
+  [ -z "$(git rev-list --min-parents=2 "$EXPECTED_MAIN..$NEW_MAIN")" ] &&
+  [ "$(git rev-parse "$NEW_MAIN^{tree}")" = "$TESTED_TREE" ] || { echo "UNEXPECTED MAIN: stop"; exit 1; }
+  ```
+- **IS IN.** With `--merge`, run the ancestry and tree checks above. With squash or rebase, the tree check alone shows that main holds the tested code.
 
 ## Main watcher (sketch)
 
@@ -161,7 +192,9 @@ A new push to main can cancel the previous main run (concurrency groups). Inside
 When main goes red after a batch, classify the failure as usual. Merging subsets onto current main cannot isolate a code failure, because main already holds every member. Instead:
 
 - If the log clearly names one member, open a revert PR for that member only.
-- Otherwise open one revert PR for the whole batch. Before merging it, check that its tree equals the batch base tree (`git rev-parse "$BASE^{tree}"`). Then find the cause by building subsets from the batch base under the failing job's conditions. If that job runs only on main, reproduce it locally or ask the owner how to run it. Rebatch the innocent members after the cause is known.
+- Otherwise open one revert PR for the whole batch. Before merging it, check that its tree equals the batch base tree (`git rev-parse "$BASE^{tree}"`). Then find the cause by building subsets from the batch base under the failing job's conditions. If that job runs only on main, reproduce it locally or ask the owner how to run it.
+
+A revert merges like any other change and needs the same merge authority. The reverted PRs stay merged on GitHub, so they cannot join a batch again (the build step stops on them). After the cause is known, each innocent member gets a new PR that re-applies only its own changes on current main. Do not revert the whole revert: that also brings back the failing change.
 
 ## Fresh-CI policy
 

@@ -47,10 +47,10 @@ Write what you saw, not what you expect. If a lesson already exists below, add y
 |---|---|
 | Just before the owner left, the lead asked two questions in a blocking dialog. The owner pointed out it would have stopped the whole run | Once the owner leaves, never use a tool that waits for a human. Questions go to QUESTIONS.md |
 | "Pick the most reversible option" led to weak choices | Pick the right option. Lead review + independent second-model review agree → `ASSUMED, needs owner`, carry it out, record the revert. 12 such entries, each with a revert path, went into the report |
-| Fast merges cancelled earlier main runs; after one commit no contract run finished, so main was unverified | One merge at a time. The next merge waits until main finishes **all** workflows of the previous one, slow lanes included |
-| Peers merged on their own green checks while main moved under them | Pre-merge notice → lead verifies every claim itself → GO → merge pinned to the head SHA → IS IN → lead verifies parents and ancestry → watcher |
+| Fast merges cancelled earlier main runs; after one commit no contract run finished, so main was unverified | One merge at a time. The next merge waits until main finishes **all** workflows of the previous one, slow lanes included *(Superseded 2026-11-10: see [merge gate](merge-gate.md).)* |
+| Peers merged on their own green checks while main moved under them | Pre-merge notice → lead verifies every claim itself → GO → merge pinned to the head SHA → IS IN → lead verifies parents and ancestry → watcher *(Superseded 2026-11-10: see [merge gate](merge-gate.md).)* |
 | `git merge-tree` with a short SHA failed to resolve | Use full SHAs in every gate command |
-| A toolchain patch bump left every queued PR BEHIND | Decide in advance: BEHIND-only needs no fresh CI; if main goes red for a reason linked to the bump, stop and give every remaining PR fresh CI |
+| A toolchain patch bump left every queued PR BEHIND | Decide in advance: BEHIND-only needs no fresh CI; if main goes red for a reason linked to the bump, stop and give every remaining PR fresh CI *(Superseded 2026-11-10: see [merge gate](merge-gate.md).)* |
 | The same network error from the Go module proxy failed a main image build three times | Main flake → rerun once and hold the queue. Unknown cause → file on the second sighting; cause proven by code reading → file on the first. Keep single sightings on a watch list |
 | A peer started 10 CPU-heavy processes for a reproduction; load hit 20.9 (limit 20) | A stress test starts small and checks load first. Peers stop at a lower load than the hard limit |
 | A local `go test -p 2 -parallel 4` pushed load to 21 | One heavy test job at a time; prove heavy packages in PR CI when the machine is busy |
@@ -195,7 +195,7 @@ Evidence for the lead's tracked-watcher and independent-main-verification rows: 
 
 The proposals under "Still open" in the five sections above were merged into SKILL.md, merge-gate.md and plan-template.md on 2026-11-02. The owner then answered the four open questions:
 
-1. A chat reply from a briefly reachable owner counts as approval for everything, spend included.
+1. A chat reply from a briefly reachable owner counts as approval for everything, spend included. *Clarified 2026-11-11:* it is valid for any kind of action, spend included, but only for what the reply clearly answers; it never extends to other actions.
 2. A single sighting on the watch list is dropped after 14 days without a repeat. A product-behavior symptom is filed on the first sighting (the lease-renewal sighting was filed as wefty #1444).
 3. When missing logs block a diagnosis, file a small issue to keep them, every time (wefty #1445).
 4. No merging in pairs: one merge at a time stays, so a red main maps to one change. *Superseded 2026-11-10:* CI waits slowed every project too much. The owner chose batch testing with bisection on red, which maps a red result to one failing PR, or to a small set that fails only together ([merge-gate.md](merge-gate.md)).

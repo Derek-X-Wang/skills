@@ -17,7 +17,7 @@ Deliver useful, verified work within approved scope. Unused quota is acceptable.
 | 2 | Project manager (project execution owner) | Every project; one per project | Its project's queue, workers, integration gate, and records. With no factory manager, it also does tier 1's owner-facing job |
 | 3 | Worker / reviewer | Dispatched per task | One bounded task; reports only to its project manager |
 
-Messages go one step at a time: owner ↔ (factory manager) ↔ project manager ↔ worker. Preserve the session's existing role. The skill name, a shared machine, or shared quota never appoints a factory manager; only an explicit owner assignment does. A standalone task has one task orchestrator.
+Messages go one step at a time: owner ↔ (factory manager) ↔ project manager ↔ worker. Preserve the session's existing role. The skill name, a shared machine, or shared quota never appoints a factory manager; only an explicit owner assignment that you can trace to the owner (the owner's own message, or a record the owner approved) does. A standalone task has one task orchestrator.
 
 ## Select the mode
 
@@ -25,7 +25,7 @@ Messages go one step at a time: owner ↔ (factory manager) ↔ project manager 
 - **Factory management:** explicitly assigned multi-project work. Read [manager](references/manager.md), [records](references/records.md), and [capacity and fleet](references/capacity-and-fleet.md).
 - **Task orchestration:** delegation, model/route choice, review, takeover, or a bounded audit. Read [orchestration](references/orchestration.md). It does not start a factory, sweep, loop, or timer.
 - **Local UI routing:** before live browser, app, or desktop work, read [computer use](references/computer-use.md). It grants no external-write authority and creates no session.
-- **Manual resume:** before a new manager continues a previous run, read [continuation](references/continuation.md) and reconcile live state.
+- **Manual resume:** before a new manager continues a previous run, read [continuation](references/continuation.md) and reconcile live state, then continue in that role's mode (project or factory management).
 - **Unattended window:** when the owner is away or in the nightly window, also read [unattended operation](references/unattended.md). Use only standing authority; park work that needs new authority and continue independent work.
 - **Experimental items:** before using anything in the experimental registry (for example Seshloom, wefty exec, batch CI), or when the owner introduces new software or a new method, read [experimental](references/experimental.md).
 - **Skill improvement:** when a skill defect interferes with work, read [continuous improvement](references/continuous-improvement.md).

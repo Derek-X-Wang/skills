@@ -43,7 +43,7 @@ Your testing should go beyond reading code. Depending on what tools are availabl
 - **Read the code**: Check for logic errors, missing edge cases, inconsistencies with the spec
 - **Run the tests**: If tests exist, run them and check coverage
 - **Build the project**: Verify it compiles/builds without errors
-- **Exercise the feature**: If you have browser tools (Playwright MCP), CLI access, or API clients, use them to actually interact with the feature as a user would
+- **Exercise the feature**: If you have browser tools (Playwright MCP), CLI access, or API clients, use them to actually interact with the feature as a user would. Before live browser or app use, follow [computer-use routing](../../../../computer-use.md)
 
 The most valuable bugs are the ones you find by using the feature, not just reading about it. Route ordering bugs, state management issues, race conditions — these show up in use, not in code review.
 

@@ -39,7 +39,7 @@ Artifacts create a durable audit trail. They do not create direct agent handoffs
 1. Read project instructions, specifications, contracts, and existing architecture.
 2. Choose a project-local artifact directory only when persistent artifacts add value. Do not change always-loaded instructions by default.
 3. Select only relevant quality dimensions. Customize weights, thresholds, and evidence to the task contract.
-4. Customize the role templates:
+4. Customize the role templates. Dispatch each role under the standard [dispatch contract](../../orchestration.md#send-a-decision-complete-dispatch), which starts it in worker mode:
    - [planner](../templates/planner-generator-evaluator/agents/planner.md)
    - [generator](../templates/planner-generator-evaluator/agents/generator.md)
    - [evaluator](../templates/planner-generator-evaluator/agents/evaluator.md)
