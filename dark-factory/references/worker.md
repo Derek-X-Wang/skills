@@ -36,6 +36,7 @@ Give every message a unique message ID (use the same ID on its shadow copy), plu
 - If the same failure repeats without new evidence, stop and report the loop. Retrying an unchanged attempt spends quota without new information, and your manager can bring a fresh approach.
 - For live browser, app, or desktop work, load [computer-use routing](computer-use.md) and verify your own adapter and target. The parent's tools are never yours by default.
 - Commit, push, PR, merge, or reply only when the dispatch grants it. With commit authority, use `git-project-memory`. With PR-description authority, use `pr-writing`.
+- Before pushing code, waiting for CI, or changing CI, read [CI path](ci.md). Act on the first failed job instead of waiting for the whole run, within your scope and authority. Your manager watches the batch and main; you do not.
 - In the strict merge flow, follow your part of [merge gate](merge-gate.md): send the pre-merge notice when your PR is ready. `READY` from the lead only admits the PR to a batch. Merge only when your dispatch grants merge authority and the lead sends a `MERGE batch` instruction that names you, and only the listed heads in the listed order.
 
 ## Always

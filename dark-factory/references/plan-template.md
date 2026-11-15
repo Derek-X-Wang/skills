@@ -13,7 +13,7 @@ Use this private planning checklist for a factory or unattended window. Reuse ex
 - Main SHA and the result of every workflow on it.
 - Open PRs in flight, and who owns each.
 - Issues in the queue: their labels, blockers, and whether each is safe without a human.
-- CI cost model (free hosted runners? paid minutes? cloud?).
+- CI profile ([CI path](ci.md#records)): required check and whether a branch rule enforces it; median push-to-first-failure and candidate-to-merge-ready; macOS jobs per run; main-only jobs; free hosted runners, paid minutes, or cloud.
 - Gates an agent must run before it says "works" (format, vet, tests with a long timeout).
 - Known sandbox limits (tests that cannot run inside a worker's sandbox, and where they run instead).
 - Peer sessions: for each, its prohibited operations (for example "no local Docker or VM"), the source of that rule, and the authorized fallback. Recheck before each dispatch and after a session is replaced.

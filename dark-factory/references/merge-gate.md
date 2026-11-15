@@ -25,7 +25,7 @@ PRE-MERGE NOTICE #<PR> (<issue>: <one-line title>)
 My view: fresh CI needed / not needed, and why.
 ```
 
-Send the notice when the PR's own CI is green and its review is done. The lead collects ready PRs for the next batch. The lead may ask for a fresh notice when main moves before the batch is built.
+Send the notice when the PR's own CI is green and its review is done. While you wait, follow [CI path](ci.md#while-ci-runs): act on the first failed job instead of waiting for the aggregate check. The lead collects ready PRs for the next batch. The lead may ask for a fresh notice when main moves before the batch is built.
 
 Record the CI base SHA in the run log when PR CI finishes. GitHub does not show it on the PR, and inferring it later from run times is slow and error-prone.
 
