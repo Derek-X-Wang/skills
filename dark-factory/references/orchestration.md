@@ -255,7 +255,7 @@ Report completion with a compact cleanup outcome: items removed or stopped, item
 
 ## Invoke `audit-repo`
 
-`$dark-factory audit-repo` (or the compatibility `$agent-orchestration audit-repo`) with a named repository and natural-language selected areas is the entrypoint for the bounded repository audit. This is skill prompt vocabulary, not a shell executable or an implemented CLI flag; [repo audit](orchestration/patterns/repo-audit.md) owns the workflow. One auditor runs at Codex GPT-6 Astra high effort by default, with targeted xhigh escalation under the audit pattern — Derek's selected preference for this workflow, not a routine research default — with the active orchestrator preserved, no automatic fanout, and no silent model, effort, or Fable substitution when the requested route is unavailable.
+`$dark-factory audit-repo` with a named repository and natural-language selected areas is the entrypoint for the bounded repository audit. This is skill prompt vocabulary, not a shell executable or an implemented CLI flag; [repo audit](orchestration/patterns/repo-audit.md) owns the workflow. One auditor runs at Codex GPT-6 Astra high effort by default, with targeted xhigh escalation under the audit pattern — Derek's selected preference for this workflow, not a routine research default — with the active orchestrator preserved, no automatic fanout, and no silent model, effort, or Fable substitution when the requested route is unavailable.
 
 Higher-authority issues, specifications, contracts, ADRs, and repository instructions override this skill. Stop when precedence is unclear.
 

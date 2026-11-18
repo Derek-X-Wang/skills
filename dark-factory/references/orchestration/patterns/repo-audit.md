@@ -2,7 +2,7 @@
 
 Use this pattern for a bounded, evidence-backed audit of one repository that returns prioritized findings and proposed actions. The default audit mode is report-only: read-only against the inspected application and forge state, with fixes handled as a separate explicitly scoped task.
 
-Invoke it inside this skill with the convention `$dark-factory audit-repo` (compatibility: `$agent-orchestration audit-repo`), naming the repository and any selected areas in natural language. `audit-repo` is skill prompt vocabulary, not a shell executable, an implemented CLI flag, a script, or a scheduler. This pattern creates no infrastructure.
+Invoke it inside this skill with the convention `$dark-factory audit-repo`, naming the repository and any selected areas in natural language. `audit-repo` is skill prompt vocabulary, not a shell executable, an implemented CLI flag, a script, or a scheduler. This pattern creates no infrastructure.
 
 ## Route and authority
 

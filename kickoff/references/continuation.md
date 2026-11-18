@@ -24,13 +24,13 @@ If any identity is ambiguous, show the few best candidates and ask once. Require
 
 Use a fresh session when the workspace is compatible but no exact active session is proven. Dormant sessions are context sources only; do not invoke native resume. Build a bounded handoff from the relevant evidence.
 
-Always load `agent-orchestration` to validate route feasibility, authority, ownership, and the return path before starting a fresh session. An explicit human choice of destination model or harness constrains its selection and wins when feasible; otherwise let it select the model, harness, host, control plane, and route. Tell it that Orca is the human's current preferred control plane. If Orca cannot perform the selected action, present one verified alternative and require `$kickoff <execute-mode> confirm route <verified-route>` before switching.
+Always load `dark-factory` (task orchestration mode) to validate route feasibility, authority, ownership, and the return path before starting a fresh session. An explicit human choice of destination model or harness constrains its selection and wins when feasible; otherwise let it select the model, harness, host, control plane, and route. Tell it that Orca is the human's current preferred control plane. If Orca cannot perform the selected action, present one verified alternative and require `$kickoff <execute-mode> confirm route <verified-route>` before switching.
 
 ## 4. Create an approved isolated worktree
 
 Use an isolated worktree only for an existing repository when the current workspace is missing, incompatible, owned by another editor, or dirty with unrelated or uncertain changes.
 
-Before constructing the proposal, load `agent-orchestration` and any operational sources it requires to select a verified model, harness, host, control plane, and route without launching anything. Then show:
+Before constructing the proposal, load `dark-factory` (task orchestration mode) and any operational sources it requires to select a verified model, harness, host, control plane, and route without launching anything. Then show:
 
 - repository and clean base ref;
 - new branch and absolute worktree path;
@@ -53,4 +53,4 @@ Continue after absent stores, unsupported schemas, or bounded-search exhaustion 
 
 Treat focus, launch, and worktree creation as claims until verified from live structured state. On a failed action, preserve the current workspace and evidence, report the failure, and offer the next safe outcome in the fixed order. If proceeding needs a human selection, confirmation, or approval, require a new reply that explicitly begins with `$kickoff`; do not act on an ordinary follow-up. Do not silently switch control planes or widen authority.
 
-If `agent-orchestration` cannot satisfy this contract, report the exact integration gap to the human. Do not edit that skill.
+If `dark-factory` cannot satisfy this contract, report the exact integration gap to the human. Do not edit that skill.

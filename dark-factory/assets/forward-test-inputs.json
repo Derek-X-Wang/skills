@@ -36,7 +36,7 @@
     },
     {
       "id": "alias-task-only",
-      "request": "Use agent-orchestration to get one independent R1 review of a local patch.",
+      "request": "Use dark-factory task orchestration to get one independent R1 review of a local patch.",
       "artifacts": {
         "factory_configuration": "absent",
         "task_authority": "read-only review",

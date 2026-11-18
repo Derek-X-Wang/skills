@@ -18,7 +18,6 @@ npx skills add Derek-X-Wang/skills --skill convex -g
 
 | Skill | Description |
 |-------|-------------|
-| **agent-orchestration** | Compatibility entry for Dark Factory task orchestration; install alongside dark-factory |
 | **dark-factory** | Shared task/UI orchestration and attended or unattended factory management, with personal and private Bite workflows |
 | **computer-use-routing** | Compatibility entry for Dark Factory local UI routing; install alongside dark-factory |
 | **kitcn** | Kitcn (formerly Better Convex) projects: cRPC, ORM, auth, and React |
@@ -32,15 +31,11 @@ npx skills add Derek-X-Wang/skills --skill convex -g
 | **cmux-markdown** | Markdown viewer panel with live reload |
 | **codex-worker** | Launch, resume, and inspect headless Codex CLI workers |
 | **doc-coauthoring** | Structured documentation co-authoring workflow |
-| **docx** | Word document creation, editing, and analysis |
 | **github** | GitHub PR, issue, and comment interaction via gh CLI |
 | **grill-me** | Stress-test plans and designs through relentless questioning |
-| **pdf** | PDF manipulation, extraction, and form filling |
-| **pptx** | PowerPoint presentation creation and editing |
 | **pr-writing** | Human-readable PR descriptions with product meaning and verification evidence |
 | **manage-my-skills** | Personal skill lifecycle using the current harness creator or a portable supporting reference |
 | **slack-gif-creator** | Animated GIF creation optimized for Slack |
-| **xlsx** | Spreadsheet creation, editing, and analysis |
 | **youtube-transcript** | Download YouTube video transcripts |
 
 ## Format
