@@ -1,103 +1,78 @@
 ---
 name: port-registry
-description: Manages per-project port range assignments so multiple local dev servers never collide. Use this skill whenever starting dev servers, setting up a new project's dev environment, encountering port conflicts (EADDRINUSE), or when the user asks about which ports a project uses. Also use proactively when you notice a project's dev config hardcodes a common port (3000, 3001, 8080) that could conflict with other projects.
+description: Manages per-project dev-port blocks so local dev servers never collide. Use when starting dev servers, setting up a new project's dev environment, hitting a port conflict (EADDRINUSE), or when the user asks which ports a project uses. Also use when a project's dev config hardcodes a common port (3000, 3001, 8080).
 ---
 
 # Port Registry
 
-When working on multiple projects locally, dev servers compete for the same default ports (3000, 3001, 8080, etc.). This skill manages a central registry at `~/.config/port-registry.json` that assigns each project a dedicated port range.
+Each project owns one block of dev ports. The port numbers are committed in the project's dev scripts, so a block must hold on every machine. The table therefore lives in the owner's home repo, shared through git, and names projects by identity, never by a local path.
 
-## Registry Location
+## The table
 
-`~/.config/port-registry.json`
-
-## Registry Schema
+`ports.json` in the OS folder of the home repo. Find the OS folder in `os_repo_root` of `~/.local/share/dark-factory/machine.json`. If that binding is missing, report it; a second, machine-local table would let two machines assign the same block.
 
 ```json
 {
   "block_size": 100,
   "next_available": 5200,
-  "ranges": [
+  "projects": [
     {
-      "project": "ProjectName",
-      "path": "/absolute/path/to/project",
+      "slug": "my-saas",
       "start": 5000,
       "end": 5099,
-      "assignments": {
-        "web": 5001,
-        "backend": 5050,
-        "cms": 5002
-      },
-      "notes": "Optional notes about the project's port usage"
+      "assignments": { "web": 5001, "api": 5050 },
+      "notes": "Optional: what runs on each port"
+    },
+    {
+      "repo": "some-org/some-repo",
+      "tags": ["work"],
+      "start": 5100,
+      "end": 5199,
+      "assignments": { "web": 5101 }
     }
-  ]
+  ],
+  "reserved": [{ "start": 8900, "end": 9099, "reason": "..." }]
 }
 ```
 
-### Fields
+- **slug** names the project's page `wiki/<slug>.md` in the OS folder. The page's `resource:` field is the repository URL.
+- **repo** (`owner/name`, lowercase) identifies a project that has no wiki page.
+- **tags: ["work"]** marks a company project. Its notes follow the company-information rules in the home repo's root `AGENTS.md`: say what runs on a port, nothing about what is inside the project.
+- **reserved** ranges are taken. Assign nothing inside them.
 
-- **block_size**: Ports per project (default: 100). Each project gets `[start, end]` inclusive.
-- **next_available**: The start of the next unassigned block.
-- **ranges[]**: One entry per project.
-  - **project**: Human-readable project name.
-  - **path**: Absolute path to the project root. Used to match the current working directory.
-  - **start / end**: The reserved range (inclusive).
-  - **assignments**: Named port mappings for specific services within the range. These are the ports that should be configured in the project's dev scripts.
-  - **notes**: Optional context about the project's port layout.
+## Find the current project's entry
 
-## Workflow
+1. In the project, before you go anywhere else, note its root and read `git remote get-url origin`. Reduce the URL to `owner/name`, lowercase, without `.git`.
+2. Read the published table without touching the home repo's working tree: `git -C <OS folder> fetch origin`, then `git -C <OS folder> show origin/HEAD:./ports.json`. The wiki identities come from the same snapshot: `git -C <OS folder> grep -i '^resource:' origin/HEAD -- wiki`. When you cannot or may not fetch, read the files in the checkout and say that the answer comes from a cached snapshot.
+3. Match an entry whose `repo` equals the project's `owner/name` exactly, or whose slug's wiki page has a `resource:` URL that reduces to the same `owner/name`. Compare the whole identity, never a suffix.
+4. With no remote or no match, match the project root from step 1 against `projects.<slug>.localPath` in `~/.config/kb.json`.
 
-### 1. Check the Registry
+A worktree or a temporary preview of a project shares that project's block: give it a free port inside the block and record it in `assignments` under a name that says what it is.
 
-Read `~/.config/port-registry.json`. If it doesn't exist, create it with the default structure (empty ranges, block_size 100, next_available 5000).
+Report the block and the named ports, and remind the user which ports the dev servers must use.
 
-### 2. Look Up Current Project
+## Assign a block or a port
 
-Match the current working directory against `ranges[].path`. A match means the project already has an assigned range.
+An assignment is a write to the home repo. It counts only when it is on the remote default branch of the home repo; until then, another machine can take the same block.
 
-- **If found**: Report the assigned range and any named assignments. If the user is starting dev servers, remind them which ports to use.
-- **If not found**: Assign the next available block. Set `start` to `next_available`, `end` to `start + block_size - 1`, and increment `next_available`. Ask the user for the project name if you can't infer it from the directory.
+Write only when the home repo checkout is ready for it: it is on the default branch, it has no unpushed commits, nothing is staged, and `ports.json` is unmodified. When any of these fails, or you lack authority to commit or push there, leave everything as it is and report the assignment you propose as unconfirmed. Switching branches, stashing, or committing someone else's changes to make the checkout ready is outside this skill.
 
-### 3. Configure Assignments
+1. `git -C <OS folder> pull --ff-only`.
+2. Find the project's entry again in the table you just pulled. If another machine added it, use that entry and stop.
+3. For a new project, set `start` to `next_available` and `end` to `start + block_size - 1`, then add `block_size` to `next_available`. Key the entry by `slug` when the wiki page exists, otherwise by `repo`.
+4. Name the ports the project needs. The usual layout, to adapt freely: `x001` primary web, `x002` second web service, `x050` backend or API, `x060` database or its admin UI, `x070` and up for the rest.
+5. `git -C <OS folder> add ports.json` and commit `chore(os): assign ports for <slug or repo>`. Note the commit ID, confirm that `git -C <OS folder> show --stat HEAD` lists `ports.json` alone, then `git -C <OS folder> push`.
+6. A push rejected as non-fast-forward means another machine wrote first. If `HEAD` is still your commit and `ports.json` has no change since it, take the commit back: `git -C <OS folder> reset --soft HEAD~1`, then `git -C <OS folder> restore --staged --worktree ports.json`. Start again at step 1.
 
-When you know which services the project runs (web, backend, API, CMS, storybook, etc.), populate the `assignments` map with specific ports within the range. Convention:
+On any other push failure, or when the checkout changed after your commit, leave everything in place and report it. Run every Git command of this section with `-C <OS folder>`: your shell is still in the project.
 
-- **x001**: Primary web/frontend (e.g., Next.js, Vite)
-- **x002**: Secondary web service (e.g., CMS admin, docs site)
-- **x050**: Backend / API server
-- **x060**: Database or database admin UI
-- **x070+**: Additional services
+## Apply the ports to the project
 
-These are conventions, not rules. Adapt to what the project actually needs.
+After an assignment, the project's dev config must use the ports. Change it only when the user asks or agrees:
 
-### 4. Update Project Config
+- **Next.js:** the `--port` flag or the `PORT` variable in the `package.json` scripts
+- **Vite:** `server.port` in `vite.config.ts`
+- **Payload CMS:** `serverURL` in the config, or `PORT`
+- **Custom dev scripts:** find where the port is hardcoded
 
-After assigning ports, help the user update the project's dev configuration so the assigned ports are actually used. Common patterns:
-
-- **Next.js**: `--port` flag or `PORT` env var in `package.json` scripts
-- **Vite**: `server.port` in `vite.config.ts`
-- **Convex**: Usually doesn't need a port config (cloud-based)
-- **Payload CMS**: `serverURL` in config or `PORT` env var
-- **Custom dev scripts**: Look for where ports are hardcoded and update them
-
-Only modify configs if the user asks or agrees. The primary job is to track and advise.
-
-## Commands the User Might Say
-
-| User says | Action |
-|-----------|--------|
-| "what ports does this project use" | Look up current project in registry |
-| "register this project" | Assign a new range to the current project |
-| "list all port assignments" | Show the full registry |
-| "I'm getting EADDRINUSE" | Check registry for conflicts, suggest resolution |
-| "set up ports for a new project" | Assign range + help configure dev scripts |
-
-## Example
-
-User is in `/Users/foo/projects/my-saas` and runs `bun dev` which fails on port 3001.
-
-1. Read registry — no entry for this path
-2. Assign range 5200-5299 (next available)
-3. Map: web=5201, api=5250, admin=5202
-4. Help update `package.json` dev script to use `--port 5201`
-5. Save updated registry
+On `EADDRINUSE`, find the holder with `lsof -i :<port>`, then use the table to tell whose port it is: this project's own stale process, or another project running outside its block.

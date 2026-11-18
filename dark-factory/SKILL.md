@@ -35,6 +35,7 @@ Messages go one step at a time: owner ↔ (factory manager) ↔ project manager 
 ## Authority
 
 - Fleet inventory and machine availability belong to the OS repository ([shared Fleet](references/shared-fleet.md)). Projects reference it; they keep no registry of their own.
+- The project list and the pointer to each repository belong to the owner's [home repo](references/home-repo.md). Read it before cross-project work, and when you must find a project's checkout.
 - Policy, inventory, observations, execution records, and the owner's [intent ledger](references/records.md#intent-ledger) are separate files in private storage. Tracked examples are fake and disabled. Record access never grants commit, push, merge, reply, release, deployment, spend, or other external authority. Keep company disclosure limits.
 - Each task, file, and desktop input target has one active writer. Serialize coupled work and shared mutable targets. Fence prior owners before ownership transfers.
 - Use [R0/R1/R2 review](references/orchestration/review-policy.md) by impact and uncertainty, and keep stronger project gates. Review cannot supply missing product, spending, release, or scope authority.
