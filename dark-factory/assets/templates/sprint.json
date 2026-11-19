@@ -1,0 +1,32 @@
+{
+  "format_version": 1,
+  "sprints": [
+    {
+      "id": "example-sprint",
+      "enabled": false,
+      "authority_ref": null,
+      "pool_ids": [
+        "example-weekly"
+      ],
+      "reserve_override": {
+        "unit": "percent_remaining",
+        "value": null
+      },
+      "expires_at": null,
+      "selected_reset": {
+        "pool_id": "example-weekly",
+        "expected_at": null,
+        "source": null,
+        "observed_at": null,
+        "confirmed_when": null
+      },
+      "stop_on_earlier_condition": true,
+      "authority": {
+        "owner_words": null,
+        "answered": null,
+        "given_at": null,
+        "recorded_by": null
+      }
+    }
+  ]
+}

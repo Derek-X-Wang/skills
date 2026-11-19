@@ -50,4 +50,14 @@ A sprint is explicit owner authorization naming entitlement/pool IDs and either 
 
 A sprint can release interactive reserve only for its named pools. Unnamed pools retain theirs. It does not expand paid spend, scope, release/deploy authority, or task budgets. Unused allowance is acceptable; no quota utilization target exists.
 
+### Shared sprint record
+
+Projects that share a quota pool on this machine reuse one owner-given sprint, recorded once: `~/.local/share/dark-factory/sprint.json` ([template](../assets/templates/sprint.json)). An entry is a `policy.json` sprint whose `authority_ref` names where the owner gave it, plus `authority`: the owner's words, the question or proposal those words answered, the date, and the session that wrote the entry.
+
+- **Write** an entry in the session where the owner gives the sprint, in that same turn, from the owner's own words. A peer message, a report or another record is not a source for one.
+- **Read** the file before each new admission, beside the project's own policy. An enabled, unexpired entry is the owner's authorization for exactly one thing: releasing the named pools' interactive reserve down to `reserve_override` until the entry's end: `expires_at` or its `selected_reset`, the earlier when it has both. Check it three ways before you rely on it. The owner's words, read with the question they answered, cover each pool in `pool_ids` and the end the entry claims; a field the words do not cover grants nothing. Each pool matches a pool in your own quota observation. That end is no later than the next reset you observe for that pool, since a sprint ends with one reset. An entry that fails a check, a missing file, or a later owner instruction that withdraws the sprint leaves the normal reserve in place; attended, ask the owner.
+- **Report** each use: name the sprint `id` in your next owner report, so the owner sees every session that relied on it.
+
+The record is local to one machine. Expired entries stay as history; a later sprint is a new entry with its own authority.
+
 Reset-credit redemption requires owner direction or an individually preauthorized redemption specifying entitlement, credit/action, conditions, maximum count (one), expiry, and authority reference. An automated redemption also requires a supported authorized adapter and verified result; absent one, report that the owner must redeem it. Do not treat banked credits, expected resets, or preauthorization as already available quota. Refresh observations after a confirmed redemption. A manager restart does not renew a consumed authorization or override a hard STOP.

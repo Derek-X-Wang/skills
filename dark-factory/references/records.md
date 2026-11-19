@@ -10,6 +10,7 @@ These are readable record formats, not configuration consumed by an implemented 
 ~/.local/share/dark-factory/
   machine.json                       # this machine's OS Fleet connection only
   experimental.md                    # private registry of experimental items
+  sprint.json                        # owner-given sprints, shared by every project here
   machines/<machine-id>/resources.json # optional local data/checkouts, not Fleet
   projects/<project-id>/
     project.json                     # identity, storage binding, authoritative refs
@@ -52,6 +53,8 @@ A newly initialized project uses the canonical layout directly. A disabled/uncon
 - [observations.json](../assets/templates/observations.json): shared OS observation example for the authorized publisher, including machine availability and timestamped quota/readiness evidence. Each applicable limit has units, remaining value, reset and freshness or unknown status. Consumption samples retain source, baseline and uncertainty. Private project evidence is not another authoritative copy.
 - [state.json](../assets/templates/state.json): run, manager epoch, project/task ownership, allocations, checkpoints, reviewed/tested heads, intake ledger, prior actions, replay constraints, resources and cleanup status, unconsumed per-pool commitments, and pacing decisions/reasons/evidence/reevaluation conditions. The epoch is a record of ownership, not an implemented lock or automatic fencing system.
 
+One machine-wide record sits beside them: [sprint.json](../assets/templates/sprint.json), the [shared sprint record](capacity-and-fleet.md#shared-sprint-record) that every project supervisor on the machine reads.
+
 Use stable IDs to join these files. Record absence distinctly from zero. `enabled:false` or `status:unconfigured` admits no work. Ignore disabled sprint/redemption entries; their example pool IDs and null values grant nothing. A selected-reset record, when used, names a pool ID, one absolute expected reset time/timezone, and the source/condition that confirms that occurrence. Nullable identity, path, authority, or timing fields require real configuration or live evidence before the corresponding operation. Anonymous example IDs never prove a target exists. The templates illustrate one entitlement/pool, route, project, and task; add records for actual authorized capacity, not imaginary integrations.
 
 ## Intent ledger
@@ -64,7 +67,7 @@ Use stable IDs to join these files. Record absence distinctly from zero. `enable
 - **Decisions:** dated owner answers, each with the reason and what it changed. Mark a replaced decision as superseded; do not delete it.
 - **Open questions:** what still needs the owner.
 
-Read it before every owner conversation, report, and new admission. Update it in the same turn as an owner decision. It records intent, not authority: grants of authority stay in `policy.json`, and a line in `INTENT.md` never grants an operation. A restarted or replacement manager rebuilds its understanding of the owner from this file, not from memory of a conversation.
+Read it before every owner conversation, report, and new admission. Update it in the same turn as an owner decision. It records intent, not authority: grants of authority stay in `policy.json` (and, for a reserve-only sprint, in the shared sprint record), and a line in `INTENT.md` never grants an operation. A restarted or replacement manager rebuilds its understanding of the owner from this file, not from memory of a conversation.
 
 When a project has no `INTENT.md` yet, start one from sourced owner decisions and the approved goal in `policy.json`. Mark anything you inferred as unconfirmed, and confirm it in the next owner conversation.
 

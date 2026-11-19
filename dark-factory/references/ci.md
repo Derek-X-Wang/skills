@@ -11,6 +11,8 @@ Track these per project in the run log, with the SHA and the push time you recor
 
 Runner minutes are a secondary number. A change that saves minutes but not waiting needs its own reason.
 
+Report each number as a median and a p90, with n. Waiting hurts in the tail: in one project a queue-time median stayed at 0.1 min while its p90 fell from 95 to 28 min after a change. For a before/after comparison, give both windows and their workload (merged PRs, runs); a quieter after-window may explain part of a drop, so say so.
+
 ## Before you push
 
 - Run the project's local gate in CI order (for example `make check-quality`) and the tests of the packages you changed. Check the machine load first; run heavy suites only when the 1-minute load allows it.
@@ -24,6 +26,7 @@ Runner minutes are a secondary number. A change that saves minutes but not waiti
 - Watch jobs, not only the aggregate gate. The first failed job with a named test is actionable at once; the aggregate can turn red much later (once 46 minutes later).
 - On the first failed job, read its log and classify it (code, flaky test, or infrastructure) as [red main, flakes, and parking](unattended.md#red-main-flakes-and-parking) says. Reruns, filing thresholds, and parking follow that section, not a shortcut here.
 - A code failure inside your assigned scope: start the fix now. Do not wait for the rest of the run. A failure outside your scope, or one that needs a rerun, an issue, or another external write you have no authority for: report it with the evidence to your manager (or park it, unattended).
+- A re-run keeps the commit and ref of the original run. For a `pull_request` run that is the merge commit built when the run was first created, so a green re-run says nothing about a base that moved afterwards. Evidence on the current base comes from a new run (a new push, or another event the workflow triggers on) or from the batch test under the [merge gate](merge-gate.md#fresh-ci-policy).
 - Who watches what: a worker watches its own PR until it is green or handed back. The project manager watches batch heads and main. Workers do not wait on the batch or main. A worker that returns through a one-message channel (a native child) stops watching when it returns; its manager watches from then on.
 
 ## Writing tests that CI runs forever
@@ -52,4 +55,4 @@ Changes to required checks, branch rules, tiers, time budgets, or which stage ru
 
 ## Records
 
-Keep a CI profile per repo in the project plan: the required check name and whether a branch rule enforces it, the two numbers above (median), macOS jobs per run, main-only jobs, free or paid runners, open flake issues, and the date of the last measurement.
+Keep a CI profile per repo in the project plan: the required check name and whether a branch rule enforces it, the two numbers above (median and p90), macOS jobs per run, main-only jobs, free or paid runners, open flake issues, and the date of the last measurement.
