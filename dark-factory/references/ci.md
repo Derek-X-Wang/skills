@@ -1,6 +1,6 @@
 # CI path
 
-Use this module when a task pushes code, waits for CI, or changes CI. CI is a tool to find problems early. On public repositories, hosted runners are free, so the main cost is waiting: agents and people stay idle until CI answers. On private repositories or paid runners, also count the money (see the plan's CI profile).
+Use this module when a task pushes code, waits for CI, writes tests that CI will run, or changes CI. CI is a tool to find problems early. On public repositories, hosted runners are free, so the main cost is waiting: agents and people stay idle until CI answers. On private repositories or paid runners, also count the money (see the plan's CI profile).
 
 ## Two numbers
 
@@ -22,7 +22,7 @@ Report each number as a median and a p90, with n. Waiting hurts in the tail: in 
 
 ## While CI runs
 
-- One watcher per run. Poll job status at most every 120 s (`gh run view <id> --json jobs`, or `gh run watch <id> --interval 120`; plain `gh run watch` polls every 3 s). Several fast pollers exhaust the GitHub API limit.
+- One watcher per run. Take the run ID from the live list just before you start the watcher; a remembered ID can be stale. Poll job status at most every 120 s (`gh run view <id> --json jobs`, or `gh run watch <id> --interval 120`; plain `gh run watch` polls every 3 s). Several fast pollers exhaust the GitHub API limit.
 - Watch jobs, not only the aggregate gate. The first failed job with a named test is actionable at once; the aggregate can turn red much later (once 46 minutes later).
 - On the first failed job, read its log and classify it (code, flaky test, or infrastructure) as [red main, flakes, and parking](unattended.md#red-main-flakes-and-parking) says. Reruns, filing thresholds, and parking follow that section, not a shortcut here.
 - A code failure inside your assigned scope: start the fix now. Do not wait for the rest of the run. A failure outside your scope, or one that needs a rerun, an issue, or another external write you have no authority for: report it with the evidence to your manager (or park it, unattended).
@@ -37,6 +37,7 @@ Every test you add runs on every future push. Keep that cost honest:
 - Extend an existing test when it already covers the path. Add a new test only for behavior no current test protects, and say which behavior.
 - A new slow test (over about 30 s, or one that needs a special runner) states in its PR what it alone protects, and which tier it belongs to.
 - Prefer fake time over wall-clock waits in tests. Wall-clock timing flakes on shared runners.
+- A fake on one side of a boundary enforces the real side's validation, or at least one test crosses the real boundary.
 
 ## Changing CI
 

@@ -4,7 +4,7 @@ Dated evidence from real unattended runs. This file is public: no private projec
 
 ## How to add notes
 
-Add one section per run and role. Use this shape:
+Write new notes in private run storage ([records](records.md)). This public file changes only by promotion, as [unattended field notes](unattended.md#field-notes) says. Use this shape, one section per run and role:
 
 ```markdown
 ## <YYYY-MM-DD..YYYY-MM-DD> <project> — <role> (<harness / model>)

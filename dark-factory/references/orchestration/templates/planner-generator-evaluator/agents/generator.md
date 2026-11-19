@@ -45,7 +45,7 @@ Return a brief evidence note to the orchestrator. Write it to an artifact path o
 - What you built
 - Key technical decisions and why
 - Known limitations or shortcuts
-- Areas you're least confident about (helps the evaluator focus)
+- Areas you're least confident about (for the orchestrator only; the evaluator and reviewers start without your confidence or self-review)
 
 ## Rules
 

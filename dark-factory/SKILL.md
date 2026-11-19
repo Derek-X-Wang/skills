@@ -1,6 +1,6 @@
 ---
 name: dark-factory
-description: Coordinate authorized software work across agents, harnesses, and machines, attended or unattended. Use for single-project supervision, explicitly assigned multi-project factory planning, manual resume, task delegation and review, worker sessions (`/dark-factory worker`), trying or promoting new or experimental tools and methods, live UI routing, observed skill defects, personal approved-goal execution, or an explicitly requested Bite PR sweep. Select only the mode needed; a routing request does not start a factory or schedule.
+description: Coordinate authorized software work across agents, harnesses, and machines, attended or unattended. Use for single-project supervision, explicitly assigned multi-project factory planning, manual resume, task delegation and review, pushing code or waiting on CI, worker sessions (`/dark-factory worker`), trying or promoting new or experimental tools and methods, live UI routing, observed skill defects, personal approved-goal execution, or an explicitly requested Bite PR sweep. Select only the mode needed; a routing request does not start a factory or schedule.
 ---
 
 # Dark Factory
@@ -27,7 +27,7 @@ Messages go one step at a time: owner ↔ (factory manager) ↔ project manager 
 - **Local UI routing:** before live browser, app, or desktop work, read [computer use](references/computer-use.md). It grants no external-write authority and creates no session.
 - **Manual resume:** before a new manager continues a previous run, read [continuation](references/continuation.md) and reconcile live state, then continue in that role's mode (project or factory management).
 - **Unattended window:** when the owner is away or in the nightly window, also read [unattended operation](references/unattended.md). Use only standing authority; park work that needs new authority and continue independent work.
-- **CI:** before pushing code, waiting for CI, or changing CI, read [CI path](references/ci.md).
+- **CI:** before pushing code, waiting for CI, writing tests that CI will run, or changing CI, read [CI path](references/ci.md).
 - **Experimental items:** before using anything in the experimental registry (for example Seshloom, wefty exec, batch CI), or when the owner introduces new software or a new method, read [experimental](references/experimental.md).
 - **Skill improvement:** when a skill defect interferes with work, read [continuous improvement](references/continuous-improvement.md).
 - **Evolution planning:** when planning new capability or broader authority, read the [roadmap](references/roadmap.md).

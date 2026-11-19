@@ -6,7 +6,7 @@ Give the evaluator `SKILL.md`, the selected case from [forward-test-inputs.json]
 
 All timestamps, IDs, users, quotas, repositories, and paths in these fixtures are fictional. They are inputs for reasoning simulations, not configured live resources or current observations. Cases requiring a host response use the supplied response as simulated evidence, never as proof of real support. A no-side-effect forward test cannot establish prompt delivery, cross-harness readiness, writer fencing, authenticated UI state, real pagination, or actual cleanup.
 
-The implementation author checks JSON parsing and references and inspects case coverage. The parent obtains an independent agent forward test/review. Keep that distinction in the validation report. Test live routes later only within separately authorized exact-target scope; current missing T3 cross-harness launch capability must remain NOT-RUN.
+The implementation author checks JSON parsing and references and inspects case coverage. The parent obtains an independent agent forward test/review. Keep that distinction in the validation report. Test live routes later only within separately authorized exact-target scope. T3 delegation exists as an experimental canary ([registry](experimental.md#registry)); a no-side-effect forward test leaves its live launch NOT-RUN.
 
 Fixture version 2 adds paired normal-mode pacing cases (same usable allowance, reset in 12 hours versus six days), an unsustainable-burn case, and an unknown-evidence manual-resume case. The personal authority case identifies deployment/new-project text as an unapproved worker suggestion, not a fresh owner instruction. Earlier saved review results are not evidence for these amended cases.
 

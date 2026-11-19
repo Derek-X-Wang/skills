@@ -89,7 +89,7 @@ Every dispatch decision rests on sufficiently fresh relevant quota evidence: reu
 
 Default new Codex orchestration to GPT-6.1 Sol at high effort; use Opus 5.5 for normal Claude Code orchestration. Astra and Fable are not automatic new-orchestration defaults or quota fallbacks. When orchestration becomes genuinely difficult, the active orchestrator (normally Sol or Opus) may request a bounded Astra/Fable judgment task under the specialist and quota rules, or ask Derek to authorize a full orchestrator handoff. Prefer bounded assistance when it resolves the difficulty without transferring ownership. A difficulty-based handoff needs explicit authorization and a verified receiving session, context transfer, and ownership boundary; never create two active orchestrators. The opening rule still governs capability-loss handoffs. Do not replace the active orchestrator only because another model ranks higher.
 
-Proactively consider DeepSeek V4.1 Flash through OpenCode Go and GPT-6 Luna at max effort for decision-complete, readily verifiable bounded worker tasks under the [candidate policy](orchestration/model-profiles.md#bounded-worker-candidates), not gated by a blanket small-only rule. They are locally untested bounded trial candidates: not replacements for the GLM or Sol defaults, not approved reviewers, and not automatically eligible for hard or high-risk judgment. Any temporary usage promotion is a dated routing opportunity, not permanent capacity; [routing-matrix.md](orchestration/routing-matrix.md) owns its revalidation.
+Proactively consider DeepSeek V4.1 Flash through OpenCode Go and GPT-6 Luna at max effort for decision-complete, readily verifiable bounded worker tasks under the [candidate policy](orchestration/model-profiles.md#bounded-worker-candidates), not gated by a blanket small-only rule. They are locally untested bounded trial candidates: not replacements for the GLM or Sol defaults, not approved reviewers, and not automatically eligible for hard or high-risk judgment.
 
 Prefer native coordination for harness-owned agents. Choose external routes by work shape: use a one-shot route for a focused opinion and a durable host route for visible, interactive, multi-round, or AFK work. Keep work local when no reliable dispatch and return path can be proven.
 
@@ -220,7 +220,7 @@ Distinguish queued, running, reported complete, and verified work using observed
 
 Before choosing a review level or dispatching a reviewer, read [review-policy.md](orchestration/review-policy.md). Apply its R0, R1, or R2 budget from impact and uncertainty, not line count.
 
-Keep findings on the same invariant in the current task. Record unrelated defects as follow-up work. Reverify after a merge, rebase, cherry-pick, conflict resolution, or other integration change alters the tested result.
+Keep findings on the same invariant in the current task. Record unrelated defects as follow-up work. Reverify after a merge, rebase, cherry-pick, conflict resolution, or other integration change alters the tested result. A check that relied on a sandbox counts only for the permission mode it ran under: after a mode change in your session or the worker's, have the sandbox proven again ([unattended operation](unattended.md#phase-2--the-loop)).
 
 Source-mutation proof is a project or task rule. Do not impose it universally.
 

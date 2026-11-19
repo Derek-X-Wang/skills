@@ -2,6 +2,8 @@
 
 Use this pattern for a non-trivial feature or hard bug when implementation, environment observation, user-level QA, and independent review benefit from separate attention.
 
+The pattern applies only when the orchestrator selects it for a task split into separately owned parts. It runs inside the ticket shape in [decide whether to delegate](../../orchestration.md#decide-whether-to-delegate): the orchestrator states the separability claim, the integration owner, and why the concurrent roles are safe. Each part keeps one writer: the implementer owns its assigned source and tests, and the QA tester writes only test files assigned to it alone.
+
 Keep a small team. Add only roles that carry real work:
 
 | Role | Ownership | Return to orchestrator |

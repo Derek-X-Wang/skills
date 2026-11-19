@@ -43,6 +43,7 @@ Start the first pass in fresh context. Give the reviewer:
 - Intended outcome or accepted specification.
 - Exact diff, base, or changed scope.
 - Applicable project instructions and accepted decisions.
+- Conditions the lead or orchestrator set for the change (for example an acceptance signal), as part of the reviewed scope. The reviewer checks them like the diff, including whether a proof signal implies the cause.
 - Verification evidence. When the reviewer's sandbox cannot run checks (for example a read-only build cache), the orchestrator runs vet, lint and targeted tests on the reviewed SHA and supplies the commands, exit codes and log paths. The reviewer labels supplied evidence separately from checks it ran.
 - Requested review depth and return format.
 

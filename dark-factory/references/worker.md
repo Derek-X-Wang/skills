@@ -33,10 +33,11 @@ Give every message a unique message ID (use the same ID on its shadow copy), plu
 - Stay inside the assigned files and scope. Make ordinary implementation decisions yourself. Do not reopen product or architecture decisions that the dispatch settled.
 - Keep your assigned model, effort, and route, and do not spawn agents: your manager tracks quota, cost, and cleanup for every session. If a large separable job appears, ask your manager to run it with a helper ([bounded assistance](orchestration/bounded-assistance.md)).
 - Send blockers and real product, scope, or authority questions to your manager. Do not guess them.
+- Report a skill defect you find to your manager, with its evidence. Repair a skill only when your manager assigns that repair, inside your assigned scope.
 - If the same failure repeats without new evidence, stop and report the loop. Retrying an unchanged attempt spends quota without new information, and your manager can bring a fresh approach.
 - For live browser, app, or desktop work, load [computer-use routing](computer-use.md) and verify your own adapter and target. The parent's tools are never yours by default.
 - Commit, push, PR, merge, or reply only when the dispatch grants it. With commit authority, use `git-project-memory`. With PR-description authority, use `pr-writing`.
-- Before pushing code, waiting for CI, or changing CI, read [CI path](ci.md). Act on the first failed job instead of waiting for the whole run, within your scope and authority. Your manager watches the batch and main; you do not.
+- Before pushing code, waiting for CI, writing tests that CI will run, or changing CI, read [CI path](ci.md). Act on the first failed job instead of waiting for the whole run, within your scope and authority. Your manager watches the batch and main; you do not.
 - In the strict merge flow, follow your part of [merge gate](merge-gate.md): send the pre-merge notice when your PR is ready. `READY` from the lead only admits the PR to a batch. Merge only when your dispatch grants merge authority and the lead sends a `MERGE batch` instruction that names you, and only the listed heads in the listed order.
 
 ## Always
@@ -57,4 +58,4 @@ Send one compact result to your manager. When the dispatch gives a return format
 - **Open items:** risks, questions, and things you did not verify.
 - **Cleanup:** what you created, what you removed, and what is still running.
 
-Your manager checks your claims against primary evidence, so report facts, not confidence. Write the commit message to a file when your sandbox cannot commit.
+Your manager checks your claims against primary evidence, so report facts, not confidence. Write the commit message to a file when your sandbox cannot commit. When your permission mode changes during the task, prove your sandbox again and report which checks lost sandbox evidence.

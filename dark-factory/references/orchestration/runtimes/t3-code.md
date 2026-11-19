@@ -9,7 +9,7 @@ The orchestrator reads injected runtime metadata first, then inspects the tool i
 | Observed surface | Route |
 | --- | --- |
 | Harness spawn, message, and wait tools | Harness-native child agents |
-| `orchestrator_capabilities` plus delegated-task tools | T3 delegation; follow the advertised providers, models, scope, and lifecycle |
+| `orchestrator_capabilities` plus delegated-task tools | T3 delegation, an experimental canary: use it only within its [registry row](../../experimental.md#registry) limits; follow the advertised providers, models, scope, and lifecycle |
 | `t3_thread_*` or equivalent thread tools | T3 top-level thread control; verify create, send, read, wait, and interrupt behavior |
 | Only `preview_*` | Browser automation only; no T3 agent route |
 | Only authenticated HTTP or WebSocket contracts | A custom, version-specific bridge; not a default route |

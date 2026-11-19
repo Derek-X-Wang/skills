@@ -8,7 +8,7 @@ Use when runtime evidence identifies a defect in a skill. Preserve the main task
 - **Clear bounded defect:** a broken reference, wrong path, verified obsolete argument, or narrow missing condition with a reproducible consequence can be repaired in the current session through `manage-my-skills`. Keep the intended behavior and existing authority intact.
 - **Broader or unresolved change:** changes to scheduling policy, review requirements, authority, workflow, or architecture enter the maintenance queue. Repeated defects and fixes that grow beyond their bounded scope also enter that queue. A dedicated maintenance task can be scheduled by impact and recurrence; an issue need not immediately start another session.
 
-This standing authorization permits bounded source repairs to Derek-owned skills. A dispatched worker reports through its orchestrator, which assigns the repair; it does not grant itself repository ownership, recruit peers, or leave its assigned scope. For third-party skills, follow `manage-my-skills` ownership rules and report the defect without silently editing or forking them.
+This standing authorization permits bounded source repairs to Derek-owned skills. A dispatched worker follows [worker mode](worker.md#work): it reports the defect to its orchestrator, which assigns any repair. For third-party skills, follow `manage-my-skills` ownership rules and report the defect without silently editing or forking them.
 
 ## Repair and verify
 

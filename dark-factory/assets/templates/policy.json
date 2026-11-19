@@ -66,23 +66,6 @@
       ]
     }
   ],
-  "sprints": [
-    {
-      "id": "example-sprint",
-      "enabled": false,
-      "authority_ref": null,
-      "pool_ids": [
-        "example-weekly"
-      ],
-      "reserve_override": {
-        "unit": "percent_remaining",
-        "value": null
-      },
-      "expires_at": null,
-      "selected_reset": null,
-      "stop_on_earlier_condition": true
-    }
-  ],
   "reset_redemptions": [
     {
       "id": "example-redemption",

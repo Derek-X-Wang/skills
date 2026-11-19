@@ -16,7 +16,7 @@ For live browser, native-app, webview, or desktop UI work, load [computer-use ro
 | Chosen action | Operational source |
 | --- | --- |
 | Native Codex subagent lifecycle | The tools and schemas exposed by the current Codex session |
-| Focused `counsel` review | Load `counsel` and follow its target-verification step |
+| Focused `counsel` review | Load `counsel` and verify its target with `counsel --dry-run` |
 | Durable Orca session | Read [orca.md](orca.md), then load the operational skill it names for the chosen action |
 | OpenCode external worker or reviewer | Read [opencode.md](opencode.md), then use only a route that it currently marks proven for the work shape |
 
@@ -39,14 +39,14 @@ Official documentation (learn.chatgpt.com, reviewed 2026-09-07) describes capabi
 
 ## External review routes
 
-- Use `counsel` for a focused fresh Claude review after its dry run proves an eligible target under the [routing matrix](../routing-matrix.md).
+- Use `counsel` for a focused fresh Claude review after `counsel --dry-run` proves an eligible target under the [routing matrix](../routing-matrix.md).
 - Use Orca for a durable, visible, interactive, or multi-round Claude session.
 - Use the OpenCode route when the routing matrix selects an OpenCode reviewer.
 - Use a fresh native Codex subagent as an R1 fallback when a different model is unavailable.
 
 Apply the [review policy](../review-policy.md) for budget and independence. Use the [routing matrix](../routing-matrix.md) for current model and route preferences.
 
-Follow the `counsel` skill's target-verification step when its profile or target may have changed. Use the route for a focused opinion and a durable host when the work needs follow-up turns.
+Run `counsel --dry-run` to verify the resolved target when its profile or target may have changed. Use the route for a focused opinion and a durable host when the work needs follow-up turns.
 
 Model inheritance, per-role model configuration, concurrency limits, and tool names can change. Verify the current configuration instead of copying an old launch command.
 

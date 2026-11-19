@@ -32,7 +32,7 @@ When the owner says they are leaving, stop using any tool that waits for a human
 
 ## Phase 2 — the loop
 
-**Host.** For an authorized recurring window, use a supported session loop or existing timer mechanism plus tracked background watchers. A one-shot pass ends after processing; it does not create a recurrence. These documents do not implement a loop host. A watcher is started as a tracked background task, never with a trailing `&`. An untracked copy has no completion notice and competes with the tracked one. Each watcher prints one final line (`DONE`, `RED`, `QUIET`, `TIMEOUT`) and exits; re-arm it when it exits.
+**Host.** For an authorized recurring window, use a supported session loop or existing timer mechanism plus tracked background watchers. A one-shot pass ends after processing; it does not create a recurrence. These documents do not implement a loop host. A watcher is started as a tracked background task, never with a trailing `&`. An untracked copy has no completion notice and competes with the tracked one. Each watcher prints one final line (`DONE`, `RED`, `QUIET`, `TIMEOUT`) and exits; re-arm it when it exits. Read the IDs a watcher tracks from the live store just before you start it; a remembered ID can be stale after a state change.
 
 **Each check:**
 1. Liveness: peers, workers (running or finished), product health (read-only commands only).
@@ -49,7 +49,7 @@ Read these records during [manual continuation](continuation.md), then reconcile
 
 **Messages between sessions.** Reply to the sender address on the latest message, and re-list peers after a long silence; a restarted session gets a new address. Check each send's delivery result; a held message is not delivered.
 
-Before the run, verify that the selected messaging route delivers under the actual sessions' permission modes without a human approval wait. A mode mismatch held messages in the dated Claude runs in [field notes](field-notes.md); do not universalize that behavior across harnesses. If a required route needs human clicks, mark it attended and exclude it from unattended work unless a supported nonblocking route is verified.
+Before the run, verify that the selected messaging route delivers under the actual sessions' permission modes without a human approval wait. A mode mismatch held messages in the dated Claude runs in [field notes](field-notes.md); do not universalize that behavior across harnesses. If a required route needs human clicks, mark it attended and exclude it from unattended work unless a supported nonblocking route is verified. After every permission-mode change, prove the sandbox again (for example, a network call it must block) and record which checks lost sandbox evidence.
 
 **Workers.** Give each worker an explicit output folder in its brief, and check for stray files after it finishes. Plan for workers whose sandbox cannot commit: the worker drafts the commit message in a file, and the orchestrator reviews the diff and commits on the host. Pass absolute paths to gate scripts that change directory, and count the test results: a gate that ran nothing is NOT-RUN, not a pass. Before freezing a long check, preflight its environment assumptions (working folder, paths, tools). An environment failure is not a product failure: keep the failed result, and use only an already-authorized fallback. Before dispatching a planned item, compare the plan's base with current main and confirm the item is not already done. Check that each acceptance gate runs the code under test: a gate that runs pinned or released binaries in its place is NOT-RUN for that change.
 
@@ -75,7 +75,7 @@ Keep open decisions as a short ordered list, each with options and a recommendat
 
 When the project/run selects the strict integration policy, use [merge-gate.md](merge-gate.md). The bullets below apply to that policy, not to Bite private findings/local fixes. Commands and watcher sketches are examples, not installed helpers. External fixes, filings, reruns and merges throughout this reference require the relevant project/run authority; otherwise prepare private evidence/drafts and park the action.
 
-- **Batch test, bisect on red** is the default in repositories that pass the merge gate's eligibility check; other repositories merge one at a time. Follow [merge-gate.md](merge-gate.md) for both; it is the only source for the steps.
+- **Batch test, bisect on red** is a canary method for personal repositories that pass the merge gate's eligibility check; other repositories merge one at a time. Follow [merge-gate.md](merge-gate.md) for both; it is the only source for the steps.
 - **Notice → READY → batch → MERGE → IS IN.** READY admits a PR to a batch; only a MERGE instruction plus existing merge authority lets anyone merge.
 - **The notice covers more than file overlap:** same-package changes on main since the CI base (with a local vet/build/test of the trial merge when there are any), and a simulation of the whole remaining queue in order. Reorder so conflict fixes and their fresh CI run while clean PRs merge.
 - **Fresh CI.** A PR that is only BEHIND needs no separate rerun of its own CI when a trial merge is clean and the overlap since the CI base is reviewed; the batch test on current main is still required. Name exceptions in advance (for example: after a toolchain bump, if main goes red for a reason linked to the bump, every remaining PR gets fresh CI). Refresh a branch only with a merge commit, never a rebase that needs a force-push. Refuse a peer's suggestion that breaks a guardrail.
@@ -94,7 +94,7 @@ When the project/run selects the strict integration policy, use [merge-gate.md](
 - **Filing:** an unknown cause is filed on its second sighting; a cause proven by reading the code is filed on the first. A symptom of product behavior (a lost lease, lost data, a wrong state) is filed on the first sighting too, even when the cause is unknown.
 - **Watch list:** keep the other single sightings on a watch list in the report. Drop an entry after 14 days without a repeat.
 - **Missing diagnostics:** when a failure cannot be explained because the artifacts lack a log, file a small issue to keep that log, every time. The next failure can then be diagnosed.
-- **Park** an item after 3 unexplained CI failures, with notes and a reproduction.
+- **Park an item** (one PR or task, as distinct from the queue above) after 3 unexplained CI failures of its own, with notes and a reproduction.
 
 ## Really big problem
 

@@ -36,7 +36,7 @@ Run one item and one integration unit at a time:
 2. The worker verifies its work and returns a stable identifier plus evidence.
 3. The orchestrator applies the selected [R0, R1, or R2 review budget](../review-policy.md).
 4. The worker handles accepted same-invariant findings.
-5. The orchestrator performs or authorizes the next external step: commit, push, PR, merge, or none.
+5. The orchestrator performs or authorizes the next external step: commit, push, PR, merge, or none. When the project or run selects the strict integration policy, merges follow the [merge gate](../../merge-gate.md).
 6. Observe required CI. Treat CI as evidence, not a replacement for independent review.
 7. Reverify after any integration change.
 8. Assign the next decision-complete item.
