@@ -20,6 +20,17 @@ This standing authorization permits bounded source repairs to Derek-owned skills
 
 Editing a skill does not change the authority or acceptance gates of the task that discovered it. Keep the pre-repair constraints in force until an authorized change is accepted. Model agreement and self-edited instructions cannot supply missing authority, lower required review, expand paid spend, or make an unsupported tool route eligible.
 
+## Keep one owner per instruction
+
+When you edit this skill, keep one owner for each kind of instruction:
+
+- [Task orchestration](orchestration.md) owns cross-runtime policy, the final session route choice, delegation contracts, communication topology, review, and integration.
+- Runtime references in this skill own agent and session detection, coordination capability mapping, route feasibility, runtime-specific invariants, and unavailable-route behavior.
+- Operational sources own executable discovery, current commands, flags, schemas, and tool lifecycle mechanics. An operational source can be a tool-owned skill, a live runtime guide, or advertised native tool schemas.
+- A live guide or schema owns version-matched behavior when one is available.
+
+Do not copy volatile tool commands into this skill or its runtime references.
+
 ## Maintenance queue
 
 For reusable defects in Derek-owned skills, use GitHub issues in **[Derek-X-Wang/skills](https://github.com/Derek-X-Wang/skills/issues)**. Search for a matching open or closed issue first. Reuse an existing issue for the same cause rather than filing one per session; record distinct new evidence without replying to a human unless authorized. A completed bounded repair needs its change record, not necessarily a new issue. Application defects stay with their owning project; third-party skill defects go to the appropriate owner under its disclosure rules.

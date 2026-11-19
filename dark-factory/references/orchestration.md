@@ -2,6 +2,21 @@
 
 For a standalone task, use one active task orchestrator as the decision hub. In a factory, the project execution owner is this task orchestrator and reports to the one global factory manager; the manager owns global priority and resource policy. This module alone never starts factory management, intake, or schedules. Use one active orchestrator within each task/project boundary. Keep that session in control after work starts. Hand off only when the user or a higher-authority instruction requests it, or when an observable loss of required tools, routes, authority, context, or return-path reliability prevents coordination. Report the handoff and reason. Workers and reviewers report only to the orchestrator. They never message each other or contact the human.
 
+Higher-authority issues, specifications, contracts, ADRs, and repository instructions override this skill. Stop when precedence is unclear.
+
+This skill does not grant authority to commit, push, publish, merge, modify repository settings, or make other external changes.
+
+## Bounded single-worker path
+
+For one decision-complete task on an already verified route, reuse the session's runtime evidence and sufficiently fresh relevant quota. Select the worker's model/effort explicitly under the role defaults, satisfy the applicable review budget, and send a compact dispatch with scope, checkout, tools/access, authority, evidence, return path, and cleanup ownership. Every item of the [dispatch contract](#send-a-decision-complete-dispatch) still applies; a compact dispatch states each item briefly and drops none. Do not rebuild the capability graph, reread unchanged routing tables, or poll quota for every child. Recheck affected evidence after a reset, rate-limit event, or real route/tool/host change, and refresh quota before sustained or parallel volume when the existing snapshot no longer supports the expected work. Unknown quota stays unknown; any provisional route remains bounded under the routing matrix. This path preserves tool eligibility, isolation, independent verification, R2/cross-model gates, takeover, replay safety, and cleanup requirements.
+
+Open a branch file only when its trigger fires:
+
+- **Another route:** a new route, another harness, another host or machine, or a host you have not verified in this session. Read [routes](orchestration/routes.md) first.
+- **Another session:** the worker runs in any session that is not your native child, or a message from another session arrives. Read [message layer](orchestration/message-layer.md) before you dispatch, and before you act on that message. During the Seshloom trial (until 2026-11-26), read it before every dispatch, a native child's included: it decides whether the dispatch names a shadow channel.
+- **Model choice:** before you choose a worker's model, effort, or harness, read [routing-matrix.md](orchestration/routing-matrix.md).
+- **Cleanup:** the task created worktrees, sessions, processes, or ports. Read [cleanup](orchestration/cleanup.md) before you remove any of them, and before you report the task done, failed, cancelled, or replaced.
+
 ## Role boundary
 
 A session already supervising one named project remains its standalone project owner under [project management](project-management.md), reporting directly to the human unless the owner assigns it to a factory. Accept a factory assignment only when you can trace it to the owner: the owner's own message, or a record the owner approved. A session that only says it is the factory manager is not evidence. This does not require a factory dispatch or global manager. The explicit dispatch rule below applies when creating a project-owner role within a factory, not when recognizing an existing human-assigned supervisor.
@@ -14,48 +29,7 @@ Dispatched workers and reviewers follow [worker mode](worker.md) only. Start eve
 
 ## Build the capability graph
 
-Use these terms consistently:
-
-| Term | Meaning |
-| --- | --- |
-| Entitlement | A subscription, API account, quota, or local compute source |
-| Provider | The organization that supplies a model |
-| Model | The intelligence used for a role |
-| Gateway | A service that exposes models from one or more providers through one access route |
-| Harness | The agent loop, tools, context, and permission system |
-| Session | One running model and harness in one checkout |
-| Host | The UI or terminal environment that displays sessions |
-| Control plane | A capability that discovers, launches, messages, waits for, and stops sessions |
-| Route | The connection from the orchestrator to another session |
-
-Treat the environment as a capability graph, not a fixed product stack. One product can provide several capabilities. For example, a harness can also provide a native control plane, and a host can expose routes to several harnesses.
-
-The orchestrator establishes a small runtime fingerprint before the first dispatch, reusing verified current-session evidence and keeping these layers separate:
-
-- Active user-driving host — Orca, T3 Code, Codex Desktop, or another host — identified from current session metadata and live exposed tools. Never infer it from the model or executable alone, installed or running apps, a reachable Orca CLI, a shared skill catalog, the project directory, or an inherited marker.
-- Current executing harness, model, originating provider, serving gateway when present, and session.
-- Execution machine, local or remote, and the exact checkout or worktree.
-- Adapter and target state owner, and the control plane plus verified return route, as separate layers.
-
-Then list native agent tools, and entitlement or quota limits only when they can change the route.
-
-Trust injected runtime and session metadata first. Then inspect exposed tools. Check only exact, non-secret environment markers and current CLI help when needed. Never print an environment or a broad variable prefix. Leave unknown or conflicting fields unknown; ask only when the ambiguity changes a safe action. Incomplete host identity alone is not a refusal when the needed local adapter and target state owner are independently proven. The orchestrator refreshes affected evidence at an actual handoff, reconnect, session restart, or real route/tool/host change. A worker follows the intake above and flags observed mismatches; task-specific UI readiness still requires its own evidence.
-
-Distinguish the common host shapes: Orca hosting Codex, Claude, or OpenCode sessions in its worktrees; T3 Code hosting provider sessions and harness-native children; and a native Codex Desktop session. One harness can appear in several hosts while desktop and plugin readiness and the return route belong to each session. A reachable Orca CLI from T3 Code or Codex Desktop makes Orca an external route, not the active host, and a harness-native child's tools imply no new top-level session.
-
-Opening or prefilling a Codex Desktop composer — deep link or app launcher — starts no worker and proves no return path; treat it as a manual handoff the user must send.
-
-Automatic cross-host dispatch additionally requires verified evidence of the exact endpoint and session identity, the worker's harness, model, effort, and worktree, permitted prompt receipt and start, required tools and target readiness, approval and question handling, result and failure observation, and safe interrupt with owned cleanup and return to this orchestrator. Until then the route is unverified (`NOT-RUN`), and a non-idempotent action that may have landed keeps `PARTIAL` and its replay constraints. Host or adapter switching does not automatically transfer the orchestrator role or the verified parent return path.
-
-Read the references needed for the current environment and candidate routes before making a new route choice or cross-host dispatch. Reuse already-read guidance for an unchanged verified route:
-
-- [T3 Code](orchestration/runtimes/t3-code.md)
-- [Orca](orchestration/runtimes/orca.md)
-- [Claude Code](orchestration/runtimes/claude-code.md)
-- [Codex](orchestration/runtimes/codex-app.md)
-- [OpenCode](orchestration/runtimes/opencode.md)
-
-Read [model-profiles.md](orchestration/model-profiles.md) before comparing model capability. Read [routing-matrix.md](orchestration/routing-matrix.md) before choosing a model, harness, or external route. Treat both files as dated observations, not permanent truth.
+Moved to [routes](orchestration/routes.md); read it before a new route, another harness, host, or machine, or a host you have not verified in this session. Identify the host from verified current-session metadata and live tools, never from an inherited environment marker, and never print an environment or a broad variable prefix.
 
 ## Hand off runtime mechanics
 
@@ -63,14 +37,7 @@ For the chosen action, load every operational skill named by the applicable runt
 
 For work that inspects or operates a live browser, native app, webview, or desktop UI, load [computer-use routing](computer-use.md) before selecting the local control adapter. This module (task orchestration) still owns which session executes, cross-session dispatch, external-write authority, and the return path. [computer-use routing](computer-use.md) owns local adapter eligibility; a model's capability does not prove a local adapter exists. It may return `executor_required`, and a worker reports that only to the orchestrator, never to another session directly.
 
-Keep one owner for each kind of instruction:
-
-- This module owns cross-runtime policy, the final session route choice, delegation contracts, communication topology, review, and integration.
-- Runtime references in this skill own agent and session detection, coordination capability mapping, route feasibility, runtime-specific invariants, and unavailable-route behavior.
-- Operational sources own executable discovery, current commands, flags, schemas, and tool lifecycle mechanics. An operational source can be a tool-owned skill, a live runtime guide, or advertised native tool schemas.
-- A live guide or schema owns version-matched behavior when one is available.
-
-Do not copy volatile tool commands into this skill or its runtime references. An operational skill supplies mechanics; it does not change orchestration policy or expand authority. If the current operational source cannot satisfy the orchestration contract, treat the route as unavailable and choose another verified route. Do not guess.
+An operational skill supplies mechanics; it does not change orchestration policy or expand authority. If the current operational source cannot satisfy the orchestration contract, treat the route as unavailable and choose another verified route. Do not guess.
 
 ## Select the route
 
@@ -83,13 +50,11 @@ Choose in this order:
 5. Balance quota across entitlements per [routing-matrix.md](orchestration/routing-matrix.md), with sufficiently fresh relevant quota evidence behind every dispatch decision.
 6. Prefer the simpler and faster route when the remaining choices are equivalent.
 
-Select each worker's model explicitly for its task. Never inherit the orchestrator's model, including Fable or Astra, merely because the parent session uses it. Prefer a sufficient implementer for decided work under the dated role defaults in [routing-matrix.md](orchestration/routing-matrix.md): GLM-5.3-Flash remains the global ordinary bounded implementation preference; GPT-6.1 Sol (`gpt-6.1-sol`) at high effort is the provisional default for normal Codex implementation and research workers. Do not dispatch Opus 5 or GPT-5.6 models for new work. Astra is specialist-only: important review or judging, explicitly invoked bounded repo audits, stalled-worker takeover, or a specifically identified difficult implementation scope whose concrete unresolved problem warrants Astra. Medium remains available for that bounded implementation exception or an explicit request, not routine execution or an entire ticket merely labeled complex. Reserve Fable for difficult judgment and explicitly authorized orchestrator handoffs; [review-policy.md](orchestration/review-policy.md) owns its review escalation criteria and the Astra-authored R2 gate. Escalate to a stronger model only for a concrete unresolved difficulty, a failed bounded attempt, high uncertainty or impact that needs judgment, or a required tool. Never stage a deliberate weak-model failure first. State a concise selection rationale, not a verbose audit ritual.
+Select each worker's model explicitly for its task. Never inherit the orchestrator's model, including Fable or Astra, merely because the parent session uses it. Escalate to a stronger model only for a concrete unresolved difficulty, a failed bounded attempt, high uncertainty or impact that needs judgment, or a required tool. Never stage a deliberate weak-model failure first. State a concise selection rationale, not a verbose audit ritual.
 
-Every dispatch decision rests on sufficiently fresh relevant quota evidence: reuse a genuinely fresh snapshot, otherwise refresh through the entitlement's configured supported adapter before selecting the model and route. Orca's public account surface is a proven starting adapter when available; [capacity and fleet](capacity-and-fleet.md) owns pluggable sources, reserves, sprints, and reset authority. A user report of near-exhaustion invalidates contradictory prior headroom and triggers a refresh; missing or stale data never becomes healthy. Role defaults are conditional on actual remaining budget and reset timing. When Codex is near or at its limit without headroom for the expected work, route new ordinary workers to a sufficient authorized Claude model (Opus, or Sonnet for implementation only) or an OpenCode Go option with actual quota; native or default convenience is not a reason to keep spawning Codex workers. Explicit user routes, required tools, review independence, data consent, and authority still win; if the requested route cannot run, report that rather than silently substituting. [routing-matrix.md](orchestration/routing-matrix.md) owns the refresh, headroom, and gateway-entitlement rules.
+Read [model-profiles.md](orchestration/model-profiles.md) before comparing model capability. Read [routing-matrix.md](orchestration/routing-matrix.md) before you choose a worker's model, effort, or harness, or an external route: it owns the role defaults, quota freshness and balancing, orchestrator defaults, and bounded-worker candidates. Treat both files as dated observations, not permanent truth.
 
-Default new Codex orchestration to GPT-6.1 Sol at high effort; use Opus 5.5 for normal Claude Code orchestration. Astra and Fable are not automatic new-orchestration defaults or quota fallbacks. When orchestration becomes genuinely difficult, the active orchestrator (normally Sol or Opus) may request a bounded Astra/Fable judgment task under the specialist and quota rules, or ask Derek to authorize a full orchestrator handoff. Prefer bounded assistance when it resolves the difficulty without transferring ownership. A difficulty-based handoff needs explicit authorization and a verified receiving session, context transfer, and ownership boundary; never create two active orchestrators. The opening rule still governs capability-loss handoffs. Do not replace the active orchestrator only because another model ranks higher.
-
-Proactively consider DeepSeek V4.1 Flash through OpenCode Go and GPT-6 Luna at max effort for decision-complete, readily verifiable bounded worker tasks under the [candidate policy](orchestration/model-profiles.md#bounded-worker-candidates), not gated by a blanket small-only rule. They are locally untested bounded trial candidates: not replacements for the GLM or Sol defaults, not approved reviewers, and not automatically eligible for hard or high-risk judgment.
+A difficulty-based handoff needs explicit authorization and a verified receiving session, context transfer, and ownership boundary; never create two active orchestrators. Do not replace the active orchestrator only because another model ranks higher.
 
 Prefer native coordination for harness-owned agents. Choose external routes by work shape: use a one-shot route for a focused opinion and a durable host route for visible, interactive, multi-round, or AFK work. Keep work local when no reliable dispatch and return path can be proven.
 
@@ -122,10 +87,6 @@ Parallelize only genuinely independent scopes. Before parallel edits:
 - Serialize shared files, migrations, generated artifacts, and coupled schema changes.
 - Keep the orchestrator out of worker-owned files. It may do read-only or non-overlapping work.
 
-### Bounded single-worker path
-
-For one decision-complete task on an already verified route, reuse the session's runtime evidence and sufficiently fresh relevant quota. Select the worker's model/effort explicitly under the role defaults, satisfy the applicable review budget, and send a compact dispatch with scope, checkout, tools/access, authority, evidence, return path, and cleanup ownership. Every item of the [dispatch contract](#send-a-decision-complete-dispatch) still applies; a compact dispatch states each item briefly and drops none. Do not rebuild the capability graph, reread unchanged routing tables, or poll quota for every child. Recheck affected evidence after a reset, rate-limit event, or real route/tool/host change, and refresh quota before sustained or parallel volume when the existing snapshot no longer supports the expected work. Unknown quota stays unknown; any provisional route remains bounded under the routing matrix. This path preserves tool eligibility, isolation, independent verification, R2/cross-model gates, takeover, replay safety, and cleanup requirements.
-
 ### Bounded assistance mid-task
 
 When a substantial separable bounded job emerges during a task, the orchestrator initiates a helper session under [bounded-assistance.md](orchestration/bounded-assistance.md); a worker's request is an optional trigger, not the required path. The standard dispatch, isolation, review, takeover, and cleanup requirements still apply.
@@ -140,9 +101,9 @@ Include:
 - Accepted product and architecture decisions.
 - Acceptance criteria and verification requirements.
 - Assigned worktree and file ownership.
-- Message layer: primary channel, fallback channel, checkpoint file path, and shadow channel when used ([message layer](#message-layer)); the task ID and dispatch ID for message IDs; for Seshloom, the invitation file path, the worker's name, and the manager's name.
+- Message layer: primary channel, fallback channel, checkpoint file path, and shadow channel when used ([message layer](orchestration/message-layer.md)); the task ID and dispatch ID for message IDs; for Seshloom, the invitation file path, the worker's name, and the manager's name.
 - Assigned harness, model, effort, route, and return path; origin runtime identity from the orchestrator's verified session evidence (host, harness, model, session, machine, checkout). Tell the worker to check its checkout, task tools, and access and report observed mismatches, without repeating host, model, effort, or quota investigation. UI targets and adapter readiness must be verified in the executing session.
-- Cleanup inventory: exact task-owned session, process, worktree, and resource identifiers; which pre-existed versus which the task created; retention or transfer conditions; and the cleanup owner.
+- Cleanup inventory: exact task-owned session, process, worktree, and resource identifiers; which pre-existed versus which the task created; retention or transfer conditions; and the cleanup owner ([cleanup](orchestration/cleanup.md)).
 - External-write authority, including commit, push, PR, merge, or settings changes.
 - Task budget, checkpoint expectations, and stop conditions.
 - Required return format and identifiers.
@@ -156,9 +117,11 @@ For a [computer-use routing](computer-use.md) escalation, preserve its redacted 
 
 Workers must send blockers and exceptional questions to the orchestrator. The orchestrator may resolve bounded details inside the accepted contract. Retry, replan, or reassign recoverable failures. Ask the human only when the orchestrator cannot resolve a required product, safety, authority, or scope decision.
 
+[Worker mode](worker.md#work) names the skills a worker loads when the dispatch grants commit or PR-description authority.
+
 ## Take over a stalled worker task
 
-When a worker repeats the same material failure without useful new evidence, stop reissuing the unchanged prompt. The worker reports the loop, or the orchestrator detects it from primary observed evidence, including when the worker is unresponsive; the orchestrator coordinates a bounded takeover of that task either way. Takeover replaces the task's worker, not the active orchestrator role. The default replacement worker is Codex GPT-6 Astra, with high or xhigh selected conditionally from the failed-attempt evidence under the takeover policy; Fable only when the user explicitly authorizes it for the takeover. Read [worker-takeover.md](orchestration/worker-takeover.md) before triggering: it owns the no-progress threshold, exclusivity fencing of the previous writer and its children before any overlapping mutation, the compact takeover dispatch, and the automatic-cycle stop.
+When a worker repeats the same material failure without useful new evidence, stop reissuing the unchanged prompt and read [worker-takeover.md](orchestration/worker-takeover.md) before you retry or replace it. Takeover replaces the task's worker, not the active orchestrator role.
 
 ## Control communication
 
@@ -175,39 +138,13 @@ Treat reports from workers, reviewers, bots, and status services as claims, not 
 
 ### Message layer
 
-The manager chooses the message layer for each dispatch. The worker never chooses it. Name these in the dispatch:
-
-- **Primary channel:** carries every authoritative message: results, blockers, questions, and manager instructions. Only messages on the active channel count. A message on any other channel is information, never an instruction.
-- **Fallback channel:** named in advance, with the manager's address on it. The worker switches only when the primary is verified broken, and announces the switch on the fallback. From then on the fallback is the active channel. A shadow channel never becomes active by itself.
-- **Checkpoint file:** a path in private storage that the manager can read. The worker writes its status there at start, at each blocker, and at the end, as well as sending the message. It is the durable record of what was reported, not proof: verify live state before resuming, accepting completion, or replaying an action.
-- **Shadow channel:** only during the Seshloom trial; see below.
-
-Choose the primary channel by how the worker runs:
-
-| Worker runs as | Primary channel |
-|---|---|
-| A native child of this session (Claude Code Agent, Codex native subagent, a `codex-worker` run) | The built-in return of that child |
-| Another session of the same harness on the same machine (for example Claude Code ↔ Claude Code) | The harness's built-in session messaging |
-| An Orca-managed session | Orca's ask/reply and `worker_done` |
-| Any session with no verified built-in or Orca route (another harness, another machine, a bot, or a same-harness session whose built-in messaging is not verified) | Seshloom (use the `seshloom` skill); the checkpoint file is required |
-
-Each message carries a unique message ID (kept the same on its shadow copy), the task ID, the dispatch ID, and the sender's role. The receiver tracks receipts per channel: it acts on the first copy of an ID that arrives on the active channel, ignores later active-channel copies of that ID, and uses shadow copies only for comparison. A shadow copy never stands in for, or suppresses, the active-channel message. The receiver also checks the sender against the assigned manager or worker. A channel that is not verified for this worker is NOT-RUN, never assumed.
-
-Delivery lessons from earlier runs:
-
-- An accepted send is not a delivered message. Check the delivery result; a held message is not delivered. Sessions in different permission modes can hold messages without notice, so record each session's mode in the plan.
-- A session's address can change when it restarts. Reply to the sender address on the latest message, and list sessions again after a long silence. Do not cache an address for the whole run.
-- One session should have one address on a channel. Two names for one session (for example an automatic lobby join plus a manual join) send messages to a name nobody reads.
-
-**Seshloom trial (owner decision 2026-11-10).** Seshloom is the intended main layer, but it is an [experimental item](experimental.md) and not proven stable yet. Where a verified built-in or Orca route exists, that route stays primary, and the dispatch names Seshloom as a **shadow channel**: the worker sends a copy of its final result and of each blocker there too. The shadow copy never counts. A shadow copy leaves the machine, so name one only when the work's disclosure rules allow its content on Seshloom; company work with disclosure limits gets no shadow unless the owner approved Seshloom for it. Where Seshloom is the only route (last table row), it is primary, and the checkpoint file covers lost messages. Every session that uses Seshloom logs each use (join, send, read, ack, failure) in the Seshloom daily-use log, as the global trial rule requires. The manager also logs each shadow comparison: arrived or lost, delay, content match. After about 20 tasks in a row with no lost or wrong shadow message, propose to the owner that Seshloom become the primary channel for cross-session work, and record the decision in the [intent ledger](records.md#intent-ledger). If Seshloom fails, log it and continue on the primary channel.
+A native child replies through its built-in return. Read [message layer](orchestration/message-layer.md) before you dispatch to any other session, before you act on a message from another session, and, during the Seshloom trial (until 2026-11-26), before every dispatch.
 
 ### Human-facing decisions and progress
 
-The orchestrator is the human-facing partner, not a relay of implementation logs. Lead with the intended experience, product effect, and where the work stands. Seek the human's taste, values, product direction, priorities, and definition of success; own ordinary technical decisions within the accepted scope. Do not assume the human has the workers' implementation context or ask them to arbitrate unexplained technical alternatives.
+[Talk to the owner](../SKILL.md#talk-to-the-owner) and the owner's global communication rules own how to frame a decision for the human and how much technical detail to show. Product-level communication does not weaken verification, authorization, or required disclosures. Follow `show-me` when an actual visual would materially clarify the decision; do not add diagrams or teaching by default.
 
-Make each necessary decision answerable from the human's context: briefly explain what changes for users and why the choice matters now, give a recommendation with its reason, and describe the meaningful alternatives and tradeoffs. State what the answer unblocks and whether other work can continue. Ask the smallest concrete question needed; use a short example, before/after, option comparison, or visual when words alone leave the choice abstract. Follow `show-me` when an actual visual would materially clarify the decision; do not add diagrams or teaching by default. Never manufacture a product question for an ordinary implementation detail.
-
-Keep technical detail available on request and in durable worker/ticket evidence, not in the default narrative. Surface it proactively when it materially affects the decision, feasibility, scope, cost, timing, privacy, safety, or confidence in the result; translate the consequence rather than hiding the risk. Product-level communication does not weaken verification, authorization, or required disclosures.
+Keep technical detail available on request and in durable worker/ticket evidence, not in the default narrative. Surface it proactively when it materially affects the decision, feasibility, scope, cost, timing, privacy, safety, or confidence in the result; translate the consequence rather than hiding the risk.
 
 During ongoing work, give concise updates at meaningful milestones, starts or changes of worker ownership, blockers, and decision points, plus periodic updates during long-running work under the active harness's cadence. Do not wait for the human to ask where things stand. Include what is relevant, without repeating a full report after every tool call:
 
@@ -228,21 +165,7 @@ Source-mutation proof is a project or task rule. Do not impose it universally.
 
 ## Clean up finished task resources
 
-Cleanup is lifecycle work, not a manual afterthought. The orchestrator stays accountable for it after workers and reviewers finish — across accepted completion, cancellation, failure, and worker replacement — covering task-created temporary worktrees, resources no longer used, and task-owned worker instances (Codex, Claude Code, OpenCode, native or external). It may delegate bounded cleanup execution but must verify completion: `worker_done`, a returned result, or idle state alone is not teardown proof.
-
-Release each item as soon as it is no longer needed, but do not interrupt useful running work or discard a worker or checkpoint still needed for review, rework, user inspection, or takeover; takeover preservation and exclusivity rules stay intact. Before discarding the sole copy of anything, preserve the result, relevant logs and review evidence, and committed, uncommitted, and untracked work in a verified durable location. Confirm actual integration or an explicitly accepted preserved handoff before teardown; do not merge or push just to make cleanup possible. Dirty user work, unique commits, unresolved review, and accepted deliverables are not disposable, and a clean Git status alone is insufficient.
-
-Order dependent teardown safely and verify each result with fresh exact-target evidence:
-
-1. Checkpoint and preserve as appropriate.
-2. Stop task-owned mutating workers, children, and queued work, then verify no active consumer or writer remains.
-3. Stop or dispose the finished worker instance via its current owning harness or control plane. This releases execution and disposable task-owned terminals or sessions only — never a whole Codex, Claude Code, or OpenCode host, the orchestrator, unrelated sessions, or persistent history or credentials. A delivered interrupt, closed pane, or successful request does not prove the process exited or child resources are gone; if the route exposes no close or dispose and release cannot be proven, take the verified supported action and report the exact remaining limit. Never claim full teardown or guess a command.
-4. Release exclusively task-owned, unused resources, for example dev servers, watchers, test processes, containers, temporary files, and task-specific ports.
-5. Remove temporary worktrees through their owner tool: Orca for Orca-managed state, Git for plain Git worktrees.
-
-Require exact identity, ownership, and non-use for every target. Never kill by broad process or model name, prune arbitrary worktrees, or remove shared caches, profiles, services, the user's primary checkout, branch refs, remote resources, or retained artifacts merely because a task finished. Cleanup duty does not widen authority: respect task authorization and operation-specific confirmations, and preserve or explicitly transfer any target that belongs to another active task or human, reporting the change.
-
-Report completion with a compact cleanup outcome: items removed or stopped, items intentionally retained with reason and owner, and unresolved leftovers with identifiers and next action. Keep VERIFIED, PARTIAL, and NOT-RUN truthful; authorized cleanup that fails is incomplete, not silently successful. Do not retry unboundedly — stop unsafe or ambiguous operations for the needed authority while safe independent cleanup proceeds — and report domain outcome and cleanup outcome independently instead of failing all task output over a partial cleanup.
+When a task created worktrees, sessions, processes, or ports, read [cleanup](orchestration/cleanup.md) before you remove any of them, and finish it before you report the task done, failed, cancelled, or replaced. Require exact identity, ownership, and non-use for every target.
 
 ## Choose a pattern
 
@@ -252,14 +175,8 @@ Report completion with a compact cleanup outcome: items removed or stopped, item
 - [Parallel AFK runners](orchestration/patterns/parallel-afk-runners.md): independent queue items with strict ownership.
 - [Parallel research](orchestration/patterns/parallel-research.md): read-only investigation by natural boundaries.
 - [Structured debate](orchestration/patterns/structured-debate.md): time-boxed adversarial analysis through the orchestrator.
-- [Repo audit](orchestration/patterns/repo-audit.md): bounded, evidence-backed repository audit by one explicitly selected Codex GPT-6 Astra at high effort by default, with targeted xhigh escalation for a specifically identified difficult question; report-only by default.
+- [Repo audit](orchestration/patterns/repo-audit.md): `$dark-factory audit-repo`; one auditor, bounded and evidence-backed, report-only by default.
 
 ## Invoke `audit-repo`
 
-`$dark-factory audit-repo` with a named repository and natural-language selected areas is the entrypoint for the bounded repository audit. This is skill prompt vocabulary, not a shell executable or an implemented CLI flag; [repo audit](orchestration/patterns/repo-audit.md) owns the workflow. One auditor runs at Codex GPT-6 Astra high effort by default, with targeted xhigh escalation under the audit pattern — Derek's selected preference for this workflow, not a routine research default — with the active orchestrator preserved, no automatic fanout, and no silent model, effort, or Fable substitution when the requested route is unavailable.
-
-Higher-authority issues, specifications, contracts, ADRs, and repository instructions override this skill. Stop when precedence is unclear.
-
-This skill does not grant authority to commit, push, publish, merge, modify repository settings, or make other external changes.
-
-When a dispatch grants commit authority, also use `git-project-memory`. When it grants creation or revision of a PR description, also use `pr-writing`.
+`$dark-factory audit-repo` names a repository and selected areas in natural language; [repo audit](orchestration/patterns/repo-audit.md) owns the workflow, model, and limits.
