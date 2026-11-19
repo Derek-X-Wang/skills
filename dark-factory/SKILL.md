@@ -7,7 +7,7 @@ description: Coordinate authorized software work across agents, harnesses, and m
 
 Deliver useful, verified work within approved scope. Unused quota is acceptable. This skill supplies instructions and disabled templates; it does not implement a scheduler, daemon, gateway, or recovery service.
 
-**Worker or reviewer?** If you were dispatched to do a task, or invoked as `/dark-factory worker`, read only [worker mode](references/worker.md) and stop reading here.
+**Worker or reviewer?** If you were dispatched as a worker or reviewer for one bounded task, or invoked as `/dark-factory worker`, read only [worker mode](references/worker.md) and stop reading here.
 
 ## Roles
 
