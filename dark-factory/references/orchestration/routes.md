@@ -33,8 +33,6 @@ Trust injected runtime and session metadata first. Then inspect exposed tools. C
 
 Distinguish the common host shapes: Orca hosting Codex, Claude, or OpenCode sessions in its worktrees; T3 Code hosting provider sessions and harness-native children; and a native Codex Desktop session. One harness can appear in several hosts while desktop and plugin readiness and the return route belong to each session. A reachable Orca CLI from T3 Code or Codex Desktop makes Orca an external route, not the active host, and a harness-native child's tools imply no new top-level session.
 
-Opening or prefilling a Codex Desktop composer — deep link or app launcher — starts no worker and proves no return path; treat it as a manual handoff the user must send.
-
 Automatic cross-host dispatch additionally requires verified evidence of the exact endpoint and session identity, the worker's harness, model, effort, and worktree, permitted prompt receipt and start, required tools and target readiness, approval and question handling, result and failure observation, and safe interrupt with owned cleanup and return to this orchestrator. Until then the route is unverified (`NOT-RUN`), and a non-idempotent action that may have landed keeps `PARTIAL` and its replay constraints. Host or adapter switching does not automatically transfer the orchestrator role or the verified parent return path.
 
 Read the references needed for the current environment and candidate routes before making a new route choice or cross-host dispatch. Reuse already-read guidance for an unchanged verified route:

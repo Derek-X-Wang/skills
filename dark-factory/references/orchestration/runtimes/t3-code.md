@@ -4,7 +4,7 @@ Treat T3 Code as a host that may also expose control-plane routes. It can host s
 
 ## Choose the observed route
 
-The orchestrator reads injected runtime metadata first, then inspects the tool inventory and CLI help only as needed for route selection. Assigned workers follow [worker mode](../../worker.md) and do not repeat host, model, effort, or quota investigation. UI workers still verify their actual assigned adapter, tools/access, and target.
+The orchestrator reads injected runtime metadata first, then inspects the tool inventory and CLI help only as needed for route selection.
 
 | Observed surface | Route |
 | --- | --- |
@@ -21,7 +21,6 @@ Scope each observed surface to what it proves:
 - `preview_*` tools prove the browser preview surface only. It is browser-only automation — neither the user's external signed-in Chrome nor a native desktop-control adapter by default — and does not prove that T3 hosts the session or exposes other T3 control-plane capabilities.
 - Harness-native child tools imply no new T3 top-level session and no inherited UI or plugin tools.
 - An installed or copied skill catalog entry, including an OpenAI browser or computer-use plugin, proves nothing until the exact current session exposes the operational tools, the connected service permissions, and the required target state. Plugin readiness is never inherited from another session, host, or skill copy.
-- A reachable `orca` CLI makes Orca an external route, not the active host.
 
 ## Operational handoff
 
@@ -38,9 +37,5 @@ Do not assume a general T3 agent CLI or operational skill exists. If no source p
 - Use T3 to reach another top-level provider session only through a proven route.
 - A provider CLI launched by the current harness is not T3 delegation. For example, a Codex session hosted by T3 can launch an `opencode run` worker when the OpenCode runtime reference permits it; the harness owns that child process and return path.
 - T3 drives separately installed provider harnesses. Record the host, harness, model, provider, project, checkout or worktree, route, and entitlement source. Provider billing follows that harness's authentication and environment.
-- Keep worker and reviewer traffic on the orchestrator's verified return path.
-- Keep work local when dispatch or return cannot be verified.
 
 T3 has internal authenticated HTTP and WebSocket orchestration contracts. Before using a custom bridge for AFK work, prove the exact installed contract, credential cleanup, provider and model selection, message delivery, completion and failure observation, question and approval handling, transcript reads, interrupt behavior, and thread cleanup. Never expose or persist its bearer credential.
-
-The T3 Code browser preview is unrelated to agent routing. Use it only for browser work.

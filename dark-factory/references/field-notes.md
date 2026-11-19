@@ -20,7 +20,6 @@ The full narratives (2026-10-30 to 2026-11-05) are in the private log `~/.local/
 - Re-read IDs just before starting a watcher → 2026-11-02: a stale remembered ID.
 - Log each action at once; keep watcher IDs in a file → 2026-11-01: a compacted session resumed cleanly.
 - State to a file as well as a message; check delivery → 2026-11-02: a held status message.
-- Reply to the latest sender address → 2026-11-01: the lead restarted under a new address.
 - Verify delivery under the real permission modes → 2026-11-02, Claude Code: six messages held for a click.
 - Re-prove the sandbox after a mode change → 2026-11-02: a blocked call succeeded.
 - One scheduled wake; completion, due time and delivery apart → 2026-11-02: a timer kept a finished run open.
@@ -53,6 +52,10 @@ The full narratives (2026-10-30 to 2026-11-05) are in the private log `~/.local/
 ## [orchestration/cleanup.md](orchestration/cleanup.md)
 
 - Stop writers before purging a root → 2026-11-02: a watcher wrote during a purge.
+
+## [orchestration/message-layer.md](orchestration/message-layer.md)
+
+- Reply to the latest sender address → 2026-11-01: the lead restarted under a new address.
 
 ## [ci.md](ci.md)
 

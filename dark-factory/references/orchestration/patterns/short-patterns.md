@@ -20,12 +20,6 @@ If ownership cannot be stated confidently, serialize the work.
 
 ### Topology
 
-```text
-                ┌─ runner A → item A → worktree A
-orchestrator ───┼─ runner B → item B → worktree B
-                └─ runner C → item C → worktree C
-```
-
 Workers never claim from a shared queue and never inspect or message peers. The orchestrator owns assignment and the task ledger.
 
 ### Run
@@ -62,7 +56,7 @@ orchestrator ───┼─ backend question
                 └─ infrastructure question
 ```
 
-Each researcher reports only to the orchestrator. The orchestrator compares evidence, resolves terminology, and distinguishes direct observations from inferences.
+The orchestrator compares evidence, resolves terminology, and distinguishes direct observations from inferences.
 
 Use a return table when several researchers contribute:
 
@@ -83,7 +77,7 @@ advocate A → orchestrator ← advocate B
                synthesis
 ```
 
-Advocates never contact each other. The orchestrator relays the strongest opposing claims between rounds.
+The orchestrator relays the strongest opposing claims between rounds.
 
 ### Run two rounds
 

@@ -6,7 +6,7 @@ Use Orca as a host, control plane, and route for Orca-managed worktrees, termina
 
 Check injected runtime data first. Then inspect `ORCA_TERMINAL_HANDLE`, `TERM_PROGRAM`, and the presence of the `orca` CLI. An environment handle can become stale after a pane restart, so verify the live terminal before a long wait.
 
-An installed `orca` CLI or an inherited handle alone is a discovery hint or locator, not proof of live reachability or of the current host. A successful scoped live check can prove the external route; it never proves that Orca is the active user-driving host: a T3 Code or Codex Desktop session can reach Orca while another host drives the user. Establish the host from the current session's own metadata and exposed tools, and record Orca as the control plane or route separately.
+An installed `orca` CLI or an inherited handle alone is a discovery hint or locator, not proof of live reachability or of the current host.
 
 ## Operational handoff
 
@@ -18,11 +18,9 @@ Use the operational skills' version-matched live guide when available. If a requ
 ## Routing
 
 - Use Orca orchestration for work in another Orca terminal or worktree.
-- When Orca is the configured quota adapter, read its version-matched public account surface even when another harness or host UI contains the session. Other supported authorized adapters follow [capacity policy](../../capacity-and-fleet.md). Treat missing, stale, or failed provider data as unverified. Do not read credential storage.
+- When Orca is the configured quota adapter, read its version-matched public account surface even when another harness or host UI contains the session. Other supported authorized adapters follow [capacity policy](../../capacity-and-fleet.md). Do not read credential storage.
 
 For a supervised run, prefer an explicit task lifecycle that keeps worker messages visible, following the live `orchestration` guide, only when that guide or the observed route proves support for the selected harness. An agent identifier or successful terminal launch does not prove prompt delivery or completion reporting. Before declaring a timeout, inspect the inbox and task list because a completion message can land on a newer live handle.
-
-The current OpenCode manual fallback is not a successful task lifecycle. Create or target it through Orca's terminal and worktree surface. A failed structured OpenCode task can leave a usable TUI, but its `failed` record describes the automation failure, not the later manual worker result. Verify that result from fresh terminal and repository evidence.
 
 For terminal-level prompt delivery, prove from a fresh terminal read that the intended agent is the foreground process before every send. A terminal handle proves terminal identity only. Treat interrupt behavior as harness-specific. Do not assume that an interrupt pauses the agent. After any interrupt or agent exit, prove foreground-agent readiness again before sending text. Never deliver an agent brief to a shell prompt.
 
@@ -30,4 +28,4 @@ After Orca creates a worktree, verify that its actual HEAD equals the intended c
 
 Never place approval bypass flags into a durable shared playbook.
 
-Use Orca from the start when work needs a durable, visible, interactive, multi-round, or AFK external session and the selected harness has a proven dispatch and return path. Keep one worktree per editing worker. Dispatch only to the intended live terminal and foreground agent. Do not use Orca to create peer communication between workers. Read [opencode.md](opencode.md) before routing an OpenCode worker because the current field-tested path has stricter limits.
+Use Orca from the start when work needs a durable, visible, interactive, multi-round, or AFK external session and the selected harness has a proven dispatch and return path. Keep one worktree per editing worker. Read [opencode.md](opencode.md) before routing an OpenCode worker because the current field-tested path has stricter limits.

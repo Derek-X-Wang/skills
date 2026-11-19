@@ -4,6 +4,8 @@ A dark factory runs with the lights off: the owner is gone and the agents keep s
 
 **The one rule:** the run never waits for the owner. Every decision it needs is either taken before the owner leaves, or covered by a rule that lets an agent decide, record the decision, and continue.
 
+External fixes, filings, reruns and merges throughout this reference require the relevant project/run authority; otherwise prepare private evidence/drafts and park the action.
+
 ## Ownership
 
 Within an explicitly assigned factory, the [factory manager](manager.md) owns global priorities and authorized shared capacity allocations. Each project execution owner is its local lead and owns that project's loop, integration gate, records, and report. A standalone unattended project uses [project management](project-management.md): workers report to its owner, which reports directly to the human. It need not create or fill a global-manager role. Preserve one gate per project and one controller per shared target.
@@ -33,7 +35,7 @@ When the owner says they are leaving, stop using any tool that waits for a human
 
 Read these records during [manual continuation](continuation.md), then reconcile live state and fence old writers before resuming. A saved record is not proof of liveness or safe replay. Workers checkpoint changes in private storage their project owner can read as well as sending a message; messages may be held or stale.
 
-**Messages between sessions.** Reply to the sender address on the latest message, and re-list peers after a long silence; a restarted session gets a new address. Check each send's delivery result; a held message is not delivered.
+**Messages between sessions.** Apply the delivery lessons in [message layer](orchestration/message-layer.md).
 
 Before the run, verify that the selected messaging route delivers under the actual sessions' permission modes without a human approval wait. A mode mismatch held messages in dated Claude runs; do not universalize that behavior across harnesses. If a required route needs human clicks, mark it attended and exclude it from unattended work unless a supported nonblocking route is verified. After every permission-mode change, prove the sandbox again (for example, a network call it must block) and record which checks lost sandbox evidence.
 
@@ -66,7 +68,7 @@ Keep open decisions as a short ordered list, each with options and a recommendat
 
 ## Merge gate
 
-When the project/run selects the strict integration policy, follow [merge-gate.md](merge-gate.md); it owns the notice, READY, batch, MERGE, IS IN, fresh-CI and main-watcher steps, and it does not apply to Bite private findings/local fixes. External fixes, filings, reruns and merges throughout this reference require the relevant project/run authority; otherwise prepare private evidence/drafts and park the action.
+When the project/run selects the strict integration policy, follow [merge-gate.md](merge-gate.md); it owns the notice, READY, batch, MERGE, IS IN, fresh-CI and main-watcher steps, and it does not apply to Bite private findings/local fixes.
 
 ## Red main, flakes, and parking
 

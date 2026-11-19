@@ -60,7 +60,7 @@ Do not treat a generic terminal interrupt as an OpenCode pause. In the verified 
 
 Start or target the fallback through Orca's terminal and worktree surface, not its unproven OpenCode worker lifecycle. If a failed worker-launch attempt leaves a usable TUI, its task record remains `failed`; that state describes the automation failure, not the later manual worker outcome. Manual terminal activity does not repair or complete the task record.
 
-Keep the current session as orchestrator. Verify the live terminal, exact model, worktree, prompt delivery, and manual return path before work begins. Give each editing worker its own worktree. If the orchestrator cannot attend the terminal or prove delivery and return, choose another route.
+Keep the current session as orchestrator. Verify the live terminal, exact model, worktree, prompt delivery, and manual return path before work begins. If the orchestrator cannot attend the terminal or prove delivery and return, choose another route.
 
 ## Routes that need more integration
 

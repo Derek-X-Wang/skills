@@ -1,6 +1,6 @@
 # Experimental tools and methods
 
-Use this file before you use anything in the registry below, and when the owner introduces new software or a new way of working. The goal: try new things on real work, collect evidence, and never let an unproven item break work that already runs.
+The goal: try new things on real work, collect evidence, and never let an unproven item break work that already runs.
 
 ## Lifecycle
 
