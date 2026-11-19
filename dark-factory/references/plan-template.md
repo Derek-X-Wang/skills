@@ -13,7 +13,7 @@ Use this private planning checklist for a factory or unattended window. Reuse ex
 - Main SHA and the result of every workflow on it.
 - Open PRs in flight, and who owns each.
 - Issues in the queue: their labels, blockers, and whether each is safe without a human.
-- CI profile: the fields listed in [CI path records](ci.md#records).
+- CI profile: the fields listed in [CI changes records](ci-changes.md#records).
 - Gates an agent must run before it says "works" (format, vet, tests with a long timeout).
 - Known sandbox limits (tests that cannot run inside a worker's sandbox, and where they run instead).
 - Peer sessions: for each, its prohibited operations (for example "no local Docker or VM"), the source of that rule, and the authorized fallback. Recheck before each dispatch and after a session is replaced.
@@ -62,7 +62,7 @@ Use this private planning checklist for a factory or unattended window. Reuse ex
 - Hard stops (CI time, spend, quota): the response when one is exhausted, which failure classes a recovery rule may resume, and a fallback queue of authorized, unfinished work. `[OWNER]`
 - Machine stays awake? Load limits (hard limit, peer stop limit, heavy-test limit).
 - Test isolation on the owner's machine: every test gets its own temp and state root; throwaway services on non-default ports.
-- Performance measurements: merge-free window per sample, and the "contended = not counted" rule ([changing CI](ci.md#changing-ci)).
+- Performance measurements: merge-free window per sample, and the "contended = not counted" rule ([changing CI](ci-changes.md#changing-ci)).
 - Usage per entitlement/pool: configured supported adapter, timestamped source/expiry, all applicable windows and interactive reserves. A sprint the owner gives goes in the [shared sprint record](capacity-and-fleet.md#shared-sprint-record) and names pools and absolute expiry/specific reset; reset-credit redemption is owner-directed or individually preauthorized under [capacity policy](capacity-and-fleet.md).
   - e.g. lead model ≥ X% of weekly → lead only orchestrates; worker model < Y% left → start no new item; 0% → pause coding.
   - Data missing or older than N hours → "unknown" → safe mode.

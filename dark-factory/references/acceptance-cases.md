@@ -8,10 +8,4 @@ All timestamps, IDs, users, quotas, repositories, and paths in these fixtures ar
 
 The implementation author checks JSON parsing and references and inspects case coverage. The parent obtains an independent agent forward test/review. Keep that distinction in the validation report. Test live routes later only within separately authorized exact-target scope. T3 delegation exists as an experimental canary ([registry](experimental.md#registry)); a no-side-effect forward test leaves its live launch NOT-RUN.
 
-Fixture version 2 adds paired normal-mode pacing cases (same usable allowance, reset in 12 hours versus six days), an unsustainable-burn case, and an unknown-evidence manual-resume case. The personal authority case identifies deployment/new-project text as an unapproved worker suggestion, not a fresh owner instruction. Earlier saved review results are not evidence for these amended cases.
-
-Fixture version 3 adds existing single-project supervisor adoption, stable cross-worktree storage discovery, active legacy-state migration, competing shared-observation publishers, and unknown short-window capacity in a standalone project. Test these against the project-management mode and canonical storage contract; previous source reviews do not establish their outcomes.
-
-Fixture version 4 adds the OS-owned shared Fleet source, a freshly synchronized but expired availability snapshot, and machine-local resource metadata that must not become another Fleet. Earlier results do not verify this ownership change.
-
-Fixture version 5 adds worker mode on a one-message channel, an instruction that arrives on a non-active channel, re-landing innocent members after a batch revert, a repository that is not eligible for batches, an unverified factory-manager claim, and an additive experimental item. Earlier results do not verify these contracts.
+Earlier results do not verify new or amended cases; test those against the applicable mode and storage contract.

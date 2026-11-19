@@ -6,14 +6,13 @@ Choose the interaction adapter from the observed runtime, required live state, a
 
 - This module (computer-use routing) owns live-UI classification, local adapter eligibility, state affinity, allowed fallback, and the computer-use result contract.
 - [task orchestration](orchestration.md) owns which session executes, cross-session dispatch, external-write authority, communication topology, and the return path.
-- This module's runtime map owns dated, selection-oriented capability observations. Injected runtime guidance and live schemas override it.
 - The selected operational skill, live guide, or advertised tool schema owns commands, flags, setup, recovery, and lifecycle mechanics.
 
 Do not choose an adapter from the model name. The same model can run in different harnesses and hosts with different tools and state.
 
 ## Build the smallest useful fingerprint
 
-Before the first UI action, identify only what can change the adapter decision: the executing session and machine, adapter and target state owner, and any required host/state affinity. In worker mode, reuse the orchestrator's assigned harness/model/effort/route and supplied runtime context; do not repeat host or quota investigation. Check actual task tools/access and the assigned target's adapter eligibility locally, and report mismatches to the orchestrator. A supplied identity never proves inherited desktop/plugin readiness. Then record:
+Before the first UI action, identify only what can change the adapter decision: the executing session and machine, adapter and target state owner, and any required host/state affinity. A supplied identity never proves inherited desktop/plugin readiness. Then record:
 
 - Requested outcome and target page, app, window, tab, profile, or embedded surface.
 - Any explicit browser, app, profile, tab, or host choice from the user.
@@ -27,18 +26,15 @@ Treat exposed, installed, running, connected, and targetable as separate states.
 
 Read [runtime-map.md](computer-use/runtime-map.md) for the current environment before choosing an adapter. Treat it as dated selection guidance, not an executable contract.
 
-For Codex Desktop handoffs from another host, apply the [tested manual-send boundary](computer-use/runtime-map.md#codex-desktop-handoff-observation). Do not offer unattended Desktop dispatch until [task orchestration](orchestration.md) verifies a newly available route.
-
 ## Select the local adapter
 
 Apply these rules in order:
 
-1. Follow higher-authority runtime instructions.
-2. Honor an explicitly named browser, app, profile, tab, host, or control surface as a hard constraint. If it is unavailable, report that instead of silently substituting another surface.
-3. If the user wants a semantic operation rather than visible or interactive UI work, prefer a purpose-built connector, API, or CLI only when it can preserve the required identity, data, state, and authority; then leave this workflow.
-4. Preserve required state locality. Existing authenticated browser or exact-tab state outweighs a more feature-rich isolated browser.
-5. Use the most semantic eligible adapter: page or DOM control for page work; the current page or attached-browser adapter for diagnostics it exposes; DevTools or CDP when deeper browser diagnostics are required; and OS-level Computer Use for native apps, browser chrome, dialogs, webviews, or cross-app interaction.
-6. Among equally eligible adapters, prefer one already available in the current session, then the simpler and less disruptive activation path.
+1. Honor an explicitly named browser, app, profile, tab, host, or control surface as a hard constraint. If it is unavailable, report that instead of silently substituting another surface.
+2. If the user wants a semantic operation rather than visible or interactive UI work, prefer a purpose-built connector, API, or CLI only when it can preserve the required identity, data, state, and authority; then leave this workflow.
+3. Preserve required state locality. Existing authenticated browser or exact-tab state outweighs a more feature-rich isolated browser.
+4. Use the most semantic eligible adapter: page or DOM control for page work; the current page or attached-browser adapter for diagnostics it exposes; DevTools or CDP when deeper browser diagnostics are required; and OS-level Computer Use for native apps, browser chrome, dialogs, webviews, or cross-app interaction.
+5. Among equally eligible adapters, prefer one already available in the current session, then the simpler and less disruptive activation path.
 
 ```text
 live UI goal
@@ -75,49 +71,6 @@ Use the reporting vocabulary required by the governing contract. Name the select
 
 ## Escalate through the orchestrator
 
-When no local adapter can preserve the outcome and required state, return this capability request to the active orchestrator:
-
-```yaml
-status: executor_required
-origin: <originating host, harness, model, worker, session, machine, and task identifiers from the verified return path>
-executors_attempted:
-  - <executor or session identifier and its disqualifying evidence>
-outcome: <observable result needed>
-target: <page, app, window, or surface>
-required_capabilities:
-  - <page, DevTools, attached browser, or desktop capability>
-required_state:
-  - <login, profile, tab, host, or desktop-session affinity>
-explicit_constraints:
-  - <user-selected surface or none>
-local_adapters_checked:
-  - <adapter and observed readiness>
-disqualifying_evidence:
-  - <why each local adapter cannot preserve the requirement>
-actions_already_performed:
-  - <ordered redacted action identifiers and evidence references, or none>
-current_observed_state:
-  - <fresh redacted state summary and evidence references after those actions>
-replay_constraints:
-  - <non-idempotent actions that must not be repeated without proof>
-disclosure_constraints:
-  - <data and evidence the selected executor is authorized to receive>
-authority: <read-only and permitted mutations>
-evidence_required:
-  - <snapshot, screenshot, visible state, or diagnostic output>
-stop_conditions:
-  - <authentication, ambiguity, confirmation, or unsupported state>
-reason: <why no eligible local adapter exists>
-```
-
-- In worker mode, send the request only to the orchestrator and stop. Never recruit or message a peer executor.
-- If the worker's return path is unavailable or unverified, do not contact the human or a peer and do not mutate further; stop with `NOT-RUN` in the local result.
-- Describe the required capability and disqualifying evidence; do not select the replacement model, harness, or session.
-- Keep the packet minimal and redacted. Describe authenticated or private state by reference and evidence class; do not copy page contents, credentials, private data, or unrelated UI state into a cross-session request. If required evidence would exceed existing disclosure authority, record that limit without including the evidence so the orchestrator can resolve the disclosure decision.
-- In direct or orchestrator mode, load [task orchestration](orchestration.md) and treat the request as routing input, not permission to dispatch or expand scope.
-- If [task orchestration](orchestration.md) cannot prove another eligible executor and reliable return path, stop with `NOT-RUN`; do not loop back into the unchanged local route.
-- The selected executor must verify its own task tools/access, assigned adapter eligibility, and actual target before acting, without repeating the orchestrator's model/effort/quota or host investigation. Treat prior actions and state as claims to verify, preserve the replay and disclosure constraints, and never repeat a non-idempotent mutation merely because the prior executor did not finish. If landing cannot be verified, do not re-attempt; return `PARTIAL` with the uncertainty. A claimed tool or open browser in another session is not proof of current eligibility.
-- Cross-host dispatch ownership stays with [task orchestration](orchestration.md): it verifies the actual session route, delivery, approvals, return, and lifecycle. An open or prefilled composer or a shared folder is not proof of dispatch. An automatic route without that verification is unverified (`NOT-RUN`); propose a manual user-send handoff only through proper authority. Keep `PARTIAL` and its replay constraints when a non-idempotent action may have landed.
-- When another executor also cannot proceed, append its identifier and disqualifying evidence without discarding earlier attempts. Never route back to an unchanged attempted executor.
+When no executor you can reach is eligible for the action (no local adapter can preserve the outcome and required state), read [computer-use escalation](computer-use-escalation.md). Read it also before you route an `executor_required` request, or act as the executor one selects.
 
 This skill does not grant authority to install software, change settings, create sessions, send messages, publish, purchase, or perform other external writes.
