@@ -29,7 +29,7 @@ Messages go one step at a time: owner ↔ (factory manager) ↔ project manager 
 - **Unattended window:** when the owner is away or in the nightly window, also read [unattended operation](references/unattended.md). Use only standing authority; park work that needs new authority and continue independent work.
 - **CI:** before pushing code, waiting for CI, writing tests that CI will run, or changing CI, read [CI path](references/ci.md).
 - **Experimental items:** before using anything in the experimental registry (for example Seshloom, wefty exec, batch CI), or when the owner introduces new software or a new method, read [experimental](references/experimental.md).
-- **Skill improvement:** when a skill defect interferes with work, read [continuous improvement](references/continuous-improvement.md).
+- **Skill improvement:** when a skill defect interferes with work, or before you change or delete a rule of this skill, read [continuous improvement](references/continuous-improvement.md).
 - **Evolution planning:** when planning new capability or broader authority, read the [roadmap](references/roadmap.md).
 
 ## Authority

@@ -1,6 +1,6 @@
 # OpenCode harness and Go gateway
 
-Last verified: 2026-08-29 with OpenCode 1.18.25. The foreground control recorded in the [2026-08-29 field findings](../research/opencode-route-field-findings-2026-08-29.md) returned the requested text in its first invocation, persisted an explicit session, and exited with status zero. A separate Claude Code field run exposed detached-process and Orca terminal hazards described below.
+Last verified: 2026-08-29 with OpenCode 1.18.25. The foreground control recorded in the 2026-08-29 field findings returned the requested text in its first invocation, persisted an explicit session, and exited with status zero. A separate Claude Code field run exposed detached-process and Orca terminal hazards described below.
 
 Treat OpenCode as a harness. Treat OpenCode Go as an entitlement and multi-provider model gateway, not as the originating model provider. Record the model's provider separately.
 
@@ -64,8 +64,10 @@ Keep the current session as orchestrator. Verify the live terminal, exact model,
 
 ## Routes that need more integration
 
-- OpenCode's server, SDK, and ACP surfaces can support a custom persistent control plane. Treat them as unproven until the installed client proves launch, permissions, message delivery, completion, interruption, transcript reads, and cleanup.
+- OpenCode's server, SDK, and ACP surfaces can support a custom persistent control plane. Treat them as unproven until the installed client proves launch, permissions, message delivery, completion, interruption, transcript reads, and cleanup. In 1.18.25, one `opencode run --attach` call exited zero with empty standard output while the server session held the reply; read the session messages before you count an attached run as complete.
 - Orca's structured OpenCode task lifecycle remains unproven until a version-matched adapter proves prompt delivery, foreground-agent detection, completion, interruption, and return events.
+- `opencode attach <url>` attaches the interactive TUI to a running backend and takes no one-shot prompt, so it is not a headless dispatch route. Use `opencode run --attach`, HTTP, or the SDK.
+- Direct Codex access to the OpenCode Go models is not a route. Codex custom providers accepted only the Responses wire API while the Go models were documented on Chat Completions (2026-08-28), and direct model access would bypass the OpenCode harness and create no OpenCode worker.
 - T3 can host a human-created OpenCode thread. The current Codex-in-T3 tool inventory does not expose programmatic OpenCode thread control.
 - A direct OpenCode Go model request bypasses the OpenCode harness. Do not call it an OpenCode worker or assume that it loads agent instructions, tools, permissions, or session state.
 
@@ -73,6 +75,6 @@ As of 2026-08-28, DeepSeek V4 Flash returned an account consent gate for China-h
 
 Do not infer role eligibility from model availability.
 
-For dated route evidence and primary sources, see [native routes research](../research/opencode-native-routes-2026-08-28.md), [host routes research](../research/opencode-host-routes-2026-08-28.md), and [field findings from OpenCode and Orca](../research/opencode-route-field-findings-2026-08-29.md).
+Before you re-validate an OpenCode route or build a control plane on its server, SDK, ACP, or `run --attach`, read the dated evidence and primary sources (2026-08-28 and 2026-08-29) in the private log `~/.local/share/dark-factory/logs/research/`, on the machine where they were recorded.
 
 Official references: <https://opencode.ai/docs/cli/#run> and <https://opencode.ai/go>

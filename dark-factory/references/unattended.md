@@ -35,7 +35,7 @@ Read these records during [manual continuation](continuation.md), then reconcile
 
 **Messages between sessions.** Reply to the sender address on the latest message, and re-list peers after a long silence; a restarted session gets a new address. Check each send's delivery result; a held message is not delivered.
 
-Before the run, verify that the selected messaging route delivers under the actual sessions' permission modes without a human approval wait. A mode mismatch held messages in the dated Claude runs in [field notes](field-notes.md); do not universalize that behavior across harnesses. If a required route needs human clicks, mark it attended and exclude it from unattended work unless a supported nonblocking route is verified. After every permission-mode change, prove the sandbox again (for example, a network call it must block) and record which checks lost sandbox evidence.
+Before the run, verify that the selected messaging route delivers under the actual sessions' permission modes without a human approval wait. A mode mismatch held messages in dated Claude runs; do not universalize that behavior across harnesses. If a required route needs human clicks, mark it attended and exclude it from unattended work unless a supported nonblocking route is verified. After every permission-mode change, prove the sandbox again (for example, a network call it must block) and record which checks lost sandbox evidence.
 
 **Workers.** When you dispatch a worker and when its result comes back, apply the [worker checks](orchestration.md#worker-checks).
 
@@ -125,4 +125,4 @@ Many owners want every night to be a dark factory, not only long trips. The owne
 
 ## Field notes
 
-[field-notes.md](field-notes.md) preserves dated evidence from real runs: what broke, what held, and the rule it produced. Historical policies are evidence, not overrides of current authority or shared review policy. Keep new operational notes in private run storage; update public skill source only in an authorized skill-editing task after redaction. Promote a lesson only when a second run confirms it or it prevents a really big problem.
+Keep new operational notes in private run storage; update public skill source only in an authorized skill-editing task after redaction. Before you change or delete a rule, read [field notes](continuous-improvement.md#field-notes).

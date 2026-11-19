@@ -4,11 +4,15 @@ Use when runtime evidence identifies a defect in a skill. Preserve the main task
 
 ## Classify the observation
 
-- **Changed runtime facts:** record new models, harnesses, routes, tool availability, or measured behavior in the appropriate dated observations/configuration. Verify facts through supported sources. New catalog entries remain untested until representative evidence supports their use; discovery alone does not promote a default or reviewer. Propose durable profile changes when the evidence warrants them.
+- **Changed runtime facts:** record new models, harnesses, routes, tool availability, or measured behavior in the appropriate dated observations/configuration; [new versions start unranked](orchestration/model-profiles.md#new-versions-start-unranked).
 - **Clear bounded defect:** a broken reference, wrong path, verified obsolete argument, or narrow missing condition with a reproducible consequence can be repaired in the current session through `manage-my-skills`. Keep the intended behavior and existing authority intact.
 - **Broader or unresolved change:** changes to scheduling policy, review requirements, authority, workflow, or architecture enter the maintenance queue. Repeated defects and fixes that grow beyond their bounded scope also enter that queue. A dedicated maintenance task can be scheduled by impact and recurrence; an issue need not immediately start another session.
 
 This standing authorization permits bounded source repairs to Derek-owned skills. A dispatched worker follows [worker mode](worker.md#work): it reports the defect to its orchestrator, which assigns any repair. For third-party skills, follow `manage-my-skills` ownership rules and report the defect without silently editing or forking them.
+
+## Field notes
+
+Before you change or delete a rule of this skill, look up its evidence in the [field notes](field-notes.md), which index dated evidence from real runs: what broke, what held, and the rule it produced. Historical policies are evidence, not overrides of current authority or shared review policy. Promote a lesson only when a second run confirms it or it prevents a [really big problem](unattended.md#really-big-problem).
 
 ## Repair and verify
 
@@ -37,4 +41,4 @@ For reusable defects in Derek-owned skills, use GitHub issues in **[Derek-X-Wang
 
 The owner authorizes routine filing and maintenance of these skill-defect issues. This does not authorize direct replies to people, unsolicited mentions, assignments, or publication of non-public evidence. Public issue content contains only a generic symptom, sanitized reproduction, expected/actual behavior, affected skill/rule, impact, proposed direction, and verification limits. Keep company names or identifiers, internal PRs, real paths, account details, capabilities, transcripts, and raw logs in approved private storage. If a useful safe public report cannot be made, keep a private queue item instead.
 
-Each queued item retains its status, owner when assigned, private evidence reference, and any temporary handling. Prioritize blockers, recurring defects, and changes affecting several workflows. Validate a durable fix against the affected paths before promotion; preserve the previous version for recovery.
+Each queued item retains its status, owner when assigned, private evidence reference, and any temporary handling. Validate a durable fix against the affected paths before promotion; preserve the previous version for recovery.
