@@ -12,15 +12,13 @@ Treat a model without a current [model profile](../model-profiles.md) as unteste
 
 ## Operational handoff
 
-For live browser, native-app, webview, or desktop UI work, load [computer-use routing](../../computer-use.md) before selecting the local control adapter.
-
 | Chosen action | Operational source |
 | --- | --- |
 | Select a model or run a focused one-shot worker | The live OpenCode CLI help and advertised model inventory |
 | Create or target an external terminal or worktree | Read [orca.md](orca.md), then load `orca-cli` |
 | Use an attended external terminal | Read [orca.md](orca.md), then load `orca-cli`; load `orchestration` only when a version-matched OpenCode task lifecycle is proven |
 
-This reference owns OpenCode coordination capability mapping and route-specific invariants. The live OpenCode CLI owns current model and launch mechanics. Orca's operational skills own terminal and worktree mechanics. On the attended fallback, the orchestrator owns prompt delivery, observation, and result verification. The `orchestration` skill owns task-lifecycle mechanics only after version-matched OpenCode support is proven.
+On the attended fallback, the orchestrator owns prompt delivery, observation, and result verification. The `orchestration` skill owns task-lifecycle mechanics only after version-matched OpenCode support is proven.
 
 ## Proven routes
 
@@ -73,7 +71,7 @@ Keep the current session as orchestrator. Verify the live terminal, exact model,
 
 As of 2026-08-28, DeepSeek V4 Flash returned an account consent gate for China-hosted processing. Do not change that account or data-location choice without Derek's explicit approval.
 
-Choose the worker or reviewer model from the [model profiles](../model-profiles.md) and [routing matrix](../routing-matrix.md). Apply the [review policy](../review-policy.md) before selecting any reviewer. Do not infer role eligibility from model availability.
+Do not infer role eligibility from model availability.
 
 For dated route evidence and primary sources, see [native routes research](../research/opencode-native-routes-2026-08-28.md), [host routes research](../research/opencode-host-routes-2026-08-28.md), and [field findings from OpenCode and Orca](../research/opencode-route-field-findings-2026-08-29.md).
 

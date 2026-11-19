@@ -44,3 +44,5 @@ Read the references needed for the current environment and candidate routes befo
 - [Claude Code](runtimes/claude-code.md)
 - [Codex](runtimes/codex-app.md)
 - [OpenCode](runtimes/opencode.md)
+
+An observation in these references holds for the tool version it names. When the installed version differs, verify that behaviour again before you rely on it.

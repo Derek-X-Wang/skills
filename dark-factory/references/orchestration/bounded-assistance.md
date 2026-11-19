@@ -10,7 +10,7 @@ Helper support for a substantial, separable, bounded job that emerges during a t
 
 ## Select the helper
 
-Orchestrator-only. The orchestrator selects model, effort, harness, and route under [routing-matrix.md](routing-matrix.md), including its phase-based selection, GLM preference, and web-versus-local research rules, applying sufficiently fresh actual usage evidence, required capability, tools, review independence, and route safety, and never choosing the cheapest option at any cost or staging a weaker-model failure first. Assigned workers do not read routing tables, investigate quota, or select models. An assigned worker's duties stay those its dispatch names: the original worker keeps checkpoint, resume, and continuation obligations, and the helper keeps its return contract.
+Orchestrator-only. The orchestrator selects model, effort, harness, and route under [routing-matrix.md](routing-matrix.md), including its phase-based selection, ordinary bounded implementation preference, and web-versus-local research rules, applying sufficiently fresh actual usage evidence, required capability, tools, review independence, and route safety, and never choosing the cheapest option at any cost or staging a weaker-model failure first. Assigned workers do not read routing tables, investigate quota, or select models. An assigned worker's duties stay those its dispatch names: the original worker keeps checkpoint, resume, and continuation obligations, and the helper keeps its return contract.
 
 ## Request contract
 

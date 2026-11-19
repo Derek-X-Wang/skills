@@ -4,7 +4,7 @@ Last reviewed: 2026-10-01 for the Codex Sol default; earlier capability observat
 
 These are Derek's observed working defaults. They are not vendor claims, universal rankings, or permanent truths. Keep capability judgments separate from quota, route convenience, and other operating preferences.
 
-Attach each observation to the exact model version, harness, effort, task class, date, and evidence when available. A routing alias may resolve to a newer model. When it does, mark the old observation stale instead of inheriting its ranking.
+Attach each observation to the exact model version, harness, effort, task class, date, and evidence when available.
 
 Assess these dimensions separately:
 
@@ -16,7 +16,7 @@ Assess these dimensions separately:
 
 Do not infer fresh-review quality from self-correction quality.
 
-The capability evidence for older versions comes from Derek's project work and explicit judgments through 2026-09-10, not a formal benchmark. The 2026-09-23 model replacements establish routing preferences, not measured capability or savings. Opus 5 and GPT-5.6 are retired from new dispatches; do not silently fall back to them.
+The capability evidence for older versions comes from Derek's project work and explicit judgments through 2026-09-10, not a formal benchmark. The 2026-09-23 model replacements establish routing preferences, not measured capability or savings. The [current defaults](routing-matrix.md#current-defaults) list the retired models.
 
 | Originating provider | Exact model observed | Routing alias or model ID | Conditions | Observed strengths | Observed limits | Current role fit | Evidence and confidence |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -28,11 +28,13 @@ The capability evidence for older versions comes from Derek's project work and e
 | Z.ai | GLM-5.3-Flash | `opencode-go/glm-5.3-flash` | OpenCode 1.18.25 with OpenCode Go; effort not yet standardized | Capable implementation and fresh review in Derek's 2026-09-05 judgment | Comparisons with retired frontier models do not rank it against the new lineup. GLM-5.3 (non-Flash) is a different, untested configuration; do not silently substitute it or inherit Flash evidence | Cost-efficient implementer and eligible independent reviewer; Derek's preferred default for ordinary bounded work when sufficient, authorized, and route/quota eligible | Dated local operating judgment, 2026-09-05; medium confidence |
 | DeepSeek | DeepSeek V4 Flash | `opencode-go/deepseek-v4-flash` | OpenCode 1.18.25 with OpenCode Go; effort not yet standardized; a data-location consent gate was observed on 2026-08-28 | Implementation quality comparable to Sonnet and possibly stronger in Derek's current judgment | Not approved for fresh review. Verify current consent state through the supported route; changing the account's data-location choice requires Derek's explicit approval. A routing preference does not change that choice | Historical: the chore default until DeepSeek V4.1 Flash replaced it on 2026-11-19 (owner decision); never select as reviewer | Derek's operating judgment and 2026-09-05 chore preference for this exact version; medium confidence |
 
-Mark any other model or materially changed version as `untested` until representative work supplies evidence. Newly listed OpenCode Go models start untested; only representative work changes that. The explicitly approved bounded trials below may proceed without claiming prior operational validation. Record vendor-documented context, tools, or aliases as facts, but do not convert marketing claims into a capability ranking.
+## New versions start unranked
+
+A routing alias may resolve to a newer model. When it does, mark the old observation stale instead of inheriting its ranking. Mark any other model or materially changed version as `untested` until representative work supplies evidence. A new version inherits no quality judgement, review eligibility, or consent state from the version it replaces. Newly listed OpenCode Go models start untested; only representative work changes that. The explicitly approved bounded trials below may proceed without claiming prior operational validation. Record vendor-documented context, tools, or aliases as facts, but do not convert marketing claims into a capability ranking.
 
 ## Bounded-worker candidates
 
-Derek requested proactive consideration of cost-conscious candidates on 2026-09-10 and replaced Luna's version on 2026-09-23. Use them for decision-complete, readily verifiable bounded implementation or chore tasks with clear acceptance checks, bounded ownership, and a stop contract — the same bounded standard as any worker, not a blanket small-only gate. They remain locally untested bounded trials until representative work provides evidence, with no automatic eligibility for hard or high-risk judgment; do not require an unrelated benchmark run before every bounded trial. Keep GLM-5.3-Flash as the ordinary bounded implementation preference and GPT-6.1 Sol high as the provisional normal Codex worker default. Required independent review still uses an existing sufficient eligible reviewer; neither candidate is approved as a reviewer. Record the actual model, route, effort, result, verification, and material rework in the task handoff; do not silently promote a default or edit shared profiles after a single success.
+Derek requested proactive consideration of cost-conscious candidates on 2026-09-10 and replaced Luna's version on 2026-09-23. Use them for decision-complete, readily verifiable bounded implementation or chore tasks with clear acceptance checks, bounded ownership, and a stop contract — the same bounded standard as any worker, not a blanket small-only gate. They remain locally untested bounded trials until representative work provides evidence, with no automatic eligibility for hard or high-risk judgment; do not require an unrelated benchmark run before every bounded trial. They do not replace the ordinary bounded implementation default or the default Codex implementer in the [current defaults](routing-matrix.md#current-defaults). Required independent review still uses an existing sufficient eligible reviewer; neither candidate is approved as a reviewer. Record the actual model, route, effort, result, verification, and material rework in the task handoff; do not silently promote a default or edit shared profiles after a single success.
 
 | Candidate | Catalog and documentation evidence | Bounded use and limits |
 | --- | --- | --- |
@@ -62,5 +64,15 @@ Fable and Astra price parity is a Derek-reported operating assumption (2026-09-0
 ## Dated capability support
 
 [OpenAI's GPT-6 Sol](https://developers.openai.com/api/docs/models/gpt-6-sol) and [Luna](https://developers.openai.com/api/docs/models/gpt-6-luna) pages identify their model IDs and support high and max effort. [Anthropic's Opus 5.5 overview](https://platform.claude.com/docs/en/models/opus-5-5/overview) identifies `claude-opus-5-5`; its [effort documentation](https://platform.claude.com/docs/en/build-with-claude/effort) supports max and says medium is the default. [OpenAI's GPT-6.1 Sol page](https://developers.openai.com/api/docs/models/gpt-6.1-sol) identifies `gpt-6.1-sol` and supports high effort as of 2026-10-01. These official API facts do not establish local harness availability, task quality, review sufficiency, or subscription allowance consumption. Verify actual model and effort at dispatch. [Routing-matrix.md](routing-matrix.md) owns quota and route checks; budgets and stop conditions still apply at max.
+
+## Default history
+
+When a row of the [current defaults](routing-matrix.md#current-defaults) changes, add a dated line here: the change, the reason, and who decided.
+
+- 2026-09-05: GLM-5.3-Flash is Derek's preferred capability, price, and allowance balance for ordinary bounded implementation; recheck its sufficiency against the task rather than assuming a ranking against the Codex default.
+- 2026-09-06: Derek preferred Opus at max for R2 review of Astra-authored work. The role carried forward provisionally to Opus 5.5 on 2026-09-23; Opus 5.5 review quality in this role has not been locally validated.
+- 2026-09-08: Derek's dated operating preference: web work prefers Codex or Claude sessions with verified hosted search tools. Preference only, not fresh capability-test evidence or a provider-superiority claim.
+- 2026-10-01: The Codex default changed to GPT-6.1 Sol (Derek's provisional routing choice). The normal orchestrator roles and the Sol-high worker role carry forward as provisional transfers of dated role preferences, not measured quality or savings claims for the new models.
+- 2026-11-19: DeepSeek V4.1 Flash replaced V4 Flash as the bounded-chore default (owner decision). It is a routing choice and inherits no V4 ranking.
 
 During normal project work, report a profile-update candidate only when a run materially contradicts or strengthens a current observation. Do not edit this shared file unless the task explicitly includes skill maintenance.

@@ -11,16 +11,12 @@ Treat Codex as a harness that can also expose a native control plane for subagen
 
 ## Operational handoff
 
-For live browser, native-app, webview, or desktop UI work, load [computer-use routing](../../computer-use.md) before selecting the local control adapter.
-
 | Chosen action | Operational source |
 | --- | --- |
 | Native Codex subagent lifecycle | The tools and schemas exposed by the current Codex session |
 | Focused `counsel` review | Load `counsel` and verify its target with `counsel --dry-run` |
 | Durable Orca session | Read [orca.md](orca.md), then load the operational skill it names for the chosen action |
 | OpenCode external worker or reviewer | Read [opencode.md](opencode.md), then use only a route that it currently marks proven for the work shape |
-
-This reference owns Codex coordination capability mapping and invariants. Each operational source owns its current mechanics. Do not infer native tools or model controls that the current session does not expose.
 
 ## Distinguish the Codex host shapes
 
@@ -39,15 +35,6 @@ Official documentation (learn.chatgpt.com, reviewed 2026-09-07) describes capabi
 
 ## External review routes
 
-- Use `counsel` for a focused fresh Claude review after `counsel --dry-run` proves an eligible target under the [routing matrix](../routing-matrix.md).
-- Use Orca for a durable, visible, interactive, or multi-round Claude session.
-- Use the OpenCode route when the routing matrix selects an OpenCode reviewer.
-- Use a fresh native Codex subagent as an R1 fallback when a different model is unavailable.
-
-Apply the [review policy](../review-policy.md) for budget and independence. Use the [routing matrix](../routing-matrix.md) for current model and route preferences.
-
-Run `counsel --dry-run` to verify the resolved target when its profile or target may have changed. Use the route for a focused opinion and a durable host when the work needs follow-up turns.
-
-Model inheritance, per-role model configuration, concurrency limits, and tool names can change. Verify the current configuration instead of copying an old launch command.
+Choose the review route from the [routing matrix](../routing-matrix.md#review-routes) and the reviewer under the [review policy](../review-policy.md).
 
 Official reference: <https://learn.chatgpt.com/docs/agent-configuration/subagents>

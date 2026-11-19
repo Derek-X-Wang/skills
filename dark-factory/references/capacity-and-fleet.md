@@ -1,6 +1,6 @@
 # Capacity and fleet
 
-Read before allocating factory capacity or choosing a new route. [Routing matrix](orchestration/routing-matrix.md) retains dated model preferences; this file owns common capacity and inventory policy.
+Read before allocating factory capacity or choosing a new route. [Routing matrix](orchestration/routing-matrix.md) holds the current model defaults and the quota rules tied to roles; this file owns common capacity, quota observation, and inventory policy.
 
 ## Keep the layers separate
 

@@ -10,18 +10,17 @@ An installed `orca` CLI or an inherited handle alone is a discovery hint or loca
 
 ## Operational handoff
 
-- For live browser, native-app, webview, or desktop UI work, load [computer-use routing](../../computer-use.md) before selecting the local control adapter.
 - Load `orchestration` before Orca task, structured dispatch, mailbox, wait, ask/reply, decision-gate, or worker-lifecycle actions.
 - Load `orca-cli` before Orca account or quota inspection and before worktree, terminal, terminal-level prompt delivery, repository, artifact, skill-sharing, or browser-host actions.
 
-This reference owns Orca coordination capability mapping and orchestration invariants. The operational skills own executable resolution and current commands. Use their version-matched live guide when available. If a required skill or guide is unavailable, use verified read-only discovery only, then choose another route. Never guess a mutating command.
+Use the operational skills' version-matched live guide when available. If a required skill or guide is unavailable, use verified read-only discovery only, then choose another route. Never guess a mutating command.
 
 ## Routing
 
 - Use Orca orchestration for work in another Orca terminal or worktree.
 - When Orca is the configured quota adapter, read its version-matched public account surface even when another harness or host UI contains the session. Other supported authorized adapters follow [capacity policy](../../capacity-and-fleet.md). Treat missing, stale, or failed provider data as unverified. Do not read credential storage.
 
-For a supervised run, prefer an explicit task lifecycle that keeps worker messages visible: create the task, dispatch to the verified terminal, wait on the live coordinator mailbox, and inspect task state. Use this only when the live guide or observed route proves support for the selected harness. An agent identifier or successful terminal launch does not prove prompt delivery or completion reporting. Before declaring a timeout, inspect the inbox and task list because a completion message can land on a newer live handle.
+For a supervised run, prefer an explicit task lifecycle that keeps worker messages visible, following the live `orchestration` guide, only when that guide or the observed route proves support for the selected harness. An agent identifier or successful terminal launch does not prove prompt delivery or completion reporting. Before declaring a timeout, inspect the inbox and task list because a completion message can land on a newer live handle.
 
 The current OpenCode manual fallback is not a successful task lifecycle. Create or target it through Orca's terminal and worktree surface. A failed structured OpenCode task can leave a usable TUI, but its `failed` record describes the automation failure, not the later manual worker result. Verify that result from fresh terminal and repository evidence.
 
@@ -29,6 +28,6 @@ For terminal-level prompt delivery, prove from a fresh terminal read that the in
 
 After Orca creates a worktree, verify that its actual HEAD equals the intended commit before dispatch. A named base branch can resolve through a stale local ref. Prefer an explicit remote ref or commit SHA when exact base identity matters.
 
-Treat model launch flags, built-in agent identifiers, and mailbox behavior as versioned CLI details. Recheck them before use. Never place approval bypass flags into a durable shared playbook.
+Never place approval bypass flags into a durable shared playbook.
 
 Use Orca from the start when work needs a durable, visible, interactive, multi-round, or AFK external session and the selected harness has a proven dispatch and return path. Keep one worktree per editing worker. Dispatch only to the intended live terminal and foreground agent. Do not use Orca to create peer communication between workers. Read [opencode.md](opencode.md) before routing an OpenCode worker because the current field-tested path has stricter limits.

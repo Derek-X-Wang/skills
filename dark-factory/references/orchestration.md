@@ -52,7 +52,7 @@ Choose in this order:
 
 Select each worker's model explicitly for its task. Never inherit the orchestrator's model, including Fable or Astra, merely because the parent session uses it. Escalate to a stronger model only for a concrete unresolved difficulty, a failed bounded attempt, high uncertainty or impact that needs judgment, or a required tool. Never stage a deliberate weak-model failure first. State a concise selection rationale, not a verbose audit ritual.
 
-Read [model-profiles.md](orchestration/model-profiles.md) before comparing model capability. Read [routing-matrix.md](orchestration/routing-matrix.md) before you choose a worker's model, effort, or harness, or an external route: it owns the role defaults, quota freshness and balancing, orchestrator defaults, and bounded-worker candidates. Treat both files as dated observations, not permanent truth.
+Read [routing-matrix.md](orchestration/routing-matrix.md) before you choose a worker's model, effort, or harness, or an external route: it owns the current defaults, including orchestrator defaults and bounded-trial candidates, and the quota rules tied to roles. Read [model-profiles.md](orchestration/model-profiles.md) before you compare model capability, when those defaults do not settle the model choice, or before you propose a default change. Treat both files as dated observations, not permanent truth.
 
 A difficulty-based handoff needs explicit authorization and a verified receiving session, context transfer, and ownership boundary; never create two active orchestrators. Do not replace the active orchestrator only because another model ranks higher.
 

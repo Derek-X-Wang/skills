@@ -25,15 +25,13 @@ Scope each observed surface to what it proves:
 
 ## Operational handoff
 
-For live browser, native-app, webview, or desktop UI work, load [computer-use routing](../../computer-use.md) before selecting the local control adapter.
-
 | Chosen action | Operational source |
 | --- | --- |
 | Harness-owned child agents | The native tools and schemas exposed by that harness |
 | T3 delegation or top-level thread control | Load a T3-owned operational skill when exposed; otherwise use the advertised live tool schemas |
 | Custom authenticated bridge | The exact installed contract proven for the current version |
 
-This reference owns T3 coordination capability mapping and invariants. The selected operational source owns its mechanics. Do not assume a general T3 agent CLI or operational skill exists. If no source proves dispatch and return, keep the work local.
+Do not assume a general T3 agent CLI or operational skill exists. If no source proves dispatch and return, keep the work local.
 
 ## Operating rules
 
