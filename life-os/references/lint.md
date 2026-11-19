@@ -6,8 +6,10 @@ Run a health check on the Life OS. Find OKF violations, stale content, orphaned 
 
 ## Step 0: Sync
 
+`<OS folder>` is the value of `os_repo_root` in `~/.local/share/dark-factory/machine.json`. If that binding is missing, ask the user where the OS folder is and stop. Each shell call starts in the project you were invoked from, so begin every command block with `cd "<OS folder>"`.
+
 ```bash
-cd /Users/derekxwang/Development/projects/DXW/mono/os && git pull --ff-only
+cd "<OS folder>" && git pull --ff-only
 ```
 
 ## Step 1: Check Hot Cache Staleness
@@ -15,7 +17,7 @@ cd /Users/derekxwang/Development/projects/DXW/mono/os && git pull --ff-only
 For each hot cache file at the repo root (`goals.md`, `finance.md`, `health.md`, `projects.md`, `study.md`, `career.md`, `family.md`):
 
 ```bash
-git log -1 --format="%ai" -- <file>
+cd "<OS folder>" && git log -1 --format="%ai" -- <file>
 ```
 
 Flag any file that hasn't been updated in more than 2 weeks. Empty placeholder files (career.md, family.md) are exempt until they have real content.
@@ -25,6 +27,7 @@ Flag any file that hasn't been updated in more than 2 weeks. Empty placeholder f
 All links repo-wide are standard relative markdown. Any `[[wikilink]]` in a content file is a violation:
 
 ```bash
+cd "<OS folder>"
 grep -n '\[\[' *.md wiki/*.md inbox/*.md 2>/dev/null
 ```
 
@@ -33,6 +36,7 @@ grep -n '\[\[' *.md wiki/*.md inbox/*.md 2>/dev/null
 Every non-reserved `wiki/*.md` (everything except `index.md` and `log.md`) must start with YAML frontmatter containing a non-empty `type`:
 
 ```bash
+cd "<OS folder>"
 for f in wiki/*.md; do
   case "$f" in wiki/index.md|wiki/log.md) continue;; esac
   head -1 "$f" | grep -q '^---$' || echo "MISSING FRONTMATTER: $f"
@@ -63,6 +67,7 @@ For every relative markdown link in root `*.md` and `wiki/*.md`, verify the targ
 Leading-slash links are violations regardless of whether they appear to resolve:
 
 ```bash
+cd "<OS folder>"
 grep -n '](/' *.md wiki/*.md 2>/dev/null
 ```
 
@@ -71,6 +76,7 @@ grep -n '](/' *.md wiki/*.md 2>/dev/null
 For each non-reserved wiki page, compare the frontmatter `timestamp` against the last commit that touched the file:
 
 ```bash
+cd "<OS folder>"
 git log -1 --format=%cI -- wiki/<page>.md
 ```
 

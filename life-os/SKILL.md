@@ -15,9 +15,9 @@ Personal operating system copilot. Manages daily priorities, planning, and refle
 
 ## OS Folder
 
-**Path:** `/Users/derekxwang/Development/projects/DXW/mono/os`
+The OS folder is in the owner's home repo. Its location is per-machine: read `os_repo_root` in `~/.local/share/dark-factory/machine.json`, and use that absolute path in every command, especially when invoked from a different project. Below, `<OS folder>` stands for it.
 
-Always use this absolute path, especially when invoked from a different project.
+If the binding is missing, ask the user where the OS folder is and stop until you know. A guessed folder would put the plan and the notes into the wrong checkout.
 
 ## Git Sync (MANDATORY)
 
@@ -25,10 +25,10 @@ The OS repo is shared with cron agents. **Always sync before reading and after w
 
 ```bash
 # Before any OS operation
-cd /Users/derekxwang/Development/projects/DXW/mono/os && git pull --ff-only
+cd "<OS folder>" && git pull --ff-only
 
 # After edits
-git add <changed files> && git commit -m "chore(os): <description>" && git push
+cd "<OS folder>" && git add <changed files> && git commit -m "chore(os): <description>" && git push
 ```
 
 ## Architecture

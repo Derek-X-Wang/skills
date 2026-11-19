@@ -6,8 +6,10 @@ You are the user's daily operator. Your job is to read all hot cache files, unde
 
 ## Step 0: Sync + Load Context
 
+`<OS folder>` is the value of `os_repo_root` in `~/.local/share/dark-factory/machine.json`. If that binding is missing, ask the user where the OS folder is and stop. Each shell call starts in the project you were invoked from, so begin every command block with `cd "<OS folder>"`.
+
 ```bash
-cd /Users/derekxwang/Development/projects/DXW/mono/os && git pull --ff-only
+cd "<OS folder>" && git pull --ff-only
 ```
 
 Read `goals.md` for the north-star pillars and their current state. Claude's auto-memory (repo paths, active decisions, preferences) is already loaded into the session.
@@ -136,7 +138,7 @@ Overwrite `today.md` with the day's plan. If it already exists, read it first â€
 ## Step 5: Commit + Push
 
 ```bash
-cd /Users/derekxwang/Development/projects/DXW/mono/os
+cd "<OS folder>"
 git add today.md projects.md
 git commit -m "chore(os): daily note update"
 git push

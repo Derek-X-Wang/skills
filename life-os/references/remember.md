@@ -4,8 +4,10 @@ The user wants to save something. Determine where it belongs and file it.
 
 ## Step 0: Sync
 
+`<OS folder>` is the value of `os_repo_root` in `~/.local/share/dark-factory/machine.json`. If that binding is missing, ask the user where the OS folder is and stop. Each shell call starts in the project you were invoked from, so begin every command block with `cd "<OS folder>"`.
+
 ```bash
-cd /Users/derekxwang/Development/projects/DXW/mono/os && git pull --ff-only
+cd "<OS folder>" && git pull --ff-only
 ```
 
 ## Step 1: Determine Destination
@@ -48,7 +50,7 @@ If a wiki page was touched, log to `wiki/log.md`: find or create today's `## YYY
 ## Step 4: Commit + Push
 
 ```bash
-cd /Users/derekxwang/Development/projects/DXW/mono/os
+cd "<OS folder>"
 git add <changed files>
 git commit -m "chore(os): remember — <brief description>"
 git push

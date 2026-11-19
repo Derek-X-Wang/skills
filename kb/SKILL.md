@@ -9,7 +9,7 @@ Cross-project knowledge sharing, stored in the Life OS wiki (an OKF v0.1 bundle)
 
 ## Data Locations
 
-- **Knowledge (git-shared, portable):** OS repo `/Users/derekxwang/Development/projects/DXW/mono/os`
+- **Knowledge (git-shared, portable):** the OS folder of the owner's home repo. Find it in `os_repo_root` of `~/.local/share/dark-factory/machine.json`. If that binding is missing, report it and stop: guessing a folder would write knowledge into the wrong checkout
   - Project knowledge: `wiki/<slug>.md` — scan-owned `## Tech Stack` + `## Features` sections inside generated markers
   - Patterns: `wiki/pattern-<slug>.md`
   - Never write machine-specific paths into the wiki. Key-file references are repo-relative.

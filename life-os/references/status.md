@@ -4,8 +4,10 @@ Give the user a brief status report across all life areas.
 
 ## Step 0: Sync
 
+`<OS folder>` is the value of `os_repo_root` in `~/.local/share/dark-factory/machine.json`. If that binding is missing, ask the user where the OS folder is and stop. Each shell call starts in the project you were invoked from, so begin every command block with `cd "<OS folder>"`.
+
 ```bash
-cd /Users/derekxwang/Development/projects/DXW/mono/os && git pull --ff-only
+cd "<OS folder>" && git pull --ff-only
 ```
 
 ## Step 1: Read Everything
