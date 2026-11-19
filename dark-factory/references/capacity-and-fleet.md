@@ -1,6 +1,6 @@
 # Capacity and fleet
 
-Read before allocating factory capacity or choosing a new route. [Routing matrix](orchestration/routing-matrix.md) holds the current model defaults and the quota rules tied to roles; this file owns common capacity, quota observation, and inventory policy.
+Read before allocating factory capacity or choosing a new route. [Routing matrix](orchestration/routing-matrix.md) holds the current model defaults and the quota rules tied to roles; this file owns quota observation, reserves, pacing, sprints and reset credits.
 
 ## Keep the layers separate
 
@@ -20,9 +20,9 @@ A model provider does not identify the charged entitlement. A gateway catalog do
 
 ## Static capability inventory versus live observation
 
-Use the [OS-owned shared Fleet](shared-fleet.md): machine capabilities, allowed executors, route mechanics references, network/disclosure boundaries and state affinity belong to its registry; current availability, readiness and quota belong to its timestamped observations or declared live sources. Projects reference the shared IDs and record their own commitments/evidence. They do not bootstrap private fleet copies. Installed, exposed, running, connected, and targetable are different states. Refresh affected observations through the authorized publisher/source after a session/harness/machine change, disconnect, rate-limit event, reset, or meaningful consumption. Reuse sufficiently fresh evidence; do not poll every worker by ritual.
+Use the [OS-owned shared Fleet](shared-fleet.md): machine capabilities, allowed executors, route mechanics references, network/disclosure boundaries and state affinity belong to its registry; current availability, readiness and quota belong to its timestamped observations or declared live sources. Installed, exposed, running, connected, and targetable are different states. Refresh affected observations through the authorized publisher/source after a session/harness/machine change, disconnect, rate-limit event, reset, or meaningful consumption. Reuse sufficiently fresh evidence; do not poll every worker by ritual.
 
-For each dispatch prove the actual checkout, required tools, permissions, return path, cleanup owner, and any target state in the executing session. Use [UI routing](computer-use.md) for authenticated surfaces. Persistent authenticated state is a retained resource with an owner and affinity, not a disposable worker cache. One active controller owns desktop input or a shared mutable window. Never copy cookies, credentials, profile files, or private page contents to make another machine appear equivalent.
+Use [UI routing](computer-use.md) for authenticated surfaces. Persistent authenticated state is a retained resource with an owner and affinity, not a disposable worker cache. Never copy cookies, credentials, profile files, or private page contents to make another machine appear equivalent.
 
 wefty may supply compute or a Computer Seat when its operational contract is verified. Seshloom may transport scoped messages. Their existence does not establish remote harness/UI readiness, authority, or an unattended return path. Use operational sources for commands and lifecycle; document missing capability without inventing a new service.
 
@@ -32,7 +32,7 @@ Select a supported, authorized adapter for each entitlement. Orca's public accou
 
 Record short-window, weekly, monthly, model-specific, and shared pool limits where applicable. Use `unknown`, not zero or healthy, for missing/stale/failed measurements. A current weekly observation cannot override an unknown or exhausted applicable short window. Evaluate every applicable constraint and reserve; percentages from different plans are not comparable token budgets. Readiness and usage are independent: a live route may have no capacity, and spare quota may have no eligible route.
 
-Policy declares a normal interactive reserve **per entitlement/pool** in the same unit as its observation. Before admission, account for estimated task use, concurrent commitments, all applicable limits, and the protected reserve. An unconfigured reserve or estimate is not unlimited capacity. Under unknown usage, permit only an explicitly bounded provisional call when policy grants it; no sustained or parallel volume until relevant capacity is verified. Otherwise select another eligible route or park. User reports of near-exhaustion invalidate contradictory old headroom.
+Policy declares a normal interactive reserve **per entitlement/pool** in the same unit as its observation. Before admission, account for estimated task use, concurrent commitments, all applicable limits, and the protected reserve. An unconfigured reserve or estimate is not unlimited capacity. Under unknown usage, permit only an explicitly bounded provisional call when policy grants it; no sustained or parallel volume until relevant capacity is verified. Otherwise select another eligible route or park. User reports of near-exhaustion invalidate contradictory old headroom. Fixed freshness intervals, reserve percentages, thresholds and concurrency limits come from approved policy and relevant evidence, not invented defaults.
 
 ## Normal-mode pacing
 
@@ -48,7 +48,7 @@ Record the selected admission/concurrency decision, reason, per-pool usable allo
 
 A sprint is explicit owner authorization naming entitlement/pool IDs and either an absolute expiry with timezone or one specific reset occurrence with an absolute expected time and observation condition. Record it, with its reserve override and authority reference, only in the [shared sprint record](#shared-sprint-record). Validate the expiry before each admission and after wake/resume; the earlier configured stop condition wins if both exist. On expiry, a delayed/unknown selected reset, or uncertain clock/reset evidence, restore the normal reserve and admit no work using the released capacity. Checkpoint or finish already admitted work only under its recorded budget; a sprint cannot exempt it from hard caps. Never roll a selected reset forward to the next cycle automatically.
 
-A sprint can release interactive reserve only for its named pools. Unnamed pools retain theirs. It does not expand paid spend, scope, release/deploy authority, or task budgets. Unused allowance is acceptable; no quota utilization target exists.
+A sprint can release interactive reserve only for its named pools. Unnamed pools retain theirs. It does not expand paid spend, scope, release/deploy authority, or task budgets.
 
 ### Shared sprint record
 
