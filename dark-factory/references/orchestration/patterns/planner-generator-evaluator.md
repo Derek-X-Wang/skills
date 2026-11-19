@@ -36,31 +36,23 @@ Artifacts create a durable audit trail. They do not create direct agent handoffs
 
 ## Setup
 
-1. Read project instructions, specifications, contracts, and existing architecture.
-2. Choose a project-local artifact directory only when persistent artifacts add value. Do not change always-loaded instructions by default.
-3. Select only relevant quality dimensions. Customize weights, thresholds, and evidence to the task contract.
-4. Customize the role templates. Dispatch each role under the standard [dispatch contract](../../orchestration.md#send-a-decision-complete-dispatch), which starts it in worker mode:
+1. Choose a project-local artifact directory only when persistent artifacts add value. Do not change always-loaded instructions by default.
+2. Select only relevant quality dimensions. Customize weights, thresholds, and evidence to the task contract. For web UI work, add the [originality dimension](../templates/planner-generator-evaluator/criteria/web-app.md) to the rubric.
+3. Customize the role templates. Dispatch each role under the standard [dispatch contract](../../orchestration.md#send-a-decision-complete-dispatch), which starts it in worker mode:
    - [planner](../templates/planner-generator-evaluator/agents/planner.md)
    - [generator](../templates/planner-generator-evaluator/agents/generator.md)
    - [evaluator](../templates/planner-generator-evaluator/agents/evaluator.md)
-   - [reviewer](../templates/planner-generator-evaluator/agents/reviewer.md)
-   - [auditor](../templates/planner-generator-evaluator/agents/auditor.md)
-5. Choose a starting rubric when useful:
-   - [web app](../templates/planner-generator-evaluator/criteria/web-app.md)
-   - [CLI app](../templates/planner-generator-evaluator/criteria/cli-app.md)
-   - [API service](../templates/planner-generator-evaluator/criteria/api-service.md)
-   - [mobile app](../templates/planner-generator-evaluator/criteria/mobile-app.md)
 
 ## Run the loop
 
-1. Dispatch the planner with the approved outcome and scope. Do not allow scope expansion.
+1. Dispatch the planner with the approved outcome and scope.
 2. Check the spec against higher-authority requirements. Resolve only decisions already within orchestrator authority. If the spec adds or changes product behavior that the human did not approve, obtain human approval through the orchestrator before generator dispatch.
 3. Dispatch the generator with the accepted spec, repository context, ownership, authority, and verification contract.
 4. Give the evaluator the accepted spec, criteria, implementation diff, and objective evidence. Do not include the generator's self-review.
 5. Apply the selected [review budget](../review-policy.md). Give each reviewer the task contract, accepted decisions, diff, and verification evidence.
 6. Send accepted same-invariant findings to the generator through the orchestrator.
 7. Repeat evaluation and review only for the changed areas and affected invariants, then rerun required verification.
-8. Use the auditor when the spec or evaluation process needs a separate challenge.
+8. Use the [auditor](../templates/planner-generator-evaluator/agents/auditor.md) when the spec or evaluation process needs a separate challenge.
 
 Use 1–5 scores only when a graded rubric improves the decision. Define the threshold before evaluation. A score without concrete evidence is not a result.
 

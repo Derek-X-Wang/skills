@@ -45,13 +45,33 @@ Start the first pass in fresh context. Give the reviewer:
 - Applicable project instructions and accepted decisions.
 - Conditions the lead or orchestrator set for the change (for example an acceptance signal), as part of the reviewed scope. The reviewer checks them like the diff, including whether a proof signal implies the cause. A finding may replace the lead's mechanism with another that keeps the lead's goal; [worker mode](../worker.md#work) tells the reviewer so.
 - Verification evidence. When the reviewer's sandbox cannot run checks (for example a read-only build cache), the orchestrator runs vet, lint and targeted tests on the reviewed SHA and supplies the commands, exit codes and log paths. The reviewer labels supplied evidence separately from checks it ran.
-- Requested review depth and return format.
+- Requested review depth and return format: the [review return format](#review-return-format) unless the task needs another.
 
 Do not include the implementer's confidence, conclusions, chat, or self-review before the first pass. A targeted re-review may include the prior findings and fixes. If no route can provide fresh context, report the limitation and do not claim the selected budget was satisfied without an authorized waiver.
 
 Keep the reviewer read-only. It may suggest a fix but must not apply one. If it edits the reviewed scope, treat it as an implementer and obtain a new independent review when the budget requires one.
 
 Require findings to identify severity, concrete evidence, affected invariant, and review limits. The reviewer reports only to the orchestrator.
+
+### Review return format
+
+Ask the reviewer to read the complete surrounding rule, not only changed lines; to check correctness, failure behavior, security, data integrity, compatibility, and maintainability as relevant; and to return:
+
+```markdown
+# Independent review: <change>
+
+## Required findings
+- [severity] <problem, evidence, and required outcome>
+
+## Follow-up findings
+- <unrelated defect and evidence>
+
+## Evidence assessment
+- VERIFIED | PARTIAL | NOT-RUN — <what was inspected>
+
+## Verdict
+ACCEPT | REWORK | BLOCKED
+```
 
 ## Triage, rework, and re-review
 

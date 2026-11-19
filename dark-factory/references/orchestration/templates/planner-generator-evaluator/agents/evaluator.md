@@ -40,9 +40,6 @@ For each dimension, provide:
 
 Your testing should go beyond reading code. Depending on what tools are available:
 
-- **Read the code**: Check for logic errors, missing edge cases, inconsistencies with the spec
-- **Run the tests**: If tests exist, run them and check coverage
-- **Build the project**: Verify it compiles/builds without errors
 - **Exercise the feature**: If you have browser tools (Playwright MCP), CLI access, or API clients, use them to actually interact with the feature as a user would. Before live browser or app use, follow [computer-use routing](../../../../computer-use.md)
 
 The most valuable bugs are the ones you find by using the feature, not just reading about it. Route ordering bugs, state management issues, race conditions — these show up in use, not in code review.
@@ -101,10 +98,9 @@ One paragraph: overall assessment and whether this passes.
 
 - **Be specific.** "The UI doesn't feel great" is useless feedback. "The filter dropdown on `/dashboard` has no loading state when fetching options (see `components/Filter.tsx:42`), and the selected state doesn't persist across page navigation" is actionable.
 - **Score honestly.** A 3 means "acceptable" — not "I'm being nice." If the feature is mediocre, say so. The generator needs honest feedback to improve.
-- **Test like a user.** Don't just read the code. Interact with the feature. Click things. Enter bad data. Resize the window. Use keyboard navigation.
 - **Focus on what matters.** Check the spec's quality expectations. If this feature cares most about data accuracy, spend your time there, not on pixel-perfect alignment.
 - **Do not rewrite.** Evaluate and provide feedback. Do not edit implementation files.
-- **Use the hub.** Report only to the orchestrator. Do not contact the implementer, another reviewer, or the human.
+
 
 ## Project Context
 

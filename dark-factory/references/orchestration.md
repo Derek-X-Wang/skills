@@ -180,13 +180,13 @@ When a task created worktrees, sessions, processes, or ports, read [cleanup](orc
 
 ## Choose a pattern
 
-- [Feature team](orchestration/patterns/feature-team.md): implementation, environment observation, user-level QA, and review.
-- [Planner–Generator–Evaluator](orchestration/patterns/planner-generator-evaluator.md): product specification, implementation, graded evaluation, and process audit.
-- [AFK runner](orchestration/patterns/afk-runner.md): one decision-complete queue item at a time.
-- [Parallel AFK runners](orchestration/patterns/parallel-afk-runners.md): independent queue items with strict ownership.
-- [Parallel research](orchestration/patterns/parallel-research.md): read-only investigation by natural boundaries.
-- [Structured debate](orchestration/patterns/structured-debate.md): time-boxed adversarial analysis through the orchestrator.
-- [Repo audit](orchestration/patterns/repo-audit.md): `$dark-factory audit-repo`; one auditor, bounded and evidence-backed, report-only by default.
+- [Feature team](orchestration/patterns/feature-team.md): for a non-trivial feature or hard bug when implementation, environment observation, user-level QA, and independent review benefit from separate attention.
+- [Planner–Generator–Evaluator](orchestration/patterns/planner-generator-evaluator.md): for a substantial feature with subjective quality requirements or unclear product decomposition.
+- [AFK runner](orchestration/patterns/afk-runner.md): to process a queue serially after product, safety, scope, and authority decisions are complete.
+- [Parallel AFK runners](orchestration/patterns/short-patterns.md#parallel-afk-runners): when several decision-complete queue items are genuinely independent.
+- [Parallel research](orchestration/patterns/short-patterns.md#parallel-research): for read-only investigation across natural code, document, data, or system boundaries that a few focused searches cannot answer locally.
+- [Structured debate](orchestration/patterns/short-patterns.md#structured-debate): for a time-boxed decision with two or more genuinely defensible options; not for an obvious choice or implementation work.
+- [Repo audit](orchestration/patterns/repo-audit.md): when `$dark-factory audit-repo` asks for a bounded, evidence-backed audit of one repository.
 
 ## Invoke `audit-repo`
 

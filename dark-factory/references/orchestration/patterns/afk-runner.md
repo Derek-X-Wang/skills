@@ -12,27 +12,11 @@ Use this pattern to process a queue serially after product, safety, scope, and a
 
 Use the installed `github` skill for current GitHub CLI mechanics when the queue lives on GitHub. Verify repository labels, issue format, base branch, merge policy, and command syntax instead of copying stale defaults.
 
-Do not use AFK mode for vague issues, unresolved product choices, missing safety decisions, or work whose external effects are not authorized.
-
 ## Serial loop
-
-```text
-orchestrator assigns item
-          ↓
-worker implements and verifies
-          ↓
-orchestrator applies selected R0/R1/R2 review
-          ↓
-worker handles accepted rework
-          ↓
-orchestrator integrates only if authorized
-          ↓
-reverify integration result → assign next item
-```
 
 Run one item and one integration unit at a time:
 
-1. The orchestrator assigns the item. The worker does not race peers to claim work.
+1. The orchestrator assigns the item.
 2. The worker verifies its work and returns a stable identifier plus evidence.
 3. The orchestrator applies the selected [R0, R1, or R2 review budget](../review-policy.md).
 4. The worker handles accepted same-invariant findings.

@@ -13,20 +13,9 @@ Keep a small team. Add only roles that carry real work:
 | QA tester | User-level behavior; read-only unless test files are assigned | Reproduction steps, expected and actual behavior, evidence |
 | Reviewer | Independent cold review; no edits | Severity-ranked findings and review limits |
 
-## Topology
-
-```text
-                    ┌─ implementer
-human ↔ orchestrator├─ environment watcher
-                    ├─ QA tester
-                    └─ reviewer
-```
-
-No role contacts another role. The orchestrator relays each actionable signal.
-
 ## Run the loop
 
-1. Write one task contract with the outcome, invariant, accepted decisions, scope, verification, authority, and stop conditions.
+1. Write one task contract that meets the [dispatch contract](../../orchestration.md#send-a-decision-complete-dispatch).
 2. Assign non-overlapping ownership. Put every editing role in a separate worktree.
 3. Start the environment watcher first only when a persistent process gives useful feedback.
 4. Dispatch the implementer when the environment or static preflight is ready.

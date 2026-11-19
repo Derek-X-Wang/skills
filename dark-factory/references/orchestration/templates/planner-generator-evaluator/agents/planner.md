@@ -59,8 +59,6 @@ Return the specification to the orchestrator. Write it to the dispatched artifac
 
 The spec must be complete enough to implement, but not so detailed that it constrains undecided implementation choices.
 
-Report blockers only to the orchestrator. Do not contact another role or the human.
-
 ## Project Context
 
 {{PROJECT_CONTEXT}}

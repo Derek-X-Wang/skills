@@ -7,7 +7,7 @@ Invoke it inside this skill with the convention `$dark-factory audit-repo`, nami
 ## Route and authority
 
 - One auditor session: the bounded repo audit model in the [current defaults](../routing-matrix.md#current-defaults), at high effort by default through a verified route. Reserve xhigh for a specifically identified difficult finding or question, not an automatic second whole-repository pass. The orchestrator selects and discloses any targeted escalation within the existing scope and remaining budget; the auditor does not reroute itself. Honor an explicit effort request. This is Derek's operating preference dated 2026-09-09, not a benchmark or measured savings claim and not a routine research default.
-- Verify the resolved model, that the serving harness supports the requested effort, the required tools, checkout, and return path as any dispatch does. Apply the quota and return-path rules from [routing-matrix.md](../routing-matrix.md) by reference. Quota balancing chooses among eligible routes only; it never changes the requested model or effort.
+- Quota balancing chooses among eligible routes only; it never changes the requested model or effort.
 - The active orchestrator stays the hub. It owns the dispatch, checks material evidence in the report, and coordinates any follow-up. The auditor reports only to the orchestrator. No automatic fanout — not even one auditor per area — and no worker-to-worker channels.
 - No silent substitution: if the requested model, effort, or route is unavailable, report the bounded inability and request direction. Never switch the model or effort silently, and never substitute Fable automatically.
 - Safe local diagnostics, temp outputs, and one new local report artifact are allowed inside the audit contract, at the exact output destination the dispatch establishes, never overwriting user artifacts.
@@ -18,15 +18,6 @@ orchestrator ────> one auditor session (high effort by default)
       ↑
 report path + compact summary
 ```
-
-## Audit loop
-
-1. Run preflight and record the bounds.
-2. Audit each selected area. Continue the safe areas when one is NOT-RUN.
-3. Write the local report; return its path and a compact summary to the orchestrator.
-4. The orchestrator checks material evidence before treating findings as accepted.
-5. Findings become work only through the separate fix phase.
-6. A repeat run revalidates and dedupes before extending coverage.
 
 ## Preflight
 
@@ -98,8 +89,8 @@ Fixes require explicit approval of the selected finding and scope. Then run the 
 
 - Isolated ownership or worktree, with preserved evidence and behavior.
 - Suitable verification for the change.
-- The required [R0, R1, or R2 review](../review-policy.md). An auditor who edits is an implementer and cannot self-certify independent review.
-- The auditor may implement a specifically authorized difficult cut, but the strongest model is not a blanket default for resulting chores.
+- The required [R0, R1, or R2 review](../review-policy.md).
+- The auditor may implement a specifically authorized difficult cut.
 - No commit, push, PR, merge, or closure follows automatically from audit or fix authority.
 
 ## Repeat runs and cron readiness
