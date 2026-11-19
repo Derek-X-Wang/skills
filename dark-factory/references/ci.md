@@ -53,8 +53,9 @@ Every test you add runs on every future push. Keep that cost honest:
 - A regression fix comes with the smallest test that fails on the old code and passes on the fix. Show both results.
 - Extend an existing test when it already covers the path. Add a new test only for behavior no current test protects, and say which behavior.
 - A new slow test (over about 30 s, or one that needs a special runner) states in its PR what it alone protects, and which tier it belongs to.
-- Prefer fake time over wall-clock waits in tests. Wall-clock timing flakes on shared runners.
+- Prefer fake time over wall-clock waits in tests. Wall-clock timing flakes on shared runners. Remove the timing source from a test where you can; that is better than proving the timing afterwards.
 - A fake on one side of a boundary enforces the real side's validation, or at least one test crosses the real boundary.
+- Set a timing bound from evidence (measured slack under an outer deadline), not with a blind retry. When you widen one, widen only the cases that end early on success; a negative case keeps its short budget, so the timeout path stays tested.
 
 ## Changing CI
 

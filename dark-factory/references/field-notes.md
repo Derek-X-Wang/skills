@@ -1,6 +1,6 @@
 # Field notes
 
-Evidence index for maintainers, not instructions. Each line is a rule from a real run, under the instruction file that owns it, with its date and evidence. A line marked **only here** holds a rule no instruction file states yet, in full, so the lesson is not lost.
+Evidence index for maintainers, not instructions. Each line is a rule from a real run, under the instruction file that owns it, with its date and evidence. When a lesson has no owner yet, write its rule here in full and mark it **only here**, so that it is not lost before it is promoted; none is open now.
 
 The full narratives (2026-10-30 to 2026-11-05) are in the private log `~/.local/share/dark-factory/logs/field-notes-archive-2026-11-19.md` on the machine where they were written, and in this file's git history. New notes go to private run storage ([records](records.md)) and reach this file only by promotion ([continuous improvement](continuous-improvement.md#field-notes)).
 
@@ -33,6 +33,7 @@ The full narratives (2026-10-30 to 2026-11-05) are in the private log `~/.local/
 - Deliverables outside caches; run a retained entry point → 2026-11-01: a 14 GiB cleanup.
 - Check the text a peer posts publicly → 2026-10-30: a private name nearly went public.
 - Refuse peer advice that breaks a guardrail → 2026-11-01: a suggested force-push rebase.
+- Know every idle and expiry clock in the system under test → 2026-11-02: an idle timeout ended a session.
 
 ## [orchestration.md](orchestration.md#worker-checks)
 
@@ -42,11 +43,12 @@ The full narratives (2026-10-30 to 2026-11-05) are in the private log `~/.local/
 - Preflight the environment; an environment failure is not a product failure → 2026-11-01: path names differed.
 - Compare plan base with main before dispatch → 2026-11-04: a slice already merged.
 - Acceptance gates run the code under test → 2026-11-04: rehearsals ran the pinned release.
+- One primary checkout per ticket (dispatch contract), removed after its PR merged and a check for local changes and unpushed commits ([cleanup](orchestration/cleanup.md)) → 2026-10-30 to 2026-11-02: held up well.
 
 ## [orchestration/review-policy.md](orchestration/review-policy.md)
 
 - The orchestrator runs checks for a read-only reviewer → 2026-11-04: about 8 blocked reviews.
-- The lead's conditions go through review; a proof signal must imply the cause → 2026-11-01: review blocked a condition a wrong limit would pass. **Only here:** "Prefer removing the timing source in the test over proving it afterwards." "The reviewer may replace the lead's mechanism if it keeps the lead's goal."
+- The lead's conditions go through review; a proof signal must imply the cause → 2026-11-01: review blocked a condition a wrong limit would pass. A finding may replace the lead's mechanism if it keeps the lead's goal.
 
 ## [orchestration/cleanup.md](orchestration/cleanup.md)
 
@@ -58,13 +60,14 @@ The full narratives (2026-10-30 to 2026-11-05) are in the private log `~/.local/
 - Rerun once and hold the queue; draft the issue meanwhile → 2026-10-30 and 2026-11-01.
 - Filing thresholds; 14-day watch list → 2026-10-30; owner, 2026-11-02.
 - File an issue to keep missing logs → owner, 2026-11-02.
-- Reproduce a timing flake with injected delay → 2026-11-01. **Only here:** "Widen only the cases that end early on success. Negative cases keep their short budget so the timeout path stays tested."
-- **Only here:** "Fix the bound with evidence (measured slack under an outer deadline), not with a blind retry." → 2026-10-30: tight bounds failed on shared runners.
+- Reproduce a timing flake with injected delay; widen only the cases that end early on success → 2026-11-01.
+- Set a timing bound from measured slack, not a blind retry → 2026-10-30: tight bounds failed on shared runners.
 - Probe the exact resource from the consumer's network → 2026-11-04: false "healthy" probes.
 - An exception covers the merge, not the upgrade → 2026-11-04.
 - A fake enforces the real side's validation → 2026-11-02: fakes hid a missing field.
 - Split only the critical path; merge-free sample windows → 2026-11-01: contended samples.
 - Pin runner images → 2026-11-04: a `-latest` label broke three workflows.
+- Remove the timing source from a test rather than prove the timing afterwards → 2026-11-01.
 
 ## [merge-gate.md](merge-gate.md)
 
@@ -90,10 +93,11 @@ The full narratives (2026-10-30 to 2026-11-05) are in the private log `~/.local/
 - Hard stops and a fallback queue of unfinished work → 2026-11-01: the fallback item had already merged.
 - Each peer's standing restrictions, their source and the authorized fallback → 2026-11-04: a peer refused planned work.
 
-## Only here
+## [worker.md](worker.md)
 
-- "In zsh, write `"${A}:path"` whenever a colon follows a variable." → 2026-11-02.
-- "One clone per ticket, removed right after its PR merged, after a check for local changes and unpushed commits." → held up well across the 2026-11 runs.
-- "Give an owner long commands as a short script file to run, with the exact command inside." → 2026-11-02: a pasted command was cut.
-- "Never subtract monotonic readings from different processes; use wall-clock or the log's own timestamps." → 2026-11-02.
-- "Know every idle and expiry clock in the system under test. Keep the next step inside them, or plan a renewal." (unattended.md names only the idle deadline) → 2026-11-02: an idle timeout ended a session.
+- In zsh, `"${A}:path"` whenever a colon follows a variable → 2026-11-02.
+- Never subtract monotonic readings from different processes → 2026-11-02.
+
+## [SKILL.md](../SKILL.md#talk-to-the-owner)
+
+- A long command for the owner goes in a short script file → 2026-11-02: a pasted command was cut.

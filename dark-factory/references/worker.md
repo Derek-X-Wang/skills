@@ -33,6 +33,9 @@ Give every message a unique message ID (use the same ID on its shadow copy), plu
 - Stay inside the assigned files and scope. Make ordinary implementation decisions yourself. Do not reopen product or architecture decisions that the dispatch settled.
 - Keep your assigned model, effort, and route, and do not spawn agents: your manager tracks quota, cost, and cleanup for every session. If a large separable job appears, ask your manager to run it with a helper ([bounded assistance](orchestration/bounded-assistance.md)).
 - Send blockers and real product, scope, or authority questions to your manager. Do not guess them.
+- In zsh, write `"${A}:path"` whenever a colon follows a variable: an unbraced variable followed by a colon modifier such as `:h` changes the expansion.
+- Never subtract monotonic readings from different processes; use wall-clock time or the log's own timestamps.
+- As a reviewer, check the conditions the lead set for the change as you check the diff. A finding may replace the lead's mechanism with another that keeps the lead's goal.
 - Report a skill defect you find to your manager, with its evidence. Repair a skill only when your manager assigns that repair, inside your assigned scope.
 - If the same failure repeats without new evidence, stop and report the loop. Retrying an unchanged attempt spends quota without new information, and your manager can bring a fresh approach.
 - For live browser, app, or desktop work, load [computer-use routing](computer-use.md) and verify your own adapter and target. The parent's tools are never yours by default.

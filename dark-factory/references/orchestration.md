@@ -100,7 +100,7 @@ Include:
 - Scope and no-touch areas.
 - Accepted product and architecture decisions.
 - Acceptance criteria and verification requirements.
-- Assigned worktree and file ownership.
+- Assigned worktree and file ownership: one primary checkout per ticket; a helper keeps its own isolation.
 - Message layer: primary channel, fallback channel, checkpoint file path, and shadow channel when used ([message layer](orchestration/message-layer.md)); the task ID and dispatch ID for message IDs; for Seshloom, the invitation file path, the worker's name, and the manager's name.
 - Assigned harness, model, effort, route, and return path; origin runtime identity from the orchestrator's verified session evidence (host, harness, model, session, machine, checkout). Tell the worker to check its checkout, task tools, and access and report observed mismatches, without repeating host, model, effort, or quota investigation. UI targets and adapter readiness must be verified in the executing session.
 - Cleanup inventory: exact task-owned session, process, worktree, and resource identifiers; which pre-existed versus which the task created; retention or transfer conditions; and the cleanup owner ([cleanup](orchestration/cleanup.md)).

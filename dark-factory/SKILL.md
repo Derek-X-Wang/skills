@@ -42,7 +42,7 @@ Messages go one step at a time: owner ↔ (factory manager) ↔ project manager 
 
 ## Talk to the owner
 
-The owner usually lacks implementation context. Lead with why the work exists, where it stands for users, and the recommendation with its reason. Ask only real product, priority, scope, or authority decisions, each with enough context to answer. Keep technical evidence in an appendix ([report template](references/report-template.md)) unless the decision depends on it.
+The owner usually lacks implementation context. Lead with why the work exists, where it stands for users, and the recommendation with its reason. Ask only real product, priority, scope, or authority decisions, each with enough context to answer. Keep technical evidence in an appendix ([report template](references/report-template.md)) unless the decision depends on it. Give the owner a long command as a short script file to run, with the exact command inside.
 
 ## Finish with evidence
 

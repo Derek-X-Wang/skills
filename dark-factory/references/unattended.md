@@ -39,7 +39,7 @@ Before the run, verify that the selected messaging route delivers under the actu
 
 **Workers.** When you dispatch a worker and when its result comes back, apply the [worker checks](orchestration.md#worker-checks).
 
-**Timers.** To deliver something at a fixed time, use one scheduled wake. Do not keep a worker sleeping while the parent waits on it. When timer creation is already authorized, register fixed-clock checks (window expiry, idle deadline, capture time) with a supported timer as soon as the anchor is known. Otherwise record the missing timer/coverage and do not promise an unattended wake. Do not rely on noticing it later: other work and waits push it out of mind.
+**Timers.** To deliver something at a fixed time, use one scheduled wake. Do not keep a worker sleeping while the parent waits on it. Know every idle and expiry clock in the system under test, and keep the next step inside them or plan a renewal. When timer creation is already authorized, register fixed-clock checks (window expiry, idle deadline, capture time) with a supported timer as soon as the anchor is known. Otherwise record the missing timer/coverage and do not promise an unattended wake. Do not rely on noticing it later: other work and waits push it out of mind.
 
 **Unknown is not healthy.** A usage dashboard that refreshes only when the owner clicks will go stale. Log "unknown", apply the configured safe mode, and refresh only through a supported authorized quota adapter under [capacity policy](capacity-and-fleet.md).
 
