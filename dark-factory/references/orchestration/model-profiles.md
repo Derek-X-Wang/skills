@@ -74,5 +74,7 @@ When a row of the [current defaults](routing-matrix.md#current-defaults) changes
 - 2026-09-08: Derek's dated operating preference: web work prefers Codex or Claude sessions with verified hosted search tools. Preference only, not fresh capability-test evidence or a provider-superiority claim.
 - 2026-10-01: The Codex default changed to GPT-6.1 Sol (Derek's provisional routing choice). The normal orchestrator roles and the Sol-high worker role carry forward as provisional transfers of dated role preferences, not measured quality or savings claims for the new models.
 - 2026-11-19: DeepSeek V4.1 Flash replaced V4 Flash as the bounded-chore default (owner decision). It is a routing choice and inherits no V4 ranking.
+- 2026-11-19: Claude Sonnet 5.5 replaced Sonnet 5, and Claude Fable 5.2 replaced Fable 5, in their rows (owner decision: these are the current releases). The owner kept each row's role and limits. Both start unranked: the Sonnet 5 and Fable 5 profile rows are evidence for the older versions only.
+- 2026-11-19: Claude Code work uses Opus 5.5 at high effort by default (owner decision). The R2 row keeps its own effort.
 
 During normal project work, report a profile-update candidate only when a run materially contradicts or strengthens a current observation. Do not edit this shared file unless the task explicitly includes skill maintenance.

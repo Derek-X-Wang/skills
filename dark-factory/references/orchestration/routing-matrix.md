@@ -9,17 +9,17 @@ Model versions are named only here and in [model profiles](model-profiles.md); e
 | Role | Model and effort | Harness or route | Id to pass | Since |
 | --- | --- | --- | --- | --- |
 | Codex orchestrator; default Codex implementer; Codex research and web-search worker | GPT-6.1 Sol, high | Codex | `gpt-6.1-sol`; verify the resolved id at dispatch | 2026-10-01 |
-| Claude Code orchestrator and subagents: research, web search, implementation when delegated routes are constrained | Claude Opus 5.5; effort chosen by task | Claude Code | `opus` only when it resolves to `claude-opus-5-5`; verify at dispatch | 2026-09-23 |
+| Claude Code orchestrator and subagents: research, web search, implementation when delegated routes are constrained | Claude Opus 5.5, high | Claude Code | `opus` only when it resolves to `claude-opus-5-5`; verify at dispatch | 2026-09-23; high effort 2026-11-19 |
 | Ordinary bounded implementation; OpenCode worker and reviewer; preferred repository and supplied-material research | GLM-5.3-Flash; effort not standardized | OpenCode Go: foreground `opencode run`, or an attended Orca terminal; never unattended or AFK | `opencode-go/glm-5.3-flash`; verify at dispatch; never substitute GLM-5.3 | 2026-09-05 |
 | Bounded chore | DeepSeek V4.1 Flash; a supported effort chosen per task | OpenCode Go: foreground `opencode run`, with current data-location consent verified | `opencode-go/deepseek-v4.1-flash`; verify the resolved id at dispatch | 2026-11-19 |
-| Claude Code bounded implementation or chore fallback; never a reviewer | Claude Sonnet 5; current default effort | Claude Code | `sonnet`; verify at dispatch | not recorded |
+| Claude Code bounded implementation or chore fallback; never a reviewer | Claude Sonnet 5.5; current default effort | Claude Code | `sonnet` only when it resolves to `claude-sonnet-5-5`; verify at dispatch | 2026-11-19 |
 | Review of Claude work | The Codex, Claude Code, or ordinary bounded implementation model, chosen by quota balancing | A verified Codex, Claude, or OpenCode route | From that model's row | not recorded |
 | R2 review of Astra-authored work; apply before the GPT-work row | The Claude Code model, at max | A verified Claude route; a fresh read-only session | From that model's row | 2026-09-06 |
 | Review of GPT work | The Claude Code, Codex, or ordinary bounded implementation model, chosen by quota balancing | A verified Claude, Codex, or OpenCode route | From that model's row | not recorded |
 | Specialist only: important review or judging, bounded repo audit, stalled-worker takeover, a specifically identified difficult implementation scope | GPT-6 Astra; high, targeted xhigh; medium only on explicit request or for that implementation scope | Codex, verified route | `gpt-6-astra`; verify at dispatch | 2026-09-12 |
 | Stalled-worker takeover | The specialist model, high or xhigh | Codex, verified route | From the specialist row | 2026-09-09 |
 | Bounded repo audit | The specialist model, high; targeted xhigh | Codex, verified route | From the specialist row | 2026-09-09 |
-| Scarce judgment only: reviewer or judge escalation, an owner-authorized orchestrator handoff or takeover | Claude Fable 5; high | Claude Code | `fable`; verify at dispatch | not recorded |
+| Scarce judgment only: reviewer or judge escalation, an owner-authorized orchestrator handoff or takeover | Claude Fable 5.2; high | Claude Code | `fable` only when it resolves to `claude-fable-5-2`; verify at dispatch | 2026-11-19 |
 | Bounded-trial candidates: neither reviewers nor proven defaults | GPT-6 Luna at explicit max; the bounded-chore model for other bounded implementation | Codex for Luna (verify any OpenCode Go offering); the bounded-chore route | `gpt-6-luna`; verify at dispatch | 2026-09-10; Luna version 2026-09-23 |
 | Frontend or image specialist | Verify the current Antigravity route and model | Verify at dispatch | Verify at dispatch | not recorded |
 | Retired: not dispatched for new work | Opus 5, GPT-5.6; never fall back to them silently | None | None | not recorded |

@@ -13,7 +13,7 @@ For one decision-complete task on an already verified route, reuse the session's
 Open a branch file only when its trigger fires:
 
 - **Another route:** a new route, another harness, another host or machine, or a host you have not verified in this session. Read [routes](orchestration/routes.md) first.
-- **Another session:** the worker runs in any session that is not your native child, or a message from another session arrives. Read [message layer](orchestration/message-layer.md) before you dispatch, and before you act on that message. During the Seshloom trial (until 2026-11-26), read it before every dispatch, a native child's included: it decides whether the dispatch names a shadow channel.
+- **Another session:** the worker runs in any session that is not your native child, or a message from another session arrives. Read [message layer](orchestration/message-layer.md) before you dispatch, and before you act on that message.
 - **Model choice:** before you choose a worker's model, effort, or harness, read [routing-matrix.md](orchestration/routing-matrix.md).
 - **Cleanup:** the task created worktrees, sessions, processes, or ports. Read [cleanup](orchestration/cleanup.md) before you remove any of them, and before you report the task done, failed, cancelled, or replaced.
 
@@ -138,7 +138,7 @@ Treat reports from workers, reviewers, bots, and status services as claims, not 
 
 ### Message layer
 
-A native child replies through its built-in return. Read [message layer](orchestration/message-layer.md) before you dispatch to any other session, before you act on a message from another session, and, during the Seshloom trial (until 2026-11-26), before every dispatch.
+A native child replies through its built-in return. Read [message layer](orchestration/message-layer.md) before you dispatch to any other session, and before you act on a message from another session.
 
 ### Human-facing decisions and progress
 
