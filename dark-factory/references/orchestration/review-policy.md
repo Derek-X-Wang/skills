@@ -45,7 +45,7 @@ Start the first pass in fresh context. Give the reviewer:
 - Applicable project instructions and accepted decisions.
 - Conditions the lead or orchestrator set for the change (for example an acceptance signal), as part of the reviewed scope. The reviewer checks them like the diff, including whether a proof signal implies the cause. A finding may replace the lead's mechanism with another that keeps the lead's goal; [worker mode](../worker.md#work) tells the reviewer so.
 - Verification evidence. When the reviewer's sandbox cannot run checks (for example a read-only build cache), the orchestrator runs vet, lint and targeted tests on the reviewed SHA and supplies the commands, exit codes and log paths. The reviewer labels supplied evidence separately from checks it ran.
-- Requested review depth and return format: the [review return format](#review-return-format) unless the task needs another.
+- Requested review depth, the checks, and the return format: carry both the checks and the format of [review return format](#review-return-format) into the dispatch, unless the task needs another format.
 
 Do not include the implementer's confidence, conclusions, chat, or self-review before the first pass. A targeted re-review may include the prior findings and fixes. If no route can provide fresh context, report the limitation and do not claim the selected budget was satisfied without an authorized waiver.
 

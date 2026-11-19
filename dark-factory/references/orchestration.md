@@ -111,7 +111,7 @@ Include:
 
 Send the contract and evidence needed to act. Do not send the coordinator's full chat history. Before you dispatch, apply the [worker checks](#worker-checks) that concern the brief.
 
-A Codex worker that you launch with your own `writable_roots` gets that list in place of the configured one: include every folder from `~/.codex/config.toml`'s list.
+A Codex worker that you launch with your own `writable_roots` gets that list in place of the configured one. When you pass the list to add a folder, include every folder from `~/.codex/config.toml`'s list as well, so that tools needing them keep working. An explicit narrower limit from the owner or the dispatch wins: state which configured folders the worker will lack, and verify the effective access before launch.
 
 For a [computer-use routing](computer-use.md) escalation, preserve its redacted safety fields in the next dispatch and attach only evidence permitted by `disclosure_constraints`. If the only eligible executor cannot act without evidence it is not authorized to receive, stop and ask the correct authority to decide; do not dispatch the evidence. Do not return work to an attempted executor unless fresh evidence proves a material capability or state change.
 
