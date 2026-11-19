@@ -1,6 +1,6 @@
 # Merge gate
 
-Use this strict integration policy only when selected by the project/run. It does not authorize merges or apply to Bite private review/local-fix processing. The project execution owner (lead) is the only gate.
+Use this strict integration policy only when selected by the project/run. It does not authorize merges or apply to Bite private review/local-fix processing. External fixes, filings, reruns and merges throughout this reference require the relevant project/run authority; otherwise prepare private evidence/drafts and park the action. The project execution owner (lead) is the only gate. Commands in this file are examples, not installed helpers.
 
 **Batch flow: batch test, then bisect on red** (owner decision 2026-11-10, run as a canary under its [registry row](experimental.md#registry)). Each PR passes its own checks and the lead's verification. The lead then tests a batch of ready PRs together as one combined tree, and merges the whole batch when that tree is green. When the batch is red, the lead splits it in half until the failing PR is found, and the green PRs still merge. This keeps the goal of the old rule: every red result maps to one failing PR, or to a small set of PRs that fail only together. It also cuts the wait: with about 1 hour of CI, 10 PRs take about 1 hour when all are green and about 3–5 hours with one bad PR, compared with about 10 hours one at a time.
 
@@ -100,7 +100,7 @@ Record the batch base, the batch tree, and each member's head SHA. The batch PR 
 
 **Green:** every required workflow finished with success on the batch head, and main is still the batch base. Merge the members (see below). If main moved, rebuild on the new main and test again.
 
-**Red:** read the log first, as for any failure ([unattended](unattended.md#red-main-flakes-and-parking)). A flake or infrastructure failure gets one rerun of the failed jobs. For a code failure, bisect. Build every subset from the same batch base, each on its own branch `batch/$N-<k>` (k counts up, so parallel subsets never share a name). A subset counts as red only when the same job or test fails as in the batch.
+**Red:** read the log first, as for any failure ([red main, flakes, and parking](ci.md#red-main-flakes-and-parking)). A flake or infrastructure failure gets one rerun of the failed jobs. For a code failure, bisect. Build every subset from the same batch base, each on its own branch `batch/$N-<k>` (k counts up, so parallel subsets never share a name). A subset counts as red only when the same job or test fails as in the batch.
 
 1. If the log clearly points to one member, test that member alone and the batch without it, in parallel.
 2. Otherwise split the batch into two halves in queue order and test both halves, in parallel when runners allow. Repeat on a red half until one PR is left.
@@ -163,27 +163,30 @@ Merge one PR, then wait for the main watcher's `DONE` before the next. Repositor
   ```
 - **IS IN.** With `--merge`, run the ancestry and tree checks above. With squash or rebase, the tree check alone shows that main holds the tested code.
 
-## Main watcher (sketch)
+## Main watcher
 
-Run as a tracked background task. It ends with exactly one line.
+The watcher's contract:
+
+- It runs as a tracked background task and watches one main head by its full SHA.
+- It polls every 120 s or slower.
+- List the required workflows by name in the plan. A workflow that is missing for this SHA counts as not finished. Right after a merge the run list is empty or partial, and some workflows start later than others: a check like "no run is still in progress" passes at once on an empty list. Wait until every required workflow exists for the SHA, then judge.
+- For a path-filtered or matrix workflow, judge the run that actually ran jobs, not an all-skipped run. For a matrix or slow lane, confirm its legs actually ran. A red result caused only by an upstream job's failure, which skipped the legs, is not a new failure: fix the upstream job.
+- It ends with exactly one line: any failed, cancelled or timed-out required run → `MAIN <sha> RED`; every required workflow completed with success → `MAIN <sha> DONE`; its time limit reached (3 h in the example) → `MAIN <sha> TIMEOUT`.
+- In zsh, `$ids` with two run IDs is one word. Loop over one ID per call (or use `${=ids}`), and treat an empty watcher result as unknown, not as success.
+
+Example (not an installed helper):
 
 ```bash
-sha=<short>; end=$(( $(date +%s) + 10800 ))
+sha=<full SHA>; end=$(( $(date +%s) + 10800 ))
 while [ "$(date +%s)" -lt "$end" ]; do
   j=$(gh run list --branch main --limit 30 --json headSha,workflowName,status,conclusion,databaseId)
-  # For each required workflow, read "status conclusion" of the run whose headSha starts with $sha.
+  # For each required workflow, read "status conclusion" of the run whose headSha equals $sha.
   # Path-filtered or matrix workflows: pick the run that actually ran jobs (not an all-skipped run).
   # Any failure/cancelled/timed_out -> echo "MAIN $sha RED ..."; exit
   # All required "completed success" -> echo "MAIN $sha DONE ..."; exit
   sleep 120
 done; echo "MAIN $sha TIMEOUT"
 ```
-
-List the required workflows by name in the plan. A workflow that is missing for this SHA counts as not finished. Right after a merge the run list is empty or partial, and some workflows start later than others: a check like "no run is still in progress" passes at once on an empty list. Wait until every required workflow exists for the SHA, then judge.
-
-For a matrix or slow lane, confirm its legs actually ran. A red result caused only by an upstream job's failure, which skipped the legs, is not a new failure: fix the upstream job.
-
-In zsh, `$ids` with two run IDs is one word. Loop over one ID per call (or use `${=ids}`), and treat an empty watcher result as unknown, not as success.
 
 ## Why batches are spaced
 
@@ -196,13 +199,16 @@ When main goes red after a batch, classify the failure as usual. Merging subsets
 
 A revert merges like any other change and needs the same merge authority. The reverted PRs stay merged on GitHub, so they cannot join a batch again (the build step stops on them). After the cause is known, each innocent member gets a new PR that re-applies only its own changes on current main. Do not revert the whole revert: that also brings back the failing change.
 
+## Outage repair while main is red
+
+**Outage repair**, when the owner has pre-approved it: a PR that repairs a verified external outage may merge while main is red only from that outage, if its own CI is fully green, it had an independent review, every notice check passes, and the merge uses the exact approved head. Hold every other merge until main recovers, and report it.
+
 ## Fresh-CI policy
 
 The batch test runs every member on current main, so it is the fresh CI for a PR that is only BEHIND or that shares packages with recent main changes. A PR does not need its own fresh run before it joins a batch.
 
-- Overlapping files with interacting hunks → refresh the PR branch and run its own CI before it joins a batch (`gh pr update-branch`, a merge commit, never a force-push).
-- Name exceptions before the run starts (for example a toolchain bump).
-- Refresh a branch when the fresh-CI condition above requires it or when it is CONFLICTING/merge-tree is not clean, and only with a merge commit. A rebase of a pushed PR needs a force-push, so refuse it even when a peer suggests it.
+- Overlapping files with interacting hunks → refresh the PR branch and run its own CI before it joins a batch. Also refresh a PR that is CONFLICTING or whose merge-tree is not clean. Refresh only with a merge commit (`gh pr update-branch`), never a force-push: a rebase of a pushed PR needs one, so refuse it even when a peer suggests it.
+- Name exceptions before the run starts. Example: after a toolchain bump, if main goes red for a reason linked to the bump, every remaining PR gets fresh CI.
 
 ## Cost and planning
 

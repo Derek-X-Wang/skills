@@ -109,7 +109,7 @@ Include:
 - Required return format and identifiers.
 - Prior external actions, current observed state, replay constraints, disclosure constraints, and attempted executors when the work follows a [computer-use routing](computer-use.md) escalation.
 
-Send the contract and evidence needed to act. Do not send the coordinator's full chat history.
+Send the contract and evidence needed to act. Do not send the coordinator's full chat history. Before you dispatch, apply the [worker checks](#worker-checks) that concern the brief.
 
 A Codex worker that you launch with your own `writable_roots` gets that list in place of the configured one: include every folder from `~/.codex/config.toml`'s list.
 
@@ -162,6 +162,17 @@ Before choosing a review level or dispatching a reviewer, read [review-policy.md
 Keep findings on the same invariant in the current task. Record unrelated defects as follow-up work. Reverify after a merge, rebase, cherry-pick, conflict resolution, or other integration change alters the tested result. A check that relied on a sandbox counts only for the permission mode it ran under: after a mode change in your session or the worker's, have the sandbox proven again ([unattended operation](unattended.md#phase-2--the-loop)).
 
 Source-mutation proof is a project or task rule. Do not impose it universally.
+
+### Worker checks
+
+Apply these when you dispatch a worker and when its result comes back, attended or unattended:
+
+- Give each worker an explicit output folder in its brief, and check for stray files after it finishes.
+- Plan for workers whose sandbox cannot commit: the worker drafts the commit message in a file, and the orchestrator reviews the diff and commits on the host.
+- Pass absolute paths to gate scripts that change directory, and count the test results: a gate that ran nothing is NOT-RUN, not a pass.
+- Before freezing a long check, preflight its environment assumptions (working folder, paths, tools). An environment failure is not a product failure: keep the failed result, and use only an already-authorized fallback.
+- Before dispatching a planned item, compare the plan's base with current main and confirm the item is not already done.
+- Check that each acceptance gate runs the code under test: a gate that runs pinned or released binaries in its place is NOT-RUN for that change.
 
 ## Clean up finished task resources
 

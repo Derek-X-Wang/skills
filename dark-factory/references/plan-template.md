@@ -28,15 +28,15 @@ Use this private planning checklist for a factory or unattended window. Reuse ex
 
 ## 4. Guardrails
 
-- Per-workflow allowed operations: local reads/edits/tests, commit, push, PR publication, merge, replies, release and deployment listed separately. Personal ordinary code may merge after project gates and required risk review under run authority. Bite stays private-only except isolated own-feedback local fixes/tests. `[OWNER]`
+- Per-workflow allowed operations: local reads/edits/tests, commit, push, PR publication, merge, replies, release and deployment listed separately. Personal ordinary code may merge after project gates and required risk review under run authority. Bite stays private-only except isolated own-feedback local fixes/tests. Public wording and other categories follow the actual project authority. `[OWNER]`
 - Experimental items in use: each item, its mode, its stable path, and whether that stable path is authorized for this run ([experimental](experimental.md)).
 - Selected project integration gate; use [strict merge gate](merge-gate.md) when applicable, with its batch size, solo-only items, required workflow names, batch eligibility check result, main-only jobs, and whether temporary `batch/*` branches may be deleted. `[OWNER]` Preserve stronger repository requirements and the shared [R0/R1/R2 policy](orchestration/review-policy.md).
-- Red main, flakes and parking (the queue after a second main failure; an item after three unexplained failures) follow [unattended operation](unattended.md#red-main-flakes-and-parking).
+- Red main, flakes and parking (the queue after a second main failure; an item after three unexplained failures) follow [red main, flakes, and parking](ci.md#red-main-flakes-and-parking).
 - No force-push, no history rewrite, no `--no-verify`, no branch deletion except own merged branches and, when listed above, the run's own temporary `batch/*` branches.
 - No settings, branch protection, secrets or permissions changes. No manual workflow dispatch unless listed. `[OWNER]`
 - Labels: which ones agents may add or never add.
 - The owner's installed or live tools: hands off (no upgrade, setup, removal, service-manager changes).
-- Delete/kill authority: exact paths and process owners. `[OWNER]`
+- Delete/kill authority: exact paths and process owners. Everything else stays excluded. `[OWNER]`
 - Content: no private names, paths, logs or business text in public places. Language for public text.
 - Spend: $0, no purchases (including model credits). If the run may spend: the cap, who approves each paid step, how unbilled work counts toward the cap (billing lags 1–2 days; count a worst-case bound), and a cost forecast logged before each paid step with verified teardown after. `[OWNER]`
 - Contract changes (wire fields, error codes, public APIs): out of scope, or allowed only with the contract tests and, when a deployed release carries the old contract, a mixed-version upgrade check. `[OWNER]`
@@ -62,7 +62,7 @@ Use this private planning checklist for a factory or unattended window. Reuse ex
 - Hard stops (CI time, spend, quota): the response when one is exhausted, which failure classes a recovery rule may resume, and a fallback queue of authorized, unfinished work. `[OWNER]`
 - Machine stays awake? Load limits (hard limit, peer stop limit, heavy-test limit).
 - Test isolation on the owner's machine: every test gets its own temp and state root; throwaway services on non-default ports.
-- Performance measurements: merge-free window per sample, and the "contended = not counted" rule.
+- Performance measurements: merge-free window per sample, and the "contended = not counted" rule ([changing CI](ci.md#changing-ci)).
 - Usage per entitlement/pool: configured supported adapter, timestamped source/expiry, all applicable windows and interactive reserves. A sprint the owner gives goes in the [shared sprint record](capacity-and-fleet.md#shared-sprint-record) and names pools and absolute expiry/specific reset; reset-credit redemption is owner-directed or individually preauthorized under [capacity policy](capacity-and-fleet.md).
   - e.g. lead model ≥ X% of weekly → lead only orchestrates; worker model < Y% left → start no new item; 0% → pause coding.
   - Data missing or older than N hours → "unknown" → safe mode.

@@ -24,10 +24,27 @@ Report each number as a median and a p90, with n. Waiting hurts in the tail: in 
 
 - One watcher per run. Take the run ID from the live list just before you start the watcher; a remembered ID can be stale. Poll job status at most every 120 s (`gh run view <id> --json jobs`, or `gh run watch <id> --interval 120`; plain `gh run watch` polls every 3 s). Several fast pollers exhaust the GitHub API limit.
 - Watch jobs, not only the aggregate gate. The first failed job with a named test is actionable at once; the aggregate can turn red much later (once 46 minutes later).
-- On the first failed job, read its log and classify it (code, flaky test, or infrastructure) as [red main, flakes, and parking](unattended.md#red-main-flakes-and-parking) says. Reruns, filing thresholds, and parking follow that section, not a shortcut here.
+- On the first failed job, read its log and classify it (code, flaky test, or infrastructure) as [red main, flakes, and parking](#red-main-flakes-and-parking) says. Reruns, filing thresholds, and parking follow that section, not a shortcut here.
 - A code failure inside your assigned scope: start the fix now. Do not wait for the rest of the run. A failure outside your scope, or one that needs a rerun, an issue, or another external write you have no authority for: report it with the evidence to your manager (or park it, unattended).
 - A re-run keeps the commit and ref of the original run. For a `pull_request` run that is the merge commit built when the run was first created, so a green re-run says nothing about a base that moved afterwards. Evidence on the current base comes from a new run (a new push, or another event the workflow triggers on) or from the batch test under the [merge gate](merge-gate.md#fresh-ci-policy).
 - Who watches what: a worker watches its own PR until it is green or handed back. The project manager watches batch heads and main. Workers do not wait on the batch or main. A worker that returns through a one-message channel (a native child) stops watching when it returns; its manager watches from then on.
+
+## Red main, flakes, and parking
+
+External fixes, filings, reruns and merges in this section require the relevant project/run authority; otherwise prepare private evidence/drafts and park the action.
+
+- Read the log of **every** main failure, even when a rerun passes. "Flake" is a conclusion, not a starting point: in one run, 5 single failures held 2 product bugs.
+- Classify: code, flaky test, or infrastructure (network, runner disk, registry, an upstream job whose failure skipped the slow lane).
+- **Main red from code:** open a revert PR. Never force-push.
+- **Main red from a flake or infrastructure:** rerun the failed jobs once and hold the queue. While it runs, draft the issue and the revert plan, so a second failure is handled in minutes. A second failure parks the queue.
+- **External outage** (a package mirror, registry or proxy down for hours): after the queue parks, reopen only when a probe of the exact resource the consumer needs (package, version, arch) succeeds through the consumer's own network, preferably from CI itself. A probe of an index file, or from another machine, proves nothing. A good probe earns one rerun of the failed jobs, not a claim of recovery; allow at most 3 such reruns, at least 1 hour apart, then wait for the owner.
+- **Outage repair:** before a PR that repairs a verified external outage merges while main is red, read [outage repair](merge-gate.md#outage-repair-while-main-is-red); it needs the owner's pre-approval.
+- **Owner exceptions** cover the named merge only. Upgrading the owner's install still waits until that commit's main run is verified, unless the owner says otherwise.
+- **PR flake:** rerun once; file the flake and fix it as its own small PR. Reproduce a timing flake with injected delay first: the old code must fail with the CI message and the new code must pass.
+- **Filing:** an unknown cause is filed on its second sighting; a cause proven by reading the code is filed on the first. A symptom of product behavior (a lost lease, lost data, a wrong state) is filed on the first sighting too, even when the cause is unknown.
+- **Watch list:** keep the other single sightings on a watch list in the report. Drop an entry after 14 days without a repeat.
+- **Missing diagnostics:** when a failure cannot be explained because the artifacts lack a log, file a small issue to keep that log, every time. The next failure can then be diagnosed.
+- **Park an item** (one PR or task, as distinct from the queue above) after 3 unexplained CI failures of its own, with notes and a reproduction.
 
 ## Writing tests that CI runs forever
 
@@ -48,7 +65,7 @@ Changes to required checks, branch rules, tiers, time budgets, or which stage ru
 - **Change classifier.** Decide the short path from a local `git diff` of the event's base and head, never from a paged API. Only an exact allowlist (for example docs that no test reads) takes the short path. Renames, deletes, mode changes, unknown paths, CI or script changes, an empty diff, and pushes to main take the full path. Find which tests read the "doc" files first.
 - **Cancel superseded PR runs.** Do not cancel main runs.
 - **Timeouts.** Every job and long step has one, and a step or package timeout is shorter than its job, so a hang leaves a log. A timeout is a design signal: report it and propose either more time or a split; the budget is an owner decision. Do not raise a budget on your own.
-- **Splitting.** Split or shard only the job on the critical path, and measure several runs before and after. Parallel jobs cost startup and runner slots; on GitHub Free, macOS slots are few (about 5 at once), so macOS demand is often the real queue. A split that adds a macOS job can add more queue time than it saves: record each job's queue time (`created_at` to `started_at`) before and after.
+- **Splitting.** Split or shard only the job on the critical path, and measure several runs before and after. Parallel jobs cost startup and runner slots; on GitHub Free, macOS slots are few (about 5 at once), so macOS demand is often the real queue. A split that adds a macOS job can add more queue time than it saves: record each job's queue time (`created_at` to `started_at`) before and after. Performance samples need a merge-free window per sample, agreed with the lead before measuring, and a "contended = not counted" rule set in advance.
 - **Stable inputs.** Pin runner images (no `-latest`) and enforce the pin with a script. Cache pinned downloads and verify their checksums every run. Use native runners, not emulation.
 - **Cheapest platform that proves the claim (proposal).** A platform-neutral check may run once on the cheapest runner with a small witness on the other platform. Reducing an existing platform's coverage is a coverage decision for the owner; keep it until then. Do not call Linux evidence Mac evidence.
 - **Free before paid.** Use hosted runners first. A new lane that spends money or needs secrets should be manual or main-only, not on PRs; moving an existing PR lane is a coverage decision for the owner.
