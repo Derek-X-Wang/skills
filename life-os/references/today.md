@@ -29,20 +29,20 @@ Skip files that are empty placeholders (just an `_Not yet populated_` line).
 
 ## Step 2: Check Project Repos
 
-For each active project listed in `projects.md` that has a repo path:
+For each active project in `projects.md`, find its checkout on this machine: `projects.<slug>.localPath` in `~/.config/kb.json`. A project that is not checked out here is skipped, and its row stays as it is.
 
 1. Read the "Last Checked" hash from `projects.md`
 2. In the project repo:
    ```bash
    cd <repo-path>
    git fetch origin
-   # If we have a last-checked hash, show only new commits
-   git log <last-hash>..HEAD --oneline  # or git log -5 if no hash
+   remote_head=$(git ls-remote origin HEAD | cut -c1-7)  # the remote default branch's commit
+   git log <last-hash>.."$remote_head" --oneline  # or git log -5 "$remote_head" if no hash
    git status
    git branch
    ```
 
-This tells you the **real** state and what's new since last check.
+This tells you what is new on the remote, and the local state of this checkout.
 
 Also read the project's wiki page (`wiki/<project>.md`) for backlog items and current focus.
 
@@ -52,11 +52,13 @@ Name each project task in `today.md`, with the project and the outcome wanted. T
 
 ## Step 2.6: Update Last Checked Hash
 
-After inspecting each project repo, update the "Last Checked" column in `projects.md` with the current HEAD hash and today's date:
+For each project you inspected, set the "Last Checked" column in `projects.md` to the remote default branch's commit (`remote_head` from Step 2) and today's date:
 
 ```markdown
-| ContextFS | In dev | `abc1234` (04-08) | `~/Development/incubator/ContextFS/ctxfs` |
+| ContextFS | In dev | `abc1234` (2026-04-08) | `~/Development/incubator/ContextFS/ctxfs` |
 ```
+
+`projects.md` is read on every machine, so it holds what every machine would see. What holds only for this checkout (its branch, uncommitted files, how far it is behind) goes in that task's context in `today.md` or in the chat summary.
 
 ## Step 3: Interactive Prioritization
 
