@@ -39,47 +39,14 @@ For each active project listed in `projects.md` that has a repo path:
    git status
    git branch
    ```
-3. Check for completed OS tasks:
-   ```bash
-   git log <last-hash>..HEAD --grep="Completed OS task" --oneline
-   ```
-4. Check for pending OS tasks:
-   ```bash
-   ls inbox/os-*.md 2>/dev/null
-   ```
 
-This tells you the **real** state, what's new since last check, and whether dispatched tasks were completed.
+This tells you the **real** state and what's new since last check.
 
 Also read the project's wiki page (`wiki/<project>.md`) for backlog items and current focus.
 
-## Step 2.5: Dispatch Tasks to Project Repos (optional)
+## Step 2.5: Project work stays with the project
 
-If the daily plan includes concrete tasks for a project, consider dropping a task file in the project repo's inbox:
-
-```bash
-# File: <repo>/inbox/os-YYYY-MM-DD-<slug>.md
-```
-
-Format:
-```markdown
-# <Task Title>
-
-**From:** Life OS
-**Date:** YYYY-MM-DD
-**Priority:** must-do | should-do
-
-## Context
-[Why this matters, what state the project is in]
-
-## Acceptance Criteria
-- [ ] Concrete, verifiable outcome
-- [ ] Another outcome
-
-## References
-- Wiki: [<project>](wiki/<project>.md) — in the OS repo
-```
-
-Only dispatch tasks when the user confirms the plan. Don't auto-dispatch.
+Name each project task in `today.md`, with the project and the outcome wanted. The plan is where Life OS stops: the owner, or that project's manager under the `dark-factory` skill, starts the work in the project. Life OS writes nothing into a project repository.
 
 ## Step 2.6: Update Last Checked Hash
 

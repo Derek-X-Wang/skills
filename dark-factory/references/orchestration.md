@@ -54,7 +54,6 @@ Read the references needed for the current environment and candidate routes befo
 - [Claude Code](orchestration/runtimes/claude-code.md)
 - [Codex](orchestration/runtimes/codex-app.md)
 - [OpenCode](orchestration/runtimes/opencode.md)
-- [cmux host and Claude teams overlay](orchestration/runtimes/cmux-team.md)
 
 Read [model-profiles.md](orchestration/model-profiles.md) before comparing model capability. Read [routing-matrix.md](orchestration/routing-matrix.md) before choosing a model, harness, or external route. Treat both files as dated observations, not permanent truth.
 

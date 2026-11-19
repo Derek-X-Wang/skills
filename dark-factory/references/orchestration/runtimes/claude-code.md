@@ -6,7 +6,6 @@ Treat Claude Code as a harness that can also expose a native control plane for s
 
 - Use an internal subagent for bounded background work that does not need its own visible panel.
 - Use a named team only when the current session is the active orchestrator, the session exposes the team lifecycle, and the host benefits from visible teammates.
-- When cmux hosts the session, also read [cmux-team.md](cmux-team.md). Apply its team sections only when the overlay is proven.
 - Keep the active orchestrator as the team lead and only communication hub. Do not use teammate direct messages or broadcasts.
 
 ## Operational handoff
@@ -20,7 +19,6 @@ For live browser, native-app, webview, or desktop UI work, load [computer-use ro
 | Focused `counsel` review | Load `counsel` |
 | Durable Orca session | Read [orca.md](orca.md), then load the operational skill it names for the chosen action |
 | OpenCode external worker or reviewer | Read [opencode.md](opencode.md), then use only a route that it currently marks proven for the work shape |
-| Direct cmux topology change | Read [cmux-team.md](cmux-team.md), then load `cmux` |
 
 This reference owns Claude Code coordination capability mapping and invariants. Each operational source owns its current mechanics. Do not infer a plugin command or native lifecycle that the current session does not expose.
 
