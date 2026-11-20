@@ -75,5 +75,6 @@ When a row of the [current defaults](routing-matrix.md#current-defaults) changes
 - 2026-11-19: DeepSeek V4.1 Flash replaced V4 Flash as the bounded-chore default (owner decision). It is a routing choice and inherits no V4 ranking.
 - 2026-11-19: Claude Sonnet 5.5 replaced Sonnet 5, and Claude Fable 5.2 replaced Fable 5, in their rows (owner decision: these are the current releases). The owner kept each row's role and limits. Both start unranked: the Sonnet 5 and Fable 5 profile rows are evidence for the older versions only.
 - 2026-11-19: Claude Code work uses Opus 5.5 at high effort by default (owner decision). The R2 row keeps its own effort.
+- 2026-11-20: GPT-6.2 Sol replaced GPT-6.1 Sol as the Codex orchestrator and default Codex implementer, at high (owner decision: the current release, OpenAI model id verified in the official docs). The row keeps its role. It starts unranked: the GPT-6.1 Sol profile row is evidence for that version only.
 
 During normal project work, report a profile-update candidate only when a run materially contradicts or strengthens a current observation. Do not edit this shared file unless the task explicitly includes skill maintenance.

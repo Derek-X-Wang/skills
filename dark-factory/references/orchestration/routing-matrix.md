@@ -8,7 +8,7 @@ Model versions are named only here and in [model profiles](model-profiles.md); e
 
 | Role | Model and effort | Harness or route | Id to pass | Since |
 | --- | --- | --- | --- | --- |
-| Codex orchestrator; default Codex implementer; Codex research and web-search worker | GPT-6.1 Sol, high | Codex | `gpt-6.1-sol`; verify the resolved id at dispatch | 2026-10-01 |
+| Codex orchestrator; default Codex implementer; Codex research and web-search worker | GPT-6.2 Sol, high | Codex | `gpt-6.2-sol`; verify the resolved id at dispatch | 2026-11-20 |
 | Claude Code orchestrator and subagents: research, web search, implementation when delegated routes are constrained | Claude Opus 5.5, high | Claude Code | `opus` only when it resolves to `claude-opus-5-5`; verify at dispatch | 2026-09-23; high effort 2026-11-19 |
 | Ordinary bounded implementation; OpenCode worker and reviewer; preferred repository and supplied-material research | GLM-5.3-Flash; effort not standardized | OpenCode Go: foreground `opencode run`, or an attended Orca terminal; never unattended or AFK | `opencode-go/glm-5.3-flash`; verify at dispatch; never substitute GLM-5.3 | 2026-09-05 |
 | Bounded chore | DeepSeek V4.1 Flash; a supported effort chosen per task | OpenCode Go: foreground `opencode run`, with current data-location consent verified | `opencode-go/deepseek-v4.1-flash`; verify the resolved id at dispatch | 2026-11-19 |
