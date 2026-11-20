@@ -9,8 +9,8 @@ Own the requested skill lifecycle from source edits through validation and autho
 
 ## Ownership and source
 
-- Local repo: `/Users/derekxwang/Development/projects/DXW/tools/skills`
 - Remote: `https://github.com/Derek-X-Wang/skills`
+- Local repo: this machine's clone of the remote. Its path differs per machine. Find it under the folders in `settings.roots` of `~/.config/kb.json` (default `~/Development`): the checkout whose `git remote get-url origin` names `Derek-X-Wang/skills`. If several match, ask which one.
 - Each discoverable skill is a root-level directory containing `SKILL.md`.
 - Verify the exact source and installation target before editing or removing anything. Skills sourced outside `Derek-X-Wang/skills` are keep/delete-only: do not edit, fork, or silently migrate them into this repo. Delete only when explicitly authorized. Preserve attribution and licenses for existing owned copies with third-party origins.
 - Preserve user changes. If the repo is missing, clone it for an authorized management task. Inspect status and use `git pull --ff-only` before source edits when safe; do not overwrite diverged or dirty work.
